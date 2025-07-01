@@ -22,6 +22,7 @@ import CoachingPage from './pages/coaching/CoachingPage'
 import ProfilePage from './pages/profile/ProfilePage'
 import ResourcesPage from './pages/resources/ResourcesPage'
 import SettingsPage from './pages/settings/SettingsPage'
+import AIDemoPage from './pages/ai/AIDemoPage'
 
 // Premium Pages
 import PremiumPage from './pages/premium/PremiumPage'
@@ -123,6 +124,9 @@ function AppContent() {
             {/* AI Coaching */}
             <Route path="/coaching" element={<CoachingPage />} />
             <Route path="/coaching/session/:sessionId" element={<CoachingPage />} />
+            
+            {/* AI Demo */}
+            <Route path="/ai-demo" element={<AIDemoPage />} />
             
             {/* Profile & Settings */}
             <Route path="/profile" element={<ProfilePage />} />
