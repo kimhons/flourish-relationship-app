@@ -121,12 +121,22 @@ class TogetherAIClient:
 class OpenAIClient:
     """Enhanced OpenAI client with error handling"""
     
-    def __init__(self, api_key: str):
-        openai.api_key = api_key
-        self.client = openai.AsyncOpenAI(api_key=api_key)
+    def __init__(self, api_key: str = None):
+        """Initialize OpenAI client with optional API key"""
+        if api_key:
+            openai.api_key = api_key
+            self.client = openai.AsyncOpenAI(api_key=api_key)
+            self.enabled = True
+        else:
+            self.client = None
+            self.enabled = False
+            logger.warning("OpenAI client initialized without API key - services disabled")
     
     async def chat_completion(self, model: str, messages: List[Dict], **kwargs):
         """Chat completion with OpenAI models"""
+        if not self.enabled:
+            raise Exception("OpenAI client not enabled - API key not provided")
+            
         try:
             response = await self.client.chat.completions.create(
                 model=model,
@@ -350,8 +360,19 @@ class AIServiceManager:
     """Main AI service manager orchestrating all AI operations"""
     
     def __init__(self):
-        # Initialize API clients
-        self.openai_client = OpenAIClient(os.getenv("OPENAI_API_KEY"))
+        # Initialize API clients with error handling
+        try:
+            openai_key = os.getenv("OPENAI_API_KEY")
+            if openai_key:
+                self.openai_client = OpenAIClient(openai_key)
+                logger.info("OpenAI client initialized successfully")
+            else:
+                self.openai_client = None
+                logger.warning("OpenAI API key not found - OpenAI services disabled")
+        except Exception as e:
+            logger.error(f"Failed to initialize OpenAI client: {e}")
+            self.openai_client = None
+            
         self.together_client = None  # Will be initialized async
         
         # Initialize management components
