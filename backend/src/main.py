@@ -25,6 +25,12 @@ from .models.moderation import ModerationCase, Evidence, ModerationAction, Appea
 # Import routes
 from .routes.auth import auth_bp
 from .routes.user import user_bp
+from .routes.ai_routes import ai_bp
+
+# Import AI services
+from .services.ai_service_manager import initialize_ai_services, cleanup_ai_services, ai_service_manager
+from .services.dr_love_coach import initialize_dr_love_coach
+from .services.ai_matching_engine import initialize_ai_matching_engine
 
 # Import utilities
 from .utils.email_service import send_verification_email, send_password_reset_email
@@ -62,8 +68,49 @@ def create_app(config_name='development'):
         # Database is already initialized in initialize_extensions
         db.create_all()
         create_default_data()
+        
+        # Initialize AI services
+        initialize_ai_services_sync(app)
     
     return app
+
+def initialize_ai_services_sync(app):
+    """
+    Initialize AI services synchronously
+    
+    Args:
+        app (Flask): Flask application instance
+    """
+    try:
+        import asyncio
+        
+        # Set environment variables for AI services
+        if app.config['OPENAI_API_KEY']:
+            os.environ['OPENAI_API_KEY'] = app.config['OPENAI_API_KEY']
+        if app.config['TOGETHER_API_KEY']:
+            os.environ['TOGETHER_API_KEY'] = app.config['TOGETHER_API_KEY']
+        if app.config['GOOGLE_CLOUD_PROJECT']:
+            os.environ['GOOGLE_CLOUD_PROJECT'] = app.config['GOOGLE_CLOUD_PROJECT']
+        if app.config['ANTHROPIC_API_KEY']:
+            os.environ['ANTHROPIC_API_KEY'] = app.config['ANTHROPIC_API_KEY']
+        
+        # Create event loop for async initialization
+        try:
+            loop = asyncio.get_event_loop()
+        except RuntimeError:
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
+        
+        # Initialize AI services
+        loop.run_until_complete(initialize_ai_services())
+        loop.run_until_complete(initialize_dr_love_coach(ai_service_manager))
+        loop.run_until_complete(initialize_ai_matching_engine(ai_service_manager))
+        
+        app.logger.info("All AI services initialized successfully")
+        
+    except Exception as e:
+        app.logger.error(f"Failed to initialize AI services: {e}")
+        # Continue without AI services for now
 
 def configure_app(app, config_name):
     """
@@ -111,8 +158,11 @@ def configure_app(app, config_name):
     
     # AI/ML service configuration
     app.config['OPENAI_API_KEY'] = os.environ.get('OPENAI_API_KEY', '')
+    app.config['TOGETHER_API_KEY'] = os.environ.get('TOGETHER_API_KEY', '')
     app.config['GOOGLE_AI_API_KEY'] = os.environ.get('GOOGLE_AI_API_KEY', '')
     app.config['GOOGLE_STUDIO_LIVE_API_KEY'] = os.environ.get('GOOGLE_STUDIO_LIVE_API_KEY', '')
+    app.config['GOOGLE_CLOUD_PROJECT'] = os.environ.get('GOOGLE_CLOUD_PROJECT', '')
+    app.config['ANTHROPIC_API_KEY'] = os.environ.get('ANTHROPIC_API_KEY', '')
     
     # External service configuration
     app.config['STRIPE_SECRET_KEY'] = os.environ.get('STRIPE_SECRET_KEY', '')
@@ -194,6 +244,9 @@ def register_blueprints(app):
     
     # User management routes
     app.register_blueprint(user_bp)
+    
+    # AI services routes
+    app.register_blueprint(ai_bp)
     
     # TODO: Register additional blueprints as they are created
     # app.register_blueprint(matching_bp)
@@ -402,15 +455,48 @@ def api_info():
     return jsonify({
         'name': 'Flourish Relationship Platform API',
         'version': '1.0.0',
-        'description': 'Comprehensive backend API for the most advanced relationship app',
+        'description': 'Comprehensive backend API for the most advanced relationship app with multi-model AI integration',
+        'features': [
+            'Dr. Love AI Coach with crisis intervention',
+            'Advanced compatibility matching with 10+ dimensions',
+            'Real-time voice coaching with Google Studio Live',
+            'Multi-model AI with OpenAI, Together.ai, and Google integration',
+            'Comprehensive relationship analytics and insights',
+            'Safety monitoring and content moderation',
+            'Premium subscription management',
+            'Real-time messaging and notifications'
+        ],
         'endpoints': {
-            'authentication': '/api/auth',
-            'users': '/api/users',
-            'matches': '/api/matches',
-            'messages': '/api/messages',
-            'coaching': '/api/coaching',
-            'content': '/api/content',
-            'subscriptions': '/api/subscriptions'
+            'authentication': '/api/auth/* - User authentication and management',
+            'users': '/api/users/* - User profiles and preferences',
+            'ai': '/api/ai/* - AI-powered features and services',
+            'coaching': '/api/ai/coaching/* - Dr. Love AI coaching sessions',
+            'matching': '/api/ai/matching/* - AI-powered compatibility matching',
+            'content': '/api/ai/content/* - AI content generation',
+            'voice': '/api/ai/voice/* - Voice processing and synthesis',
+            'safety': '/api/ai/safety/* - Content safety and moderation',
+            'analytics': '/api/ai/analytics/* - Relationship insights and analytics',
+            'health': '/health - Service health check'
+        },
+        'ai_models': {
+            'primary': {
+                'coaching': 'OpenAI GPT-4 Turbo + Google Gemini Pro',
+                'matching': 'OpenAI GPT-4 + Custom ML models',
+                'voice': 'Google Studio Live API + OpenAI Whisper',
+                'safety': 'OpenAI Moderation API + Custom models'
+            },
+            'fallback': {
+                'coaching': 'DeepSeek-R1, Llama 4 Maverick, Qwen3 235B',
+                'matching': 'Qwen2.5 72B, Gemma 3 27B, Llama 3.3 70B',
+                'content': 'Qwen 2.5 Coder, FLUX.1 Pro',
+                'voice': 'Cartesia Sonic-2'
+            }
+        },
+        'ai_services_status': {
+            'openai': 'configured' if app.config.get('OPENAI_API_KEY') else 'not_configured',
+            'together_ai': 'configured' if app.config.get('TOGETHER_API_KEY') else 'not_configured',
+            'google_cloud': 'configured' if app.config.get('GOOGLE_CLOUD_PROJECT') else 'not_configured',
+            'anthropic': 'configured' if app.config.get('ANTHROPIC_API_KEY') else 'not_configured'
         },
         'documentation': 'https://api.flourish-app.com/docs',
         'support': 'support@flourish-app.com'
