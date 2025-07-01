@@ -271,7 +271,7 @@ class Transaction(BaseModel):
     
     # Description and metadata
     description = db.Column(db.String(500))
-    metadata = db.Column(db.Text)  # JSON string
+    transaction_metadata = db.Column(db.Text)  # JSON string
     
     # Dates
     processed_at = db.Column(db.DateTime)
@@ -289,9 +289,9 @@ class Transaction(BaseModel):
     @property
     def metadata_dict(self):
         """Get metadata as dictionary"""
-        if self.metadata:
+        if self.transaction_metadata:
             try:
-                return json.loads(self.metadata)
+                return json.loads(self.transaction_metadata)
             except json.JSONDecodeError:
                 return {}
         return {}
@@ -299,7 +299,7 @@ class Transaction(BaseModel):
     @metadata_dict.setter
     def metadata_dict(self, value):
         """Set metadata from dictionary"""
-        self.metadata = json.dumps(value) if value else None
+        self.transaction_metadata = json.dumps(value) if value else None
     
     def mark_as_completed(self, provider_transaction_id=None):
         """Mark transaction as completed"""
@@ -465,4 +465,45 @@ class PromoCodeUsage(BaseModel):
     promo_code = db.relationship('PromoCode', backref='usages')
     user = db.relationship('User', backref='promo_code_usages')
     transaction = db.relationship('Transaction', backref='promo_code_usage')
+
+
+
+class SubscriptionPlan(BaseModel):
+    """Subscription plan model for different tiers"""
+    __tablename__ = 'subscription_plans'
+    
+    # Plan information
+    name = db.Column(db.String(100), nullable=False)
+    description = db.Column(db.Text)
+    price = db.Column(db.Float, nullable=False)
+    billing_cycle = db.Column(db.String(20), nullable=False)  # monthly, yearly
+    
+    # Features (stored as JSON)
+    features = db.Column(db.Text)  # JSON string of features
+    
+    # Plan status
+    is_active = db.Column(db.Boolean, default=True)
+    sort_order = db.Column(db.Integer, default=0)
+    
+    # Stripe information
+    stripe_price_id = db.Column(db.String(100))
+    stripe_product_id = db.Column(db.String(100))
+    
+    @property
+    def features_dict(self):
+        """Get features as dictionary"""
+        if self.features:
+            try:
+                return json.loads(self.features)
+            except json.JSONDecodeError:
+                return {}
+        return {}
+    
+    @features_dict.setter
+    def features_dict(self, value):
+        """Set features from dictionary"""
+        self.features = json.dumps(value) if value else None
+    
+    def __repr__(self):
+        return f'<SubscriptionPlan {self.name}: ${self.price}/{self.billing_cycle}>'
 
