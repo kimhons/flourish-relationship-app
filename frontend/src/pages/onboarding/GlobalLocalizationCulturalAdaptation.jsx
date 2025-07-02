@@ -1,1860 +1,1314 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import {
-  Box,
-  Container,
-  Typography,
-  Card,
-  CardContent,
-  Grid,
-  Button,
-  Tabs,
-  Tab,
-  Chip,
-  Alert,
-  LinearProgress,
-  List,
-  ListItem,
-  ListItemText,
-  ListItemIcon,
-  Paper,
-  Avatar,
-  IconButton,
-  Tooltip,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Slider,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  TextField,
-  Switch,
-  FormControlLabel,
-  Stepper,
-  Step,
-  StepLabel,
-  StepContent,
-  RadioGroup,
-  Radio,
-  FormLabel,
-  Checkbox,
-  FormGroup,
-  Divider,
-  Badge,
-  Rating,
-  CircularProgress,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails
-} from '@mui/material';
-import {
-  Language as LanguageIcon,
-  Public as PublicIcon,
-  Translate as TranslateIcon,
-  LocationOn as LocationOnIcon,
-  Schedule as ScheduleIcon,
-  CalendarToday as CalendarIcon,
-  CurrencyExchange as CurrencyIcon,
-  Flag as FlagIcon,
-  Groups as GroupsIcon,
-  Psychology as PsychologyIcon,
-  Culture as CultureIcon,
-  Diversity1 as Diversity1Icon,
-  Diversity2 as Diversity2Icon,
-  Diversity3 as Diversity3Icon,
-  EmojiPeople as EmojiPeopleIcon,
-  EmojiEvents as EmojiEventsIcon,
-  EmojiObjects as EmojiObjectsIcon,
-  EmojiNature as EmojiNatureIcon,
-  EmojiFood as EmojiFoodIcon,
-  EmojiTransportation as EmojiTransportationIcon,
-  EmojiSymbols as EmojiSymbolsIcon,
-  EmojiFlags as EmojiFlagsIcon,
-  Map as MapIcon,
-  Place as PlaceIcon,
-  Room as RoomIcon,
-  MyLocation as MyLocationIcon,
-  GpsFixed as GpsFixedIcon,
-  GpsNotFixed as GpsNotFixedIcon,
-  GpsOff as GpsOffIcon,
-  Explore as ExploreIcon,
-  ExploreOff as ExploreOffIcon,
-  Navigation as NavigationIcon,
-  NearMe as NearMeIcon,
-  NearMeDisabled as NearMeDisabledIcon,
-  Satellite as SatelliteIcon,
-  SatelliteAlt as SatelliteAltIcon,
-  Terrain as TerrainIcon,
-  Layers as LayersIcon,
-  LayersClear as LayersClearIcon,
-  Timeline as TimelineIcon,
-  AccessTime as AccessTimeIcon,
-  Alarm as AlarmIcon,
-  AlarmAdd as AlarmAddIcon,
-  AlarmOn as AlarmOnIcon,
-  AlarmOff as AlarmOffIcon,
-  Timer as TimerIcon,
-  TimerOff as TimerOffIcon,
-  Timelapse as TimelapseIcon,
-  Today as TodayIcon,
-  DateRange as DateRangeIcon,
-  Event as EventIcon,
-  EventAvailable as EventAvailableIcon,
-  EventBusy as EventBusyIcon,
-  EventNote as EventNoteIcon,
-  EventRepeat as EventRepeatIcon,
-  EventSeat as EventSeatIcon,
-  History as HistoryIcon,
-  HistoryEdu as HistoryEduIcon,
-  HistoryToggleOff as HistoryToggleOffIcon,
-  QueryBuilder as QueryBuilderIcon,
-  Schedule as ScheduleIcon2,
-  ScheduleSend as ScheduleSendIcon,
-  WatchLater as WatchLaterIcon,
-  MoreTime as MoreTimeIcon,
-  Pending as PendingIcon,
-  PendingActions as PendingActionsIcon,
-  Update as UpdateIcon,
-  Refresh as RefreshIcon,
-  Sync as SyncIcon,
-  SyncAlt as SyncAltIcon,
-  CloudSync as CloudSyncIcon,
-  SyncDisabled as SyncDisabledIcon,
-  SyncLock as SyncLockIcon,
-  SyncProblem as SyncProblemIcon,
-  Autorenew as AutorenewIcon,
-  Cached as CachedIcon,
-  Loop as LoopIcon,
-  Repeat as RepeatIcon,
-  RepeatOne as RepeatOneIcon,
-  Shuffle as ShuffleIcon,
-  SkipNext as SkipNextIcon,
-  SkipPrevious as SkipPreviousIcon,
-  FastForward as FastForwardIcon,
-  FastRewind as FastRewindIcon,
-  PlayArrow as PlayIcon,
-  Pause as PauseIcon,
-  Stop as StopIcon,
-  Replay as ReplayIcon,
-  VolumeUp as VolumeUpIcon,
-  VolumeDown as VolumeDownIcon,
-  VolumeOff as VolumeOffIcon,
-  VolumeMute as VolumeMuteIcon,
-  Mic as MicIcon,
-  MicOff as MicOffIcon,
-  Headset as HeadsetIcon,
-  HeadsetMic as HeadsetMicIcon,
-  Speaker as SpeakerIcon,
-  SpeakerPhone as SpeakerPhoneIcon,
-  Hearing as ListenIcon,
-  RecordVoiceOver as VoiceIcon,
-  Message as MessageIcon,
-  Email as EmailIcon,
-  Phone as PhoneIcon,
-  VideoCall as VideoIcon,
-  Chat as ChatIcon,
-  Forum as ForumIcon,
-  QuestionAnswer as QAIcon,
-  Send as SendIcon,
-  Reply as ReplyIcon,
-  ReplyAll as ReplyAllIcon,
-  Forward as ForwardIcon,
-  Undo as UndoIcon,
-  Redo as RedoIcon,
-  Save as SaveIcon,
-  Share as ShareIcon,
-  Edit as EditIcon,
-  Delete as DeleteIcon,
-  Add as AddIcon,
-  Remove as RemoveIcon,
-  Create as CreateIcon,
-  ContentCopy as CopyIcon,
-  ContentCut as CutIcon,
-  ContentPaste as PasteIcon,
-  SelectAll as SelectAllIcon,
-  ClearAll as ClearAllIcon,
-  Search as SearchIcon,
-  FilterList as FilterIcon,
-  Sort as SortIcon,
-  ViewList as ViewListIcon,
-  ViewModule as ViewModuleIcon,
-  ViewQuilt as ViewQuiltIcon,
-  ViewStream as ViewStreamIcon,
-  ViewColumn as ViewColumnIcon,
-  ViewCarousel as ViewCarouselIcon,
-  ViewComfy as ViewComfyIcon,
-  ViewCompact as ViewCompactIcon,
-  ViewAgenda as ViewAgendaIcon,
-  ViewArray as ViewArrayIcon,
-  ViewDay as ViewDayIcon,
-  ViewHeadline as ViewHeadlineIcon,
-  ViewSidebar as ViewSidebarIcon,
-  ViewWeek as ViewWeekIcon,
-  Fullscreen as FullscreenIcon,
-  FullscreenExit as FullscreenExitIcon,
-  ZoomIn as ZoomInIcon,
-  ZoomOut as ZoomOutIcon,
-  ZoomOutMap as ZoomOutMapIcon,
-  CenterFocusStrong as CenterFocusIcon,
-  CenterFocusWeak as CenterFocusWeakIcon,
-  FitScreen as FitScreenIcon,
-  AspectRatio as AspectRatioIcon,
-  CropFree as CropFreeIcon,
-  Crop as CropIcon,
-  CropSquare as CropSquareIcon,
-  Crop169 as Crop169Icon,
-  Crop32 as Crop32Icon,
-  Crop54 as Crop54Icon,
-  Crop75 as Crop75Icon,
-  CropDin as CropDinIcon,
-  CropLandscape as CropLandscapeIcon,
-  CropOriginal as CropOriginalIcon,
-  CropPortrait as CropPortraitIcon,
-  CropRotate as CropRotateIcon,
-  Rotate90DegreesCcw as Rotate90CcwIcon,
-  Rotate90DegreesCw as Rotate90CwIcon,
-  RotateLeft as RotateLeftIcon,
-  RotateRight as RotateRightIcon,
-  FlipToBack as FlipToBackIcon,
-  FlipToFront as FlipToFrontIcon,
-  Flip as FlipIcon,
-  Transform as TransformIcon,
-  Straighten as StraightenIcon,
-  Tune as TuneIcon,
-  Palette as PaletteIcon,
-  ColorLens as ColorLensIcon,
-  InvertColors as InvertColorsIcon,
-  Brush as BrushIcon,
-  FormatPaint as FormatPaintIcon,
-  FormatColorFill as FormatColorFillIcon,
-  FormatColorReset as FormatColorResetIcon,
-  FormatColorText as FormatColorTextIcon,
-  Gradient as GradientIcon,
-  Opacity as OpacityIcon,
-  Brightness1 as Brightness1Icon,
-  Brightness2 as Brightness2Icon,
-  Brightness3 as Brightness3Icon,
-  Brightness4 as Brightness4Icon,
-  Brightness5 as Brightness5Icon,
-  Brightness6 as Brightness6Icon,
-  Brightness7 as Brightness7Icon,
-  BrightnessHigh as BrightnessHighIcon,
-  BrightnessLow as BrightnessLowIcon,
-  BrightnessMedium as BrightnessMediumIcon,
-  BrightnessAuto as BrightnessAutoIcon,
-  Contrast as ContrastIcon,
-  Exposure as ExposureIcon,
-  ExposurePlus1 as ExposurePlus1Icon,
-  ExposurePlus2 as ExposurePlus2Icon,
-  ExposureNeg1 as ExposureNeg1Icon,
-  ExposureNeg2 as ExposureNeg2Icon,
-  ExposureZero as ExposureZeroIcon,
-  WbAuto as WbAutoIcon,
-  WbCloudy as WbCloudyIcon,
-  WbIncandescent as WbIncandescentIcon,
-  WbIridescent as WbIridescentIcon,
-  WbShade as WbShadeIcon,
-  WbSunny as WbSunnyIcon,
-  WbTwilight as WbTwilightIcon,
-  Flare as FlareIcon,
-  Flash as FlashIcon,
-  FlashAuto as FlashAutoIcon,
-  FlashOff as FlashOffIcon,
-  FlashOn as FlashOnIcon,
-  Highlight as HighlightIcon,
-  HighlightOff as HighlightOffIcon,
-  Lens as LensIcon,
-  Looks as LooksIcon,
-  Looks3 as Looks3Icon,
-  Looks4 as Looks4Icon,
-  Looks5 as Looks5Icon,
-  Looks6 as Looks6Icon,
-  LooksOne as LooksOneIcon,
-  LooksTwo as LooksTwoIcon,
-  MonochromePhotos as MonochromePhotosIcon,
-  Photo as PhotoIcon,
-  PhotoAlbum as PhotoAlbumIcon,
-  PhotoCamera as PhotoCameraIcon,
-  PhotoCameraBack as PhotoCameraBackIcon,
-  PhotoCameraFront as PhotoCameraFrontIcon,
-  PhotoFilter as PhotoFilterIcon,
-  PhotoLibrary as PhotoLibraryIcon,
-  PhotoSizeSelectActual as PhotoSizeSelectActualIcon,
-  PhotoSizeSelectLarge as PhotoSizeSelectLargeIcon,
-  PhotoSizeSelectSmall as PhotoSizeSelectSmallIcon,
-  Picture as PictureIcon,
-  PictureAsPdf as PictureAsPdfIcon,
-  PictureInPicture as PictureInPictureIcon,
-  PictureInPictureAlt as PictureInPictureAltIcon,
-  Slideshow as SlideshowIcon,
-  Collections as CollectionsIcon,
-  CollectionsBookmark as CollectionsBookmarkIcon,
-  Burst as BurstIcon,
-  CameraAlt as CameraAltIcon,
-  CameraEnhance as CameraEnhanceIcon,
-  CameraFront as CameraFrontIcon,
-  CameraRear as CameraRearIcon,
-  CameraRoll as CameraRollIcon,
-  Videocam as VideocamIcon,
-  VideocamOff as VideocamOffIcon,
-  VideoCall as VideoCallIcon,
-  VideoFile as VideoFileIcon,
-  VideoLabel as VideoLabelIcon,
-  VideoLibrary as VideoLibraryIcon,
-  VideoSettings as VideoSettingsIcon,
-  Theaters as TheatersIcon,
-  Movie as MovieIcon,
-  MovieCreation as MovieCreationIcon,
-  MovieFilter as MovieFilterIcon,
-  LocalMovies as LocalMoviesIcon,
-  LiveTv as LiveTvIcon,
-  OndemandVideo as OndemandVideoIcon,
-  PersonalVideo as PersonalVideoIcon,
-  PlayCircleFilled as PlayCircleIcon,
-  PlayCircleFilledWhite as PlayCircleWhiteIcon,
-  PlayCircleOutline as PlayCircleOutlineIcon,
-  PauseCircleFilled as PauseCircleIcon,
-  PauseCircleFilledWhite as PauseCircleWhiteIcon,
-  PauseCircleOutline as PauseCircleOutlineIcon,
-  StopCircle as StopCircleIcon,
-  PlaylistAdd as PlaylistAddIcon,
-  PlaylistAddCheck as PlaylistAddCheckIcon,
-  PlaylistPlay as PlaylistPlayIcon,
-  QueueMusic as QueueMusicIcon,
-  Queue as QueueIcon,
-  QueuePlayNext as QueuePlayNextIcon,
-  Radio as RadioIcon,
-  RecentActors as RecentActorsIcon,
-  Album as AlbumIcon,
-  ArtTrack as ArtTrackIcon,
-  AudioFile as AudioFileIcon,
-  AudioTrack as AudioTrackIcon,
-  FeaturedPlayList as FeaturedPlayListIcon,
-  FeaturedVideo as FeaturedVideoIcon,
-  FiberDvr as FiberDvrIcon,
-  FiberManualRecord as FiberManualRecordIcon,
-  FiberNew as FiberNewIcon,
-  FiberPin as FiberPinIcon,
-  FiberSmartRecord as FiberSmartRecordIcon,
-  Forward10 as Forward10Icon,
-  Forward30 as Forward30Icon,
-  Forward5 as Forward5Icon,
-  Games as GamesIcon,
-  Hd as HdIcon,
-  HearingDisabled as HearingDisabledIcon,
-  HighQuality as HighQualityIcon,
-  LibraryAdd as LibraryAddIcon,
-  LibraryBooks as LibraryBooksIcon,
-  LibraryMusic as LibraryMusicIcon,
-  Loop as LoopIcon2,
-  MissedVideoCall as MissedVideoCallIcon,
-  MusicNote as MusicNoteIcon,
-  MusicVideo as MusicVideoIcon,
-  NewReleases as NewReleasesIcon,
-  NotInterested as NotInterestedIcon,
-  Note as NoteIcon,
-  PausePresentation as PausePresentationIcon,
-  PlayDisabled as PlayDisabledIcon,
-  PlaylistRemove as PlaylistRemoveIcon,
-  PresentToAll as PresentToAllIcon,
-  Replay10 as Replay10Icon,
-  Replay30 as Replay30Icon,
-  Replay5 as Replay5Icon,
-  ShuffleOn as ShuffleOnIcon,
-  SkipNext as SkipNextIcon2,
-  SkipPrevious as SkipPreviousIcon2,
-  SlowMotionVideo as SlowMotionVideoIcon,
-  Snooze as SnoozeIcon,
-  SortByAlpha as SortByAlphaIcon,
-  Stop as StopIcon2,
-  Subscriptions as SubscriptionsIcon,
-  Subtitles as SubtitlesIcon,
-  SurroundSound as SurroundSoundIcon,
-  VideoSettings as VideoSettingsIcon2,
-  VolumeDown as VolumeDownIcon2,
-  VolumeMute as VolumeMuteIcon2,
-  VolumeOff as VolumeOffIcon2,
-  VolumeUp as VolumeUpIcon2,
-  Web as WebIcon,
-  WebAsset as WebAssetIcon,
-  WebAssetOff as WebAssetOffIcon,
-  Widgets as WidgetsIcon,
-  Wifi as WifiIcon,
-  WifiCalling as WifiCallingIcon,
-  WifiCalling3 as WifiCalling3Icon,
-  WifiLock as WifiLockIcon,
-  WifiOff as WifiOffIcon,
-  WifiProtectedSetup as WifiProtectedSetupIcon,
-  WifiTethering as WifiTetheringIcon,
-  WifiTetheringError as WifiTetheringErrorIcon,
-  WifiTetheringOff as WifiTetheringOffIcon,
-  ExpandMore as ExpandMoreIcon,
-  Help as HelpIcon,
-  Info as InfoIcon,
-  Warning as WarningIcon,
-  Error as ErrorIcon,
-  CheckCircle as CheckCircleIcon,
-  Cancel as CancelIcon,
-  Close as CloseIcon,
-  Done as DoneIcon,
-  DoneAll as DoneAllIcon,
-  Clear as ClearIcon,
-  Launch as LaunchIcon,
-  OpenInNew as OpenIcon,
-  Star as StarIcon,
-  StarBorder as StarBorderIcon,
-  StarHalf as StarHalfIcon,
-  StarOutline as StarOutlineIcon,
-  StarRate as StarRateIcon,
-  Grade as GradeIcon,
-  EmojiEvents as TrophyIcon,
-  Celebration as CelebrationIcon,
-  TrendingUp as TrendingUpIcon,
-  TrendingDown as TrendingDownIcon,
-  TrendingFlat as TrendingFlatIcon,
-  Analytics as AnalyticsIcon,
-  Assessment as AssessmentIcon,
-  Insights as InsightsIcon,
-  ShowChart as ShowChartIcon,
-  BarChart as BarChartIcon,
-  PieChart as PieChartIcon,
-  DonutLarge as DonutLargeIcon,
-  MultilineChart as MultilineChartIcon,
-  BubbleChart as BubbleChartIcon,
-  ScatterPlot as ScatterPlotIcon,
-  Equalizer as EqualizerIcon,
-  Leaderboard as LeaderboardIcon,
-  Speed as SpeedIcon,
-  Memory as MemoryIcon,
-  Storage as StorageIcon,
-  CloudUpload as CloudUploadIcon,
-  CloudDownload as CloudDownloadIcon,
-  Backup as BackupIcon,
-  Restore as RestoreIcon,
-  Download as DownloadIcon,
-  Upload as UploadIcon,
-  Security as SecurityIcon,
-  Shield as ShieldIcon,
-  Lock as LockIcon,
-  LockOpen as LockOpenIcon,
-  Verified as VerifiedIcon,
-  VpnKey as VpnKeyIcon,
-  Fingerprint as FingerprintIcon,
-  Face as FaceIcon,
-  Visibility as VisibilityIcon,
-  VisibilityOff as VisibilityOffIcon,
-  RemoveRedEye as RemoveRedEyeIcon,
-  NotificationsActive as NotificationIcon,
-  Notifications as NotificationsIcon,
-  NotificationsOff as NotificationsOffIcon,
-  NotificationsPaused as NotificationsPausedIcon,
-  Settings as SettingsIcon,
-  Build as BuildIcon,
-  Construction as ConstructionIcon,
-  Engineering as EngineeringIcon,
-  Code as CodeIcon,
-  DataObject as DataIcon,
-  Terminal as TerminalIcon,
-  Api as ApiIcon,
-  Integration as IntegrationIcon,
-  Hub as HubIcon,
-  Lan as LanIcon,
-  Dns as DnsIcon,
-  Router as RouterIcon,
-  Cable as CableIcon,
-  Usb as UsbIcon,
-  Nfc as NfcIcon,
-  Bluetooth as BluetoothIcon,
-  BluetoothConnected as BluetoothConnectedIcon,
-  Signal as SignalIcon,
-  NetworkCheck as NetworkIcon
-} from '@mui/icons-material';
+import React, { useState, useEffect } from 'react';
+import { 
+  Globe, MapPin, Languages, Users, Heart, Star,
+  Settings, Bell, Mail, Phone, MessageCircle,
+  Search, Filter, Download, Upload, RefreshCw,
+  Plus, Edit, Trash2, MoreHorizontal, Info,
+  FileText, Clipboard, Award, Zap, Target,
+  Calendar, Clock, ArrowUp, ArrowDown, Minus,
+  UserCheck, UserPlus, Shield, Lock, Eye,
+  Network, GitBranch, Layers, HardDrive, Cpu,
+  BookOpen, Terminal, Package, Webhook, Code,
+  CheckCircle, AlertTriangle, AlertCircle, XCircle,
+  BarChart3, PieChart, TrendingUp, Activity,
+  Flag, Compass, Map, Navigation, Plane
+} from 'lucide-react';
 
 const GlobalLocalizationCulturalAdaptation = () => {
-  const [activeTab, setActiveTab] = useState(0);
-  const [localizationData, setLocalizationData] = useState({});
-  const [supportedLanguages, setSupportedLanguages] = useState([]);
-  const [culturalAdaptations, setCulturalAdaptations] = useState([]);
-  const [regionalizationMetrics, setRegionalizationMetrics] = useState({});
+  const [activeTab, setActiveTab] = useState('overview');
+  const [selectedRegion, setSelectedRegion] = useState(null);
+  const [selectedCulture, setSelectedCulture] = useState(null);
+  const [localizationFilter, setLocalizationFilter] = useState('all');
 
-  // Supported Languages Data
-  useEffect(() => {
-    const languages = [
+  const [localizationData, setLocalizationData] = useState({
+    overview: {
+      totalRegions: 47,
+      supportedLanguages: 23,
+      culturalFrameworks: 156,
+      activeLocalizations: 89,
+      globalUsers: 2847392,
+      culturalAccuracy: 94.7,
+      localizationCoverage: 87.3,
+      adaptationScore: 92.1
+    },
+    regions: [
       {
         id: 1,
-        code: 'en',
-        name: 'English',
-        nativeName: 'English',
-        region: 'Global',
-        speakers: 1500000000,
-        completeness: 100,
-        status: 'complete',
-        dialects: ['US', 'UK', 'AU', 'CA', 'IN'],
-        culturalAdaptations: 15,
-        lastUpdated: new Date(Date.now() - 86400000).toISOString(),
-        translationQuality: 100,
-        localizers: 12
+        name: 'North America',
+        countries: ['United States', 'Canada', 'Mexico'],
+        languages: ['English', 'Spanish', 'French'],
+        cultures: ['Western Individualistic', 'Hispanic Collectivistic', 'French Canadian'],
+        users: 1247893,
+        localizationStatus: 'complete',
+        culturalFrameworks: 23,
+        adaptationScore: 96.3,
+        marketPenetration: 78.4,
+        revenueContribution: 45.2,
+        lastUpdated: '2024-12-01',
+        priority: 'high',
+        compliance: ['CCPA', 'PIPEDA'],
+        culturalNuances: [
+          'Direct communication preferred',
+          'Individual achievement focus',
+          'Time-oriented culture',
+          'Personal space importance'
+        ]
       },
       {
         id: 2,
-        code: 'es',
-        name: 'Spanish',
-        nativeName: 'Español',
-        region: 'Americas, Europe',
-        speakers: 500000000,
-        completeness: 98,
-        status: 'complete',
-        dialects: ['ES', 'MX', 'AR', 'CO', 'PE'],
-        culturalAdaptations: 18,
-        lastUpdated: new Date(Date.now() - 172800000).toISOString(),
-        translationQuality: 97,
-        localizers: 8
+        name: 'Europe',
+        countries: ['United Kingdom', 'Germany', 'France', 'Spain', 'Italy', 'Netherlands'],
+        languages: ['English', 'German', 'French', 'Spanish', 'Italian', 'Dutch'],
+        cultures: ['British Reserved', 'German Direct', 'French Formal', 'Mediterranean Warm'],
+        users: 856734,
+        localizationStatus: 'active',
+        culturalFrameworks: 34,
+        adaptationScore: 93.7,
+        marketPenetration: 67.2,
+        revenueContribution: 28.9,
+        lastUpdated: '2024-11-28',
+        priority: 'high',
+        compliance: ['GDPR', 'DPA'],
+        culturalNuances: [
+          'Formal communication protocols',
+          'Privacy-first approach',
+          'Work-life balance emphasis',
+          'Cultural diversity respect'
+        ]
       },
       {
         id: 3,
-        code: 'zh',
-        name: 'Chinese',
-        nativeName: '中文',
-        region: 'East Asia',
-        speakers: 1100000000,
-        completeness: 95,
-        status: 'complete',
-        dialects: ['CN', 'TW', 'HK', 'SG'],
-        culturalAdaptations: 22,
-        lastUpdated: new Date(Date.now() - 259200000).toISOString(),
-        translationQuality: 94,
-        localizers: 10
+        name: 'Asia-Pacific',
+        countries: ['Japan', 'South Korea', 'Australia', 'Singapore', 'India'],
+        languages: ['Japanese', 'Korean', 'English', 'Mandarin', 'Hindi'],
+        cultures: ['Japanese Harmony', 'Korean Hierarchical', 'Australian Casual', 'Indian Family-Centric'],
+        users: 567234,
+        localizationStatus: 'in-progress',
+        culturalFrameworks: 45,
+        adaptationScore: 89.2,
+        marketPenetration: 34.8,
+        revenueContribution: 18.7,
+        lastUpdated: '2024-12-03',
+        priority: 'high',
+        compliance: ['PDPA', 'Privacy Act'],
+        culturalNuances: [
+          'Hierarchical respect systems',
+          'Collective harmony priority',
+          'Face-saving importance',
+          'Extended family involvement'
+        ]
       },
       {
         id: 4,
-        code: 'hi',
-        name: 'Hindi',
-        nativeName: 'हिन्दी',
-        region: 'South Asia',
-        speakers: 600000000,
-        completeness: 92,
-        status: 'active',
-        dialects: ['IN', 'NP', 'FJ'],
-        culturalAdaptations: 25,
-        lastUpdated: new Date(Date.now() - 345600000).toISOString(),
-        translationQuality: 91,
-        localizers: 6
+        name: 'Latin America',
+        countries: ['Brazil', 'Argentina', 'Chile', 'Colombia', 'Peru'],
+        languages: ['Portuguese', 'Spanish'],
+        cultures: ['Brazilian Warm', 'Argentinian Passionate', 'Chilean Conservative'],
+        users: 234567,
+        localizationStatus: 'planned',
+        culturalFrameworks: 28,
+        adaptationScore: 85.6,
+        marketPenetration: 12.3,
+        revenueContribution: 4.8,
+        lastUpdated: '2024-11-20',
+        priority: 'medium',
+        compliance: ['LGPD', 'Local Privacy Laws'],
+        culturalNuances: [
+          'Warm personal relationships',
+          'Family-centered values',
+          'Emotional expressiveness',
+          'Social gathering importance'
+        ]
       },
       {
         id: 5,
-        code: 'ar',
-        name: 'Arabic',
-        nativeName: 'العربية',
-        region: 'Middle East, North Africa',
-        speakers: 400000000,
-        completeness: 89,
-        status: 'active',
-        dialects: ['SA', 'EG', 'AE', 'JO', 'LB'],
-        culturalAdaptations: 28,
-        lastUpdated: new Date(Date.now() - 432000000).toISOString(),
-        translationQuality: 88,
-        localizers: 7
-      },
-      {
-        id: 6,
-        code: 'pt',
-        name: 'Portuguese',
-        nativeName: 'Português',
-        region: 'South America, Europe',
-        speakers: 280000000,
-        completeness: 96,
-        status: 'complete',
-        dialects: ['BR', 'PT', 'AO', 'MZ'],
-        culturalAdaptations: 16,
-        lastUpdated: new Date(Date.now() - 518400000).toISOString(),
-        translationQuality: 95,
-        localizers: 5
-      },
-      {
-        id: 7,
-        code: 'ru',
-        name: 'Russian',
-        nativeName: 'Русский',
-        region: 'Eastern Europe, Central Asia',
-        speakers: 260000000,
-        completeness: 93,
-        status: 'active',
-        dialects: ['RU', 'BY', 'KZ', 'KG'],
-        culturalAdaptations: 20,
-        lastUpdated: new Date(Date.now() - 604800000).toISOString(),
-        translationQuality: 92,
-        localizers: 4
-      },
-      {
-        id: 8,
-        code: 'ja',
-        name: 'Japanese',
-        nativeName: '日本語',
-        region: 'East Asia',
-        speakers: 125000000,
-        completeness: 97,
-        status: 'complete',
-        dialects: ['JP'],
-        culturalAdaptations: 30,
-        lastUpdated: new Date(Date.now() - 691200000).toISOString(),
-        translationQuality: 96,
-        localizers: 8
-      },
-      {
-        id: 9,
-        code: 'de',
-        name: 'German',
-        nativeName: 'Deutsch',
-        region: 'Central Europe',
-        speakers: 100000000,
-        completeness: 99,
-        status: 'complete',
-        dialects: ['DE', 'AT', 'CH'],
-        culturalAdaptations: 14,
-        lastUpdated: new Date(Date.now() - 777600000).toISOString(),
-        translationQuality: 98,
-        localizers: 6
-      },
-      {
-        id: 10,
-        code: 'fr',
-        name: 'French',
-        nativeName: 'Français',
-        region: 'Europe, Africa, Americas',
-        speakers: 280000000,
-        completeness: 98,
-        status: 'complete',
-        dialects: ['FR', 'CA', 'BE', 'CH', 'SN'],
-        culturalAdaptations: 19,
-        lastUpdated: new Date(Date.now() - 864000000).toISOString(),
-        translationQuality: 97,
-        localizers: 7
-      },
-      {
-        id: 11,
-        code: 'ko',
-        name: 'Korean',
-        nativeName: '한국어',
-        region: 'East Asia',
-        speakers: 77000000,
-        completeness: 94,
-        status: 'active',
-        dialects: ['KR', 'KP'],
-        culturalAdaptations: 26,
-        lastUpdated: new Date(Date.now() - 950400000).toISOString(),
-        translationQuality: 93,
-        localizers: 5
-      },
-      {
-        id: 12,
-        code: 'it',
-        name: 'Italian',
-        nativeName: 'Italiano',
-        region: 'Southern Europe',
-        speakers: 65000000,
-        completeness: 96,
-        status: 'complete',
-        dialects: ['IT', 'SM', 'VA'],
-        culturalAdaptations: 17,
-        lastUpdated: new Date(Date.now() - 1036800000).toISOString(),
-        translationQuality: 95,
-        localizers: 4
+        name: 'Middle East & Africa',
+        countries: ['UAE', 'Saudi Arabia', 'South Africa', 'Egypt'],
+        languages: ['Arabic', 'English', 'Afrikaans'],
+        cultures: ['Islamic Traditional', 'African Ubuntu', 'Modern Gulf'],
+        users: 89456,
+        localizationStatus: 'research',
+        culturalFrameworks: 26,
+        adaptationScore: 78.9,
+        marketPenetration: 5.7,
+        revenueContribution: 2.4,
+        lastUpdated: '2024-11-15',
+        priority: 'low',
+        compliance: ['Local Data Laws'],
+        culturalNuances: [
+          'Religious considerations',
+          'Traditional family structures',
+          'Community-based decisions',
+          'Respect for elders'
+        ]
       }
-    ];
-    setSupportedLanguages(languages);
-  }, []);
-
-  // Cultural Adaptations Data
-  useEffect(() => {
-    const adaptations = [
+    ],
+    culturalFrameworks: [
       {
         id: 1,
-        region: 'North America',
-        countries: ['US', 'CA', 'MX'],
-        population: 580000000,
-        adaptations: {
-          dateFormat: 'MM/DD/YYYY',
-          timeFormat: '12-hour',
-          currency: 'USD, CAD, MXN',
-          weekStart: 'Sunday',
-          numberFormat: '1,234.56',
-          colorPreferences: ['Blue', 'Red', 'Green'],
-          communicationStyle: 'Direct',
-          relationshipValues: ['Independence', 'Equality', 'Communication'],
-          culturalNorms: ['Individual privacy', 'Gender equality', 'Open communication']
-        },
-        localizationScore: 98,
-        userSatisfaction: 4.8,
-        adoptionRate: 87.3
+        name: 'Western Individualistic Framework',
+        description: 'Focus on personal achievement, direct communication, and individual rights',
+        regions: ['North America', 'Western Europe', 'Australia'],
+        characteristics: [
+          'Direct communication style',
+          'Individual goal orientation',
+          'Personal space respect',
+          'Time-conscious culture',
+          'Achievement-based success'
+        ],
+        relationshipPatterns: [
+          'Dating autonomy',
+          'Personal choice priority',
+          'Emotional independence',
+          'Conflict resolution through discussion'
+        ],
+        adaptationStrategies: [
+          'Emphasize personal growth',
+          'Provide individual coaching',
+          'Respect privacy boundaries',
+          'Focus on self-improvement'
+        ],
+        implementationScore: 96.3,
+        userSatisfaction: 94.7,
+        culturalAccuracy: 97.1
       },
       {
         id: 2,
-        region: 'Europe',
-        countries: ['DE', 'FR', 'IT', 'ES', 'UK', 'NL', 'SE', 'NO'],
-        population: 750000000,
-        adaptations: {
-          dateFormat: 'DD/MM/YYYY',
-          timeFormat: '24-hour',
-          currency: 'EUR, GBP, CHF',
-          weekStart: 'Monday',
-          numberFormat: '1.234,56',
-          colorPreferences: ['Blue', 'Green', 'Purple'],
-          communicationStyle: 'Formal',
-          relationshipValues: ['Commitment', 'Tradition', 'Respect'],
-          culturalNorms: ['Privacy rights', 'Work-life balance', 'Cultural diversity']
-        },
-        localizationScore: 96,
-        userSatisfaction: 4.7,
-        adoptionRate: 84.6
+        name: 'Asian Collectivistic Framework',
+        description: 'Emphasis on group harmony, hierarchical respect, and family involvement',
+        regions: ['East Asia', 'Southeast Asia', 'South Asia'],
+        characteristics: [
+          'Indirect communication style',
+          'Group harmony priority',
+          'Hierarchical respect',
+          'Face-saving importance',
+          'Collective decision making'
+        ],
+        relationshipPatterns: [
+          'Family involvement in relationships',
+          'Long-term commitment focus',
+          'Harmony over conflict',
+          'Respect for elder guidance'
+        ],
+        adaptationStrategies: [
+          'Include family perspectives',
+          'Emphasize harmony building',
+          'Respect hierarchical structures',
+          'Provide group-based solutions'
+        ],
+        implementationScore: 89.2,
+        userSatisfaction: 91.4,
+        culturalAccuracy: 93.8
       },
       {
         id: 3,
-        region: 'East Asia',
-        countries: ['CN', 'JP', 'KR', 'TW', 'HK', 'SG'],
-        population: 1600000000,
-        adaptations: {
-          dateFormat: 'YYYY/MM/DD',
-          timeFormat: '24-hour',
-          currency: 'CNY, JPY, KRW',
-          weekStart: 'Monday',
-          numberFormat: '1,234.56',
-          colorPreferences: ['Red', 'Gold', 'Blue'],
-          communicationStyle: 'Indirect',
-          relationshipValues: ['Harmony', 'Family', 'Respect'],
-          culturalNorms: ['Collective harmony', 'Respect for elders', 'Face-saving']
-        },
-        localizationScore: 94,
-        userSatisfaction: 4.6,
-        adoptionRate: 91.2
-      },
-      {
-        id: 4,
-        region: 'South Asia',
-        countries: ['IN', 'PK', 'BD', 'LK', 'NP', 'BT'],
-        population: 2000000000,
-        adaptations: {
-          dateFormat: 'DD/MM/YYYY',
-          timeFormat: '12-hour',
-          currency: 'INR, PKR, BDT',
-          weekStart: 'Monday',
-          numberFormat: '1,23,456.78',
-          colorPreferences: ['Orange', 'Red', 'Yellow'],
-          communicationStyle: 'Respectful',
-          relationshipValues: ['Family', 'Tradition', 'Spirituality'],
-          culturalNorms: ['Joint family system', 'Arranged marriages', 'Religious diversity']
-        },
-        localizationScore: 92,
-        userSatisfaction: 4.5,
-        adoptionRate: 88.7
-      },
-      {
-        id: 5,
-        region: 'Middle East & North Africa',
-        countries: ['SA', 'AE', 'EG', 'TR', 'IR', 'MA', 'DZ'],
-        population: 500000000,
-        adaptations: {
-          dateFormat: 'DD/MM/YYYY',
-          timeFormat: '12-hour',
-          currency: 'SAR, AED, EGP',
-          weekStart: 'Saturday',
-          numberFormat: '1,234.56',
-          colorPreferences: ['Green', 'Blue', 'Gold'],
-          communicationStyle: 'Formal',
-          relationshipValues: ['Honor', 'Family', 'Tradition'],
-          culturalNorms: ['Islamic values', 'Extended family', 'Hospitality']
-        },
-        localizationScore: 89,
-        userSatisfaction: 4.4,
-        adoptionRate: 82.1
-      },
-      {
-        id: 6,
-        region: 'Latin America',
-        countries: ['BR', 'AR', 'CO', 'PE', 'CL', 'VE', 'EC'],
-        population: 650000000,
-        adaptations: {
-          dateFormat: 'DD/MM/YYYY',
-          timeFormat: '24-hour',
-          currency: 'BRL, ARS, COP',
-          weekStart: 'Monday',
-          numberFormat: '1.234,56',
-          colorPreferences: ['Yellow', 'Green', 'Blue'],
-          communicationStyle: 'Warm',
-          relationshipValues: ['Passion', 'Family', 'Celebration'],
-          culturalNorms: ['Family closeness', 'Social gatherings', 'Emotional expression']
-        },
-        localizationScore: 95,
-        userSatisfaction: 4.7,
-        adoptionRate: 86.4
-      },
-      {
-        id: 7,
-        region: 'Sub-Saharan Africa',
-        countries: ['NG', 'ZA', 'KE', 'GH', 'UG', 'TZ', 'ET'],
-        population: 1200000000,
-        adaptations: {
-          dateFormat: 'DD/MM/YYYY',
-          timeFormat: '12-hour',
-          currency: 'NGN, ZAR, KES',
-          weekStart: 'Monday',
-          numberFormat: '1,234.56',
-          colorPreferences: ['Green', 'Yellow', 'Red'],
-          communicationStyle: 'Community-oriented',
-          relationshipValues: ['Community', 'Respect', 'Ubuntu'],
-          culturalNorms: ['Community support', 'Oral traditions', 'Extended family']
-        },
-        localizationScore: 87,
-        userSatisfaction: 4.3,
-        adoptionRate: 79.8
-      },
-      {
-        id: 8,
-        region: 'Oceania',
-        countries: ['AU', 'NZ', 'FJ', 'PG', 'SB', 'VU'],
-        population: 50000000,
-        adaptations: {
-          dateFormat: 'DD/MM/YYYY',
-          timeFormat: '12-hour',
-          currency: 'AUD, NZD, FJD',
-          weekStart: 'Monday',
-          numberFormat: '1,234.56',
-          colorPreferences: ['Blue', 'Green', 'Gold'],
-          communicationStyle: 'Casual',
-          relationshipValues: ['Equality', 'Mateship', 'Fair dinkum'],
-          culturalNorms: ['Egalitarianism', 'Outdoor lifestyle', 'Multiculturalism']
-        },
-        localizationScore: 97,
-        userSatisfaction: 4.8,
-        adoptionRate: 89.5
+        name: 'Latin Expressive Framework',
+        description: 'Warm personal relationships, emotional expressiveness, and family-centered values',
+        regions: ['Latin America', 'Southern Europe'],
+        characteristics: [
+          'Warm communication style',
+          'Emotional expressiveness',
+          'Family-centered values',
+          'Social gathering importance',
+          'Personal relationship focus'
+        ],
+        relationshipPatterns: [
+          'Passionate relationship expression',
+          'Extended family involvement',
+          'Social celebration importance',
+          'Emotional openness valued'
+        ],
+        adaptationStrategies: [
+          'Encourage emotional expression',
+          'Include family dynamics',
+          'Celebrate relationship milestones',
+          'Provide warm, personal guidance'
+        ],
+        implementationScore: 85.6,
+        userSatisfaction: 88.9,
+        culturalAccuracy: 90.2
       }
-    ];
-    setCulturalAdaptations(adaptations);
-  }, []);
-
-  // Regionalization Metrics
-  useEffect(() => {
-    const metrics = {
-      globalCoverage: {
-        languagesSupported: 12,
-        regionsAdapted: 8,
-        countriesSupported: 67,
-        populationCoverage: 85.7,
-        translationAccuracy: 95.3,
-        culturalRelevance: 92.8
+    ],
+    localizationMetrics: {
+      languageAccuracy: [
+        { language: 'English', accuracy: 99.2, coverage: 100 },
+        { language: 'Spanish', accuracy: 96.8, coverage: 95 },
+        { language: 'French', accuracy: 94.3, coverage: 90 },
+        { language: 'German', accuracy: 93.7, coverage: 88 },
+        { language: 'Japanese', accuracy: 91.2, coverage: 85 },
+        { language: 'Korean', accuracy: 89.6, coverage: 82 },
+        { language: 'Portuguese', accuracy: 87.4, coverage: 78 },
+        { language: 'Italian', accuracy: 86.1, coverage: 75 }
+      ],
+      culturalAdaptation: [
+        { framework: 'Western Individualistic', adaptation: 96.3, satisfaction: 94.7 },
+        { framework: 'Asian Collectivistic', adaptation: 89.2, satisfaction: 91.4 },
+        { framework: 'Latin Expressive', adaptation: 85.6, satisfaction: 88.9 },
+        { framework: 'European Formal', adaptation: 93.7, satisfaction: 92.1 },
+        { framework: 'Middle Eastern Traditional', adaptation: 78.9, satisfaction: 82.3 }
+      ],
+      marketPenetration: [
+        { region: 'North America', penetration: 78.4, growth: 12.3 },
+        { region: 'Europe', penetration: 67.2, growth: 18.7 },
+        { region: 'Asia-Pacific', penetration: 34.8, growth: 34.2 },
+        { region: 'Latin America', penetration: 12.3, growth: 45.6 },
+        { region: 'Middle East & Africa', penetration: 5.7, growth: 67.8 }
+      ]
+    },
+    adaptationStrategies: [
+      {
+        id: 1,
+        strategy: 'Cultural Communication Adaptation',
+        description: 'Adapt communication styles to match cultural preferences',
+        regions: ['All Regions'],
+        implementation: [
+          'Direct vs. indirect communication detection',
+          'Cultural context awareness',
+          'Appropriate formality levels',
+          'Non-verbal communication cues'
+        ],
+        effectiveness: 94.2,
+        userFeedback: 'Highly effective in improving cross-cultural understanding'
       },
-      localizationQuality: {
-        translationQuality: 94.7,
-        culturalAdaptation: 91.6,
-        userExperience: 93.2,
-        technicalImplementation: 96.8,
-        contentRelevance: 89.4,
-        accessibilityCompliance: 97.1
+      {
+        id: 2,
+        strategy: 'Family Involvement Customization',
+        description: 'Adjust family involvement based on cultural norms',
+        regions: ['Asia-Pacific', 'Latin America', 'Middle East'],
+        implementation: [
+          'Family consultation features',
+          'Extended family relationship mapping',
+          'Cultural ceremony integration',
+          'Multi-generational guidance'
+        ],
+        effectiveness: 91.7,
+        userFeedback: 'Significantly improves relationship acceptance and success'
       },
-      userEngagement: {
-        globalUserSatisfaction: 4.6,
-        localizedContentEngagement: 78.9,
-        crossCulturalInteraction: 67.3,
-        languagePreferenceAdherence: 94.2,
-        culturalSensitivityScore: 88.7,
-        inclusivityIndex: 91.5
-      },
-      businessImpact: {
-        marketPenetration: 73.4,
-        revenueFromInternational: 42.8,
-        userAcquisitionInternational: 56.7,
-        retentionRateInternational: 81.3,
-        conversionRateInternational: 34.9,
-        brandRecognitionGlobal: 68.2
+      {
+        id: 3,
+        strategy: 'Religious and Traditional Considerations',
+        description: 'Incorporate religious and traditional values into relationship guidance',
+        regions: ['Middle East', 'Asia-Pacific', 'Latin America'],
+        implementation: [
+          'Religious compatibility assessment',
+          'Traditional ceremony guidance',
+          'Cultural value alignment',
+          'Respectful practice integration'
+        ],
+        effectiveness: 88.9,
+        userFeedback: 'Essential for cultural authenticity and user trust'
       }
-    };
-    setRegionalizationMetrics(metrics);
-  }, []);
+    ]
+  });
 
-  // Localization Data
-  useEffect(() => {
-    const data = {
-      totalUsers: 847293,
-      internationalUsers: 523847,
-      languagesActive: 12,
-      regionsActive: 8,
-      translationStrings: 47382,
-      culturalAdaptations: 156,
-      localizationAccuracy: 95.3,
-      globalSatisfaction: 4.6
-    };
-    setLocalizationData(data);
-  }, []);
+  const tabs = [
+    { id: 'overview', label: 'Global Overview', icon: Globe },
+    { id: 'regions', label: 'Regional Localization', icon: MapPin },
+    { id: 'cultures', label: 'Cultural Frameworks', icon: Users },
+    { id: 'languages', label: 'Language Support', icon: Languages },
+    { id: 'adaptation', label: 'Cultural Adaptation', icon: Heart },
+    { id: 'analytics', label: 'Localization Analytics', icon: BarChart3 }
+  ];
 
-  // Translation Quality Calculation
-  const calculateTranslationQuality = useCallback((language) => {
-    const { completeness, translationQuality, culturalAdaptations } = language;
-    
-    // Weighted quality score
-    const qualityScore = (
-      (completeness * 0.4) +
-      (translationQuality * 0.4) +
-      (Math.min(100, culturalAdaptations * 3) * 0.2)
-    );
-    
-    return Math.round(qualityScore * 100) / 100;
-  }, []);
+  const statusColors = {
+    complete: 'bg-green-100 text-green-800',
+    active: 'bg-blue-100 text-blue-800',
+    'in-progress': 'bg-yellow-100 text-yellow-800',
+    planned: 'bg-purple-100 text-purple-800',
+    research: 'bg-gray-100 text-gray-800'
+  };
 
-  // Cultural Adaptation Score Calculation
-  const calculateCulturalScore = useCallback((adaptation) => {
-    const { localizationScore, userSatisfaction, adoptionRate } = adaptation;
-    
-    // Weighted cultural score
-    const culturalScore = (
-      (localizationScore * 0.4) +
-      ((userSatisfaction / 5) * 100 * 0.3) +
-      (adoptionRate * 0.3)
-    );
-    
-    return Math.round(culturalScore * 100) / 100;
-  }, []);
+  const priorityColors = {
+    high: 'bg-red-100 text-red-800',
+    medium: 'bg-yellow-100 text-yellow-800',
+    low: 'bg-green-100 text-green-800'
+  };
 
-  const renderLanguageSupport = () => (
-    <Box>
-      <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-        <LanguageIcon color="primary" />
-        Multi-Language Support & Translation
-      </Typography>
-      
-      <Alert severity="success" sx={{ mb: 3 }}>
-        🌍 Comprehensive language support with {supportedLanguages.length} languages covering {(supportedLanguages.reduce((sum, lang) => sum + lang.speakers, 0) / 1000000000).toFixed(1)}B+ speakers globally. 
-        Average translation quality: {(supportedLanguages.reduce((sum, lang) => sum + lang.translationQuality, 0) / supportedLanguages.length).toFixed(1)}%
-      </Alert>
+  const getAccuracyColor = (accuracy) => {
+    if (accuracy >= 95) return 'text-green-600';
+    if (accuracy >= 90) return 'text-yellow-600';
+    return 'text-red-600';
+  };
 
-      {/* Language Overview */}
-      <Card sx={{ 
-        mb: 4, 
-        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', 
-        color: 'white' 
-      }}>
-        <CardContent sx={{ textAlign: 'center', py: 4 }}>
-          <Avatar sx={{ width: 100, height: 100, bgcolor: 'rgba(255,255,255,0.2)', mx: 'auto', mb: 3 }}>
-            <PublicIcon sx={{ fontSize: 50 }} />
-          </Avatar>
-          <Typography variant="h2" sx={{ fontWeight: 700, mb: 2 }}>
-            {supportedLanguages.length}
-          </Typography>
-          <Typography variant="h5" sx={{ opacity: 0.9, mb: 1 }}>
-            Supported Languages
-          </Typography>
-          <Typography variant="body1" sx={{ opacity: 0.8 }}>
-            Global multilingual relationship platform
-          </Typography>
-          <Box sx={{ display: 'flex', justifyContent: 'center', gap: 4, mt: 3 }}>
-            <Box sx={{ textAlign: 'center' }}>
-              <Typography variant="h6" sx={{ fontWeight: 700 }}>
-                {(supportedLanguages.reduce((sum, lang) => sum + lang.speakers, 0) / 1000000000).toFixed(1)}B
-              </Typography>
-              <Typography variant="body2" sx={{ opacity: 0.8 }}>
-                Speakers
-              </Typography>
-            </Box>
-            <Box sx={{ textAlign: 'center' }}>
-              <Typography variant="h6" sx={{ fontWeight: 700 }}>
-                {(supportedLanguages.reduce((sum, lang) => sum + lang.completeness, 0) / supportedLanguages.length).toFixed(1)}%
-              </Typography>
-              <Typography variant="body2" sx={{ opacity: 0.8 }}>
-                Avg Completeness
-              </Typography>
-            </Box>
-            <Box sx={{ textAlign: 'center' }}>
-              <Typography variant="h6" sx={{ fontWeight: 700 }}>
-                {supportedLanguages.reduce((sum, lang) => sum + lang.dialects.length, 0)}
-              </Typography>
-              <Typography variant="body2" sx={{ opacity: 0.8 }}>
-                Dialects
-              </Typography>
-            </Box>
-          </Box>
-        </CardContent>
-      </Card>
+  const renderOverviewTab = () => (
+    <div className="space-y-6">
+      {/* Global Metrics Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-gray-600">Global Regions</p>
+              <p className="text-2xl font-bold text-gray-900">{localizationData.overview.totalRegions}</p>
+            </div>
+            <div className="p-3 bg-blue-50 rounded-lg">
+              <Globe className="h-6 w-6 text-blue-600" />
+            </div>
+          </div>
+          <div className="mt-4 flex items-center">
+            <ArrowUp className="h-4 w-4 text-green-500" />
+            <span className="text-sm text-green-600 ml-1">+5 new regions this quarter</span>
+          </div>
+        </div>
 
-      {/* Language Statistics */}
-      <Typography variant="h6" gutterBottom>
-        Language Support Statistics
-      </Typography>
-      
-      <Grid container spacing={3} sx={{ mb: 4 }}>
-        <Grid item xs={12} md={3}>
-          <Card variant="outlined">
-            <CardContent sx={{ textAlign: 'center' }}>
-              <Typography variant="h4" sx={{ fontWeight: 700, color: 'primary.main' }}>
-                {supportedLanguages.length}
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                Total Languages
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-        
-        <Grid item xs={12} md={3}>
-          <Card variant="outlined">
-            <CardContent sx={{ textAlign: 'center' }}>
-              <Typography variant="h4" sx={{ fontWeight: 700, color: 'success.main' }}>
-                {(supportedLanguages.reduce((sum, lang) => sum + lang.completeness, 0) / supportedLanguages.length).toFixed(1)}%
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                Avg Completeness
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-        
-        <Grid item xs={12} md={3}>
-          <Card variant="outlined">
-            <CardContent sx={{ textAlign: 'center' }}>
-              <Typography variant="h4" sx={{ fontWeight: 700, color: 'warning.main' }}>
-                {(supportedLanguages.reduce((sum, lang) => sum + lang.translationQuality, 0) / supportedLanguages.length).toFixed(1)}%
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                Translation Quality
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-        
-        <Grid item xs={12} md={3}>
-          <Card variant="outlined">
-            <CardContent sx={{ textAlign: 'center' }}>
-              <Typography variant="h4" sx={{ fontWeight: 700, color: 'info.main' }}>
-                {supportedLanguages.reduce((sum, lang) => sum + lang.localizers, 0)}
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                Total Localizers
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid>
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-gray-600">Supported Languages</p>
+              <p className="text-2xl font-bold text-gray-900">{localizationData.overview.supportedLanguages}</p>
+            </div>
+            <div className="p-3 bg-green-50 rounded-lg">
+              <Languages className="h-6 w-6 text-green-600" />
+            </div>
+          </div>
+          <div className="mt-4 flex items-center">
+            <ArrowUp className="h-4 w-4 text-green-500" />
+            <span className="text-sm text-green-600 ml-1">+3 languages added</span>
+          </div>
+        </div>
 
-      {/* Language Details */}
-      <Typography variant="h6" gutterBottom>
-        Language Support Details
-      </Typography>
-      
-      <Grid container spacing={3}>
-        {supportedLanguages.map((language) => (
-          <Grid item xs={12} md={6} lg={4} key={language.id}>
-            <Card variant="outlined" sx={{ height: '100%' }}>
-              <CardContent>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                  <Avatar sx={{ 
-                    bgcolor: language.completeness >= 95 ? 'success.main' :
-                            language.completeness >= 90 ? 'primary.main' :
-                            'warning.main',
-                    width: 48,
-                    height: 48,
-                    fontSize: '1.2rem',
-                    fontWeight: 700
-                  }}>
-                    {language.code.toUpperCase()}
-                  </Avatar>
-                  <Box sx={{ flex: 1 }}>
-                    <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                      {language.name}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      {language.nativeName} • {language.region}
-                    </Typography>
-                  </Box>
-                </Box>
-                
-                <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
-                  <Chip 
-                    label={language.status} 
-                    size="small" 
-                    color={language.status === 'complete' ? 'success' : 'primary'} 
-                  />
-                  <Chip 
-                    label={`${language.completeness}%`} 
-                    size="small" 
-                    color={language.completeness >= 95 ? 'success' : 'warning'} 
-                  />
-                </Box>
-                
-                <LinearProgress
-                  variant="determinate"
-                  value={language.completeness}
-                  sx={{ 
-                    height: 8, 
-                    borderRadius: 4, 
-                    mb: 2,
-                    '& .MuiLinearProgress-bar': {
-                      backgroundColor: language.completeness >= 95 ? 'success.main' :
-                                     language.completeness >= 90 ? 'primary.main' : 'warning.main'
-                    }
-                  }}
-                />
-                
-                <Grid container spacing={2} sx={{ mb: 2 }}>
-                  <Grid item xs={6}>
-                    <Typography variant="caption" color="text.secondary">
-                      Speakers: {(language.speakers / 1000000).toFixed(0)}M
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={6}>
-                    <Typography variant="caption" color="text.secondary">
-                      Quality: {language.translationQuality}%
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={6}>
-                    <Typography variant="caption" color="text.secondary">
-                      Dialects: {language.dialects.length}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={6}>
-                    <Typography variant="caption" color="text.secondary">
-                      Adaptations: {language.culturalAdaptations}
-                    </Typography>
-                  </Grid>
-                </Grid>
-                
-                <Box sx={{ mb: 2 }}>
-                  <Typography variant="subtitle2" gutterBottom sx={{ fontWeight: 600 }}>
-                    Regional Dialects:
-                  </Typography>
-                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                    {language.dialects.slice(0, 3).map((dialect, index) => (
-                      <Chip 
-                        key={index} 
-                        label={dialect} 
-                        size="small" 
-                        variant="outlined" 
-                      />
-                    ))}
-                    {language.dialects.length > 3 && (
-                      <Chip 
-                        label={`+${language.dialects.length - 3}`} 
-                        size="small" 
-                        variant="outlined" 
-                        color="primary"
-                      />
-                    )}
-                  </Box>
-                </Box>
-                
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <Typography variant="caption" color="text.secondary">
-                    Updated: {new Date(language.lastUpdated).toLocaleDateString()}
-                  </Typography>
-                  <Typography variant="caption" color="text.secondary">
-                    {language.localizers} localizers
-                  </Typography>
-                </Box>
-              </CardContent>
-            </Card>
-          </Grid>
-        ))}
-      </Grid>
-    </Box>
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-gray-600">Cultural Accuracy</p>
+              <p className={`text-2xl font-bold ${getAccuracyColor(localizationData.overview.culturalAccuracy)}`}>
+                {localizationData.overview.culturalAccuracy}%
+              </p>
+            </div>
+            <div className="p-3 bg-purple-50 rounded-lg">
+              <Heart className="h-6 w-6 text-purple-600" />
+            </div>
+          </div>
+          <div className="mt-4 flex items-center">
+            <ArrowUp className="h-4 w-4 text-green-500" />
+            <span className="text-sm text-green-600 ml-1">+2.3% improvement</span>
+          </div>
+        </div>
+
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-gray-600">Global Users</p>
+              <p className="text-2xl font-bold text-gray-900">{localizationData.overview.globalUsers.toLocaleString()}</p>
+            </div>
+            <div className="p-3 bg-yellow-50 rounded-lg">
+              <Users className="h-6 w-6 text-yellow-600" />
+            </div>
+          </div>
+          <div className="mt-4 flex items-center">
+            <ArrowUp className="h-4 w-4 text-green-500" />
+            <span className="text-sm text-green-600 ml-1">+23% global growth</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Global Expansion Map */}
+      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+        <div className="flex items-center justify-between mb-6">
+          <h3 className="text-lg font-semibold text-gray-900">Global Expansion Map</h3>
+          <Map className="h-5 w-5 text-gray-400" />
+        </div>
+        <div className="h-96 bg-gradient-to-br from-blue-50 to-purple-50 rounded-lg flex items-center justify-center">
+          <div className="text-center">
+            <Globe className="h-24 w-24 text-blue-400 mx-auto mb-4" />
+            <p className="text-lg font-medium text-gray-700 mb-2">Interactive Global Expansion Map</p>
+            <p className="text-gray-500">Visual representation of regional localization status and market penetration</p>
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mt-6">
+              {localizationData.regions.map((region) => (
+                <div key={region.id} className="p-3 bg-white rounded-lg shadow-sm">
+                  <div className="flex items-center space-x-2 mb-2">
+                    <Flag className="h-4 w-4 text-blue-600" />
+                    <span className="text-sm font-medium text-gray-900">{region.name}</span>
+                  </div>
+                  <div className="space-y-1">
+                    <div className="flex justify-between">
+                      <span className="text-xs text-gray-500">Users:</span>
+                      <span className="text-xs text-gray-900">{region.users.toLocaleString()}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-xs text-gray-500">Penetration:</span>
+                      <span className="text-xs text-gray-900">{region.marketPenetration}%</span>
+                    </div>
+                    <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${statusColors[region.localizationStatus]}`}>
+                      {region.localizationStatus}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Localization Performance Dashboard */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Cultural Adaptation Scores */}
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+          <div className="flex items-center justify-between mb-6">
+            <h3 className="text-lg font-semibold text-gray-900">Cultural Adaptation Scores</h3>
+            <Heart className="h-5 w-5 text-gray-400" />
+          </div>
+          <div className="space-y-4">
+            {localizationData.localizationMetrics.culturalAdaptation.map((item, index) => (
+              <div key={index} className="flex items-center justify-between p-3 rounded-lg bg-gray-50">
+                <div>
+                  <p className="font-medium text-gray-900">{item.framework}</p>
+                  <p className="text-sm text-gray-500">Satisfaction: {item.satisfaction}%</p>
+                </div>
+                <div className="text-right">
+                  <p className={`text-lg font-bold ${getAccuracyColor(item.adaptation)}`}>{item.adaptation}%</p>
+                  <p className="text-xs text-gray-500">Adaptation Score</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Language Support Status */}
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+          <div className="flex items-center justify-between mb-6">
+            <h3 className="text-lg font-semibold text-gray-900">Language Support Status</h3>
+            <Languages className="h-5 w-5 text-gray-400" />
+          </div>
+          <div className="space-y-4">
+            {localizationData.localizationMetrics.languageAccuracy.slice(0, 5).map((item, index) => (
+              <div key={index} className="flex items-center justify-between p-3 rounded-lg bg-gray-50">
+                <div className="flex items-center space-x-3">
+                  <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                    <span className="text-xs font-medium text-blue-600">{item.language.slice(0, 2).toUpperCase()}</span>
+                  </div>
+                  <div>
+                    <p className="font-medium text-gray-900">{item.language}</p>
+                    <p className="text-sm text-gray-500">Coverage: {item.coverage}%</p>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <p className={`text-sm font-medium ${getAccuracyColor(item.accuracy)}`}>{item.accuracy}%</p>
+                  <p className="text-xs text-gray-500">Accuracy</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Market Penetration Analysis */}
+      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+        <div className="flex items-center justify-between mb-6">
+          <h3 className="text-lg font-semibold text-gray-900">Market Penetration Analysis</h3>
+          <TrendingUp className="h-5 w-5 text-gray-400" />
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+          {localizationData.localizationMetrics.marketPenetration.map((item, index) => (
+            <div key={index} className="p-4 border border-gray-200 rounded-lg">
+              <div className="flex items-center justify-between mb-3">
+                <h4 className="font-medium text-gray-900">{item.region}</h4>
+                <Compass className="h-4 w-4 text-blue-600" />
+              </div>
+              <div className="space-y-2">
+                <div>
+                  <div className="flex justify-between mb-1">
+                    <span className="text-xs text-gray-500">Penetration</span>
+                    <span className="text-xs text-gray-900">{item.penetration}%</span>
+                  </div>
+                  <div className="w-full bg-gray-200 rounded-full h-2">
+                    <div 
+                      className="bg-blue-600 h-2 rounded-full" 
+                      style={{ width: `${item.penetration}%` }}
+                    ></div>
+                  </div>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-xs text-gray-500">Growth</span>
+                  <div className="flex items-center space-x-1">
+                    <ArrowUp className="h-3 w-3 text-green-500" />
+                    <span className="text-xs text-green-600">+{item.growth}%</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Global Expansion Roadmap */}
+      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+        <div className="flex items-center justify-between mb-6">
+          <h3 className="text-lg font-semibold text-gray-900">Global Expansion Roadmap</h3>
+          <Navigation className="h-5 w-5 text-gray-400" />
+        </div>
+        <div className="space-y-4">
+          {[
+            { phase: 'Q1 2025', focus: 'Complete Asia-Pacific Localization', status: 'active', progress: 67 },
+            { phase: 'Q2 2025', focus: 'Launch Latin America Expansion', status: 'planned', progress: 23 },
+            { phase: 'Q3 2025', focus: 'Middle East & Africa Research', status: 'planned', progress: 12 },
+            { phase: 'Q4 2025', focus: 'Advanced Cultural AI Integration', status: 'future', progress: 5 }
+          ].map((item, index) => (
+            <div key={index} className="flex items-center justify-between p-4 rounded-lg bg-gray-50">
+              <div className="flex items-center space-x-4">
+                <div className={`w-3 h-3 rounded-full ${
+                  item.status === 'active' ? 'bg-blue-500' :
+                  item.status === 'planned' ? 'bg-yellow-500' : 'bg-gray-300'
+                }`}></div>
+                <div>
+                  <p className="font-medium text-gray-900">{item.phase}</p>
+                  <p className="text-sm text-gray-600">{item.focus}</p>
+                </div>
+              </div>
+              <div className="text-right">
+                <p className="text-sm font-medium text-gray-900">{item.progress}%</p>
+                <div className="w-24 bg-gray-200 rounded-full h-2 mt-1">
+                  <div 
+                    className="bg-blue-600 h-2 rounded-full" 
+                    style={{ width: `${item.progress}%` }}
+                  ></div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
   );
 
-  const renderCulturalAdaptation = () => (
-    <Box>
-      <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-        <CultureIcon color="primary" />
-        Cultural Adaptation & Regional Customization
-      </Typography>
-      
-      <Alert severity="info" sx={{ mb: 3 }}>
-        🌏 Comprehensive cultural adaptation across {culturalAdaptations.length} major regions covering {(culturalAdaptations.reduce((sum, region) => sum + region.population, 0) / 1000000000).toFixed(1)}B+ people. 
-        Average cultural relevance score: {(culturalAdaptations.reduce((sum, region) => sum + region.localizationScore, 0) / culturalAdaptations.length).toFixed(1)}%
-      </Alert>
+  const renderRegionsTab = () => (
+    <div className="space-y-6">
+      {/* Header with Controls */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-4 sm:space-y-0">
+        <div>
+          <h2 className="text-2xl font-bold text-gray-900">Regional Localization</h2>
+          <p className="text-gray-600">Comprehensive regional adaptation and market penetration analysis</p>
+        </div>
+        <div className="flex space-x-3">
+          <select 
+            value={localizationFilter} 
+            onChange={(e) => setLocalizationFilter(e.target.value)}
+            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+          >
+            <option value="all">All Regions</option>
+            <option value="complete">Complete</option>
+            <option value="active">Active</option>
+            <option value="planned">Planned</option>
+          </select>
+          <button className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700">
+            <Plus className="h-4 w-4 mr-2" />
+            New Region
+          </button>
+        </div>
+      </div>
 
-      {/* Cultural Adaptation Overview */}
-      <Grid container spacing={3} sx={{ mb: 4 }}>
-        <Grid item xs={12} md={3}>
-          <Card variant="outlined">
-            <CardContent sx={{ textAlign: 'center' }}>
-              <Typography variant="h4" sx={{ fontWeight: 700, color: 'primary.main' }}>
-                {culturalAdaptations.length}
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                Cultural Regions
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-        
-        <Grid item xs={12} md={3}>
-          <Card variant="outlined">
-            <CardContent sx={{ textAlign: 'center' }}>
-              <Typography variant="h4" sx={{ fontWeight: 700, color: 'success.main' }}>
-                {(culturalAdaptations.reduce((sum, region) => sum + region.population, 0) / 1000000000).toFixed(1)}B
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                Population Coverage
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-        
-        <Grid item xs={12} md={3}>
-          <Card variant="outlined">
-            <CardContent sx={{ textAlign: 'center' }}>
-              <Typography variant="h4" sx={{ fontWeight: 700, color: 'warning.main' }}>
-                {(culturalAdaptations.reduce((sum, region) => sum + region.userSatisfaction, 0) / culturalAdaptations.length).toFixed(1)}/5
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                Avg Satisfaction
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-        
-        <Grid item xs={12} md={3}>
-          <Card variant="outlined">
-            <CardContent sx={{ textAlign: 'center' }}>
-              <Typography variant="h4" sx={{ fontWeight: 700, color: 'info.main' }}>
-                {(culturalAdaptations.reduce((sum, region) => sum + region.adoptionRate, 0) / culturalAdaptations.length).toFixed(1)}%
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                Avg Adoption Rate
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid>
+      {/* Regions Grid */}
+      <div className="grid grid-cols-1 gap-6">
+        {localizationData.regions.map((region) => (
+          <div key={region.id} className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+            {/* Region Header */}
+            <div className="flex items-start justify-between mb-4">
+              <div className="flex items-center space-x-4">
+                <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                  <Flag className="h-6 w-6 text-blue-600" />
+                </div>
+                <div>
+                  <div className="flex items-center space-x-3 mb-1">
+                    <h3 className="text-lg font-semibold text-gray-900">{region.name}</h3>
+                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${statusColors[region.localizationStatus]}`}>
+                      {region.localizationStatus}
+                    </span>
+                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${priorityColors[region.priority]}`}>
+                      {region.priority} priority
+                    </span>
+                  </div>
+                  <p className="text-sm text-gray-600">{region.countries.join(', ')}</p>
+                  <div className="flex items-center space-x-4 mt-2">
+                    <span className="text-xs text-gray-500">Languages: {region.languages.length}</span>
+                    <span className="text-xs text-gray-500">Updated: {new Date(region.lastUpdated).toLocaleDateString()}</span>
+                  </div>
+                </div>
+              </div>
+              <button className="p-1 text-gray-400 hover:text-gray-600">
+                <MoreHorizontal className="h-4 w-4" />
+              </button>
+            </div>
 
-      {/* Regional Adaptations */}
-      <Typography variant="h6" gutterBottom>
-        Regional Cultural Adaptations
-      </Typography>
-      
-      <Grid container spacing={3}>
-        {culturalAdaptations.map((region) => (
-          <Grid item xs={12} md={6} key={region.id}>
-            <Card variant="outlined" sx={{ height: '100%' }}>
-              <CardContent>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                  <Avatar sx={{ 
-                    bgcolor: region.localizationScore >= 95 ? 'success.main' :
-                            region.localizationScore >= 90 ? 'primary.main' :
-                            'warning.main',
-                    width: 56,
-                    height: 56
-                  }}>
-                    <PublicIcon sx={{ fontSize: 30 }} />
-                  </Avatar>
-                  <Box sx={{ flex: 1 }}>
-                    <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                      {region.region}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      {(region.population / 1000000).toFixed(0)}M population • {region.countries.length} countries
-                    </Typography>
-                  </Box>
-                </Box>
-                
-                <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
-                  <Chip 
-                    label={`${region.localizationScore}% localized`} 
-                    size="small" 
-                    color="primary" 
-                  />
-                  <Chip 
-                    label={`${region.userSatisfaction}/5 satisfaction`} 
-                    size="small" 
-                    color="success" 
-                  />
-                </Box>
-                
-                <LinearProgress
-                  variant="determinate"
-                  value={region.localizationScore}
-                  sx={{ 
-                    height: 6, 
-                    borderRadius: 3, 
-                    mb: 2,
-                    '& .MuiLinearProgress-bar': {
-                      backgroundColor: region.localizationScore >= 95 ? 'success.main' :
-                                     region.localizationScore >= 90 ? 'primary.main' : 'warning.main'
-                    }
-                  }}
-                />
-                
-                <Accordion>
-                  <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                    <Typography variant="subtitle2">Cultural Adaptations</Typography>
-                  </AccordionSummary>
-                  <AccordionDetails>
-                    <Grid container spacing={1}>
-                      {Object.entries(region.adaptations).map(([key, value], index) => (
-                        <Grid item xs={12} key={index}>
-                          <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                            <Typography variant="caption" color="text.secondary">
-                              {key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}:
-                            </Typography>
-                            <Typography variant="caption">
-                              {Array.isArray(value) ? value.slice(0, 2).join(', ') + (value.length > 2 ? '...' : '') : value}
-                            </Typography>
-                          </Box>
-                        </Grid>
+            {/* Region Metrics */}
+            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 mb-4">
+              <div>
+                <p className="text-xs text-gray-500">Users</p>
+                <p className="text-lg font-semibold text-gray-900">{region.users.toLocaleString()}</p>
+              </div>
+              <div>
+                <p className="text-xs text-gray-500">Adaptation Score</p>
+                <p className={`text-lg font-semibold ${getAccuracyColor(region.adaptationScore)}`}>{region.adaptationScore}%</p>
+              </div>
+              <div>
+                <p className="text-xs text-gray-500">Market Penetration</p>
+                <p className="text-lg font-semibold text-blue-600">{region.marketPenetration}%</p>
+              </div>
+              <div>
+                <p className="text-xs text-gray-500">Revenue Share</p>
+                <p className="text-lg font-semibold text-green-600">{region.revenueContribution}%</p>
+              </div>
+              <div>
+                <p className="text-xs text-gray-500">Frameworks</p>
+                <p className="text-lg font-semibold text-purple-600">{region.culturalFrameworks}</p>
+              </div>
+              <div>
+                <p className="text-xs text-gray-500">Languages</p>
+                <p className="text-lg font-semibold text-yellow-600">{region.languages.length}</p>
+              </div>
+            </div>
+
+            {/* Languages and Cultures */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+              <div>
+                <p className="text-xs text-gray-500 mb-2">Supported Languages</p>
+                <div className="flex flex-wrap gap-2">
+                  {region.languages.map((language, index) => (
+                    <span key={index} className="inline-flex items-center px-2 py-1 bg-blue-50 text-blue-600 rounded text-xs">
+                      {language}
+                    </span>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <p className="text-xs text-gray-500 mb-2">Cultural Frameworks</p>
+                <div className="flex flex-wrap gap-2">
+                  {region.cultures.map((culture, index) => (
+                    <span key={index} className="inline-flex items-center px-2 py-1 bg-purple-50 text-purple-600 rounded text-xs">
+                      {culture}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Cultural Nuances */}
+            <div className="mb-4">
+              <p className="text-xs text-gray-500 mb-2">Cultural Nuances</p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                {region.culturalNuances.map((nuance, index) => (
+                  <div key={index} className="flex items-center space-x-2 text-sm text-gray-600">
+                    <div className="w-1.5 h-1.5 bg-gray-400 rounded-full"></div>
+                    <span>{nuance}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Compliance and Action Buttons */}
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-xs text-gray-500 mb-1">Compliance Standards</p>
+                <div className="flex flex-wrap gap-1">
+                  {region.compliance.map((standard, index) => (
+                    <span key={index} className="inline-flex items-center px-2 py-0.5 bg-green-50 text-green-600 rounded text-xs">
+                      {standard}
+                    </span>
+                  ))}
+                </div>
+              </div>
+              <div className="flex space-x-2">
+                <button 
+                  onClick={() => setSelectedRegion(region)}
+                  className="inline-flex items-center px-3 py-2 bg-blue-50 text-blue-600 rounded-lg text-sm font-medium hover:bg-blue-100"
+                >
+                  <Eye className="h-4 w-4 mr-1" />
+                  Details
+                </button>
+                <button className="inline-flex items-center px-3 py-2 bg-gray-50 text-gray-600 rounded-lg text-sm font-medium hover:bg-gray-100">
+                  <BarChart3 className="h-4 w-4 mr-1" />
+                  Analytics
+                </button>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Region Details Modal */}
+      {selectedRegion && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-xl shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="p-6 border-b border-gray-200">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-3">
+                  <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                    <Flag className="h-6 w-6 text-blue-600" />
+                  </div>
+                  <div>
+                    <h2 className="text-2xl font-bold text-gray-900">{selectedRegion.name}</h2>
+                    <p className="text-gray-600">{selectedRegion.countries.join(', ')}</p>
+                  </div>
+                </div>
+                <button 
+                  onClick={() => setSelectedRegion(null)}
+                  className="p-2 text-gray-400 hover:text-gray-600"
+                >
+                  <Minus className="h-6 w-6" />
+                </button>
+              </div>
+            </div>
+
+            <div className="p-6 space-y-6">
+              {/* Region Overview */}
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-3">Regional Overview</h3>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="bg-blue-50 rounded-lg p-4">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-sm font-medium text-blue-600">Total Users</p>
+                        <p className="text-2xl font-bold text-blue-900">{selectedRegion.users.toLocaleString()}</p>
+                      </div>
+                      <Users className="h-8 w-8 text-blue-600" />
+                    </div>
+                  </div>
+                  <div className="bg-green-50 rounded-lg p-4">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-sm font-medium text-green-600">Market Penetration</p>
+                        <p className="text-2xl font-bold text-green-900">{selectedRegion.marketPenetration}%</p>
+                      </div>
+                      <TrendingUp className="h-8 w-8 text-green-600" />
+                    </div>
+                  </div>
+                  <div className="bg-purple-50 rounded-lg p-4">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-sm font-medium text-purple-600">Adaptation Score</p>
+                        <p className="text-2xl font-bold text-purple-900">{selectedRegion.adaptationScore}%</p>
+                      </div>
+                      <Heart className="h-8 w-8 text-purple-600" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Cultural Details */}
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-3">Cultural Adaptation Details</h3>
+                <div className="space-y-4">
+                  <div>
+                    <h4 className="font-medium text-gray-900 mb-2">Cultural Nuances</h4>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {selectedRegion.culturalNuances.map((nuance, index) => (
+                        <div key={index} className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
+                          <CheckCircle className="h-4 w-4 text-green-500" />
+                          <span className="text-sm text-gray-700">{nuance}</span>
+                        </div>
                       ))}
-                    </Grid>
-                  </AccordionDetails>
-                </Accordion>
-                
-                <Box sx={{ mt: 2 }}>
-                  <Typography variant="subtitle2" gutterBottom sx={{ fontWeight: 600 }}>
-                    Countries:
-                  </Typography>
-                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                    {region.countries.slice(0, 4).map((country, index) => (
-                      <Chip 
-                        key={index} 
-                        label={country} 
-                        size="small" 
-                        variant="outlined" 
-                      />
-                    ))}
-                    {region.countries.length > 4 && (
-                      <Chip 
-                        label={`+${region.countries.length - 4}`} 
-                        size="small" 
-                        variant="outlined" 
-                        color="primary"
-                      />
-                    )}
-                  </Box>
-                </Box>
-              </CardContent>
-            </Card>
-          </Grid>
-        ))}
-      </Grid>
-    </Box>
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <h4 className="font-medium text-gray-900 mb-2">Supported Languages</h4>
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                      {selectedRegion.languages.map((language, index) => (
+                        <div key={index} className="p-3 border border-gray-200 rounded-lg text-center">
+                          <p className="font-medium text-gray-900">{language}</p>
+                          <p className="text-sm text-gray-500">Active</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
   );
 
-  const renderRegionalSettings = () => (
-    <Box>
-      <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-        <LocationOnIcon color="primary" />
-        Regional Settings & Localization Features
-      </Typography>
-      
-      <Alert severity="success" sx={{ mb: 3 }}>
-        ⚙️ Advanced regional settings with automatic detection and manual override options. 
-        Comprehensive localization covering date/time formats, currencies, cultural norms, and communication styles.
-      </Alert>
+  const renderCulturesTab = () => (
+    <div className="space-y-6">
+      <div className="flex justify-between items-center">
+        <div>
+          <h2 className="text-2xl font-bold text-gray-900">Cultural Frameworks</h2>
+          <p className="text-gray-600">Comprehensive cultural adaptation frameworks and implementation strategies</p>
+        </div>
+        <button className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700">
+          <Plus className="h-4 w-4 mr-2" />
+          New Framework
+        </button>
+      </div>
 
-      {/* Regional Settings Categories */}
-      <Grid container spacing={3} sx={{ mb: 4 }}>
-        <Grid item xs={12} md={4}>
-          <Card sx={{ background: 'linear-gradient(135deg, #4caf50 0%, #388e3c 100%)', color: 'white' }}>
-            <CardContent sx={{ textAlign: 'center' }}>
-              <ScheduleIcon sx={{ fontSize: 40, mb: 1 }} />
-              <Typography variant="h4" sx={{ fontWeight: 700 }}>
-                24/7
-              </Typography>
-              <Typography variant="body2" sx={{ opacity: 0.9 }}>
-                Timezone Support
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-        
-        <Grid item xs={12} md={4}>
-          <Card sx={{ background: 'linear-gradient(135deg, #2196f3 0%, #1976d2 100%)', color: 'white' }}>
-            <CardContent sx={{ textAlign: 'center' }}>
-              <CurrencyIcon sx={{ fontSize: 40, mb: 1 }} />
-              <Typography variant="h4" sx={{ fontWeight: 700 }}>
-                45+
-              </Typography>
-              <Typography variant="body2" sx={{ opacity: 0.9 }}>
-                Currencies Supported
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-        
-        <Grid item xs={12} md={4}>
-          <Card sx={{ background: 'linear-gradient(135deg, #ff9800 0%, #f57c00 100%)', color: 'white' }}>
-            <CardContent sx={{ textAlign: 'center' }}>
-              <CalendarIcon sx={{ fontSize: 40, mb: 1 }} />
-              <Typography variant="h4" sx={{ fontWeight: 700 }}>
-                12+
-              </Typography>
-              <Typography variant="body2" sx={{ opacity: 0.9 }}>
-                Calendar Systems
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid>
+      {/* Cultural Frameworks Grid */}
+      <div className="grid grid-cols-1 gap-6">
+        {localizationData.culturalFrameworks.map((framework) => (
+          <div key={framework.id} className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+            {/* Framework Header */}
+            <div className="flex items-start justify-between mb-4">
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">{framework.name}</h3>
+                <p className="text-gray-600 mb-3">{framework.description}</p>
+                <div className="flex flex-wrap gap-2">
+                  {framework.regions.map((region, index) => (
+                    <span key={index} className="inline-flex items-center px-2 py-1 bg-blue-50 text-blue-600 rounded text-xs">
+                      {region}
+                    </span>
+                  ))}
+                </div>
+              </div>
+              <div className="text-right">
+                <p className={`text-2xl font-bold ${getAccuracyColor(framework.implementationScore)}`}>
+                  {framework.implementationScore}%
+                </p>
+                <p className="text-sm text-gray-500">Implementation Score</p>
+              </div>
+            </div>
 
-      {/* Localization Features */}
-      <Typography variant="h6" gutterBottom>
-        Localization Features
-      </Typography>
-      
-      <Grid container spacing={3}>
-        {[
-          {
-            category: 'Date & Time Formats',
-            icon: <ScheduleIcon />,
-            features: [
-              'Automatic timezone detection',
-              'Regional date format preferences',
-              '12/24 hour time format support',
-              'Calendar system adaptation',
-              'Holiday and event localization',
-              'Business hours customization'
-            ],
-            coverage: 98,
-            accuracy: 99
-          },
-          {
-            category: 'Currency & Numbers',
-            icon: <CurrencyIcon />,
-            features: [
-              'Multi-currency support',
-              'Regional number formatting',
-              'Currency symbol placement',
-              'Decimal separator preferences',
-              'Thousand separator customization',
-              'Exchange rate integration'
-            ],
-            coverage: 95,
-            accuracy: 97
-          },
-          {
-            category: 'Cultural Norms',
-            icon: <CultureIcon />,
-            features: [
-              'Communication style adaptation',
-              'Relationship value alignment',
-              'Cultural sensitivity filters',
-              'Traditional celebration integration',
-              'Family structure recognition',
-              'Religious consideration support'
-            ],
-            coverage: 92,
-            accuracy: 94
-          },
-          {
-            category: 'Visual & Design',
-            icon: <PaletteIcon />,
-            features: [
-              'Color preference adaptation',
-              'Reading direction support (RTL/LTR)',
-              'Cultural symbol integration',
-              'Regional imagery preferences',
-              'Typography optimization',
-              'Layout direction adjustment'
-            ],
-            coverage: 89,
-            accuracy: 91
-          },
-          {
-            category: 'Communication Styles',
-            icon: <MessageIcon />,
-            features: [
-              'Formality level adjustment',
-              'Direct vs indirect communication',
-              'Emotional expression norms',
-              'Conflict resolution approaches',
-              'Feedback delivery styles',
-              'Relationship milestone recognition'
-            ],
-            coverage: 94,
-            accuracy: 93
-          },
-          {
-            category: 'Legal & Compliance',
-            icon: <SecurityIcon />,
-            features: [
-              'Regional privacy laws (GDPR, CCPA)',
-              'Data residency requirements',
-              'Age verification standards',
-              'Content moderation guidelines',
-              'Accessibility compliance',
-              'Local regulation adherence'
-            ],
-            coverage: 97,
-            accuracy: 98
-          }
-        ].map((category, index) => (
-          <Grid item xs={12} md={6} key={index}>
-            <Card variant="outlined" sx={{ height: '100%' }}>
-              <CardContent>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                  <Avatar sx={{ 
-                    bgcolor: category.coverage >= 95 ? 'success.main' : 'primary.main',
-                    width: 48,
-                    height: 48
-                  }}>
-                    {category.icon}
-                  </Avatar>
-                  <Box sx={{ flex: 1 }}>
-                    <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                      {category.category}
-                    </Typography>
-                    <Box sx={{ display: 'flex', gap: 1 }}>
-                      <Chip 
-                        label={`${category.coverage}% coverage`} 
-                        size="small" 
-                        color="primary" 
-                      />
-                      <Chip 
-                        label={`${category.accuracy}% accuracy`} 
-                        size="small" 
-                        color="success" 
-                      />
-                    </Box>
-                  </Box>
-                </Box>
-                
-                <LinearProgress
-                  variant="determinate"
-                  value={category.coverage}
-                  sx={{ 
-                    height: 6, 
-                    borderRadius: 3, 
-                    mb: 2,
-                    '& .MuiLinearProgress-bar': {
-                      backgroundColor: category.coverage >= 95 ? 'success.main' : 'primary.main'
-                    }
-                  }}
-                />
-                
-                <Box>
-                  <Typography variant="subtitle2" gutterBottom sx={{ fontWeight: 600 }}>
-                    Key Features:
-                  </Typography>
-                  <List dense>
-                    {category.features.map((feature, featureIndex) => (
-                      <ListItem key={featureIndex} sx={{ px: 0, py: 0.5 }}>
-                        <ListItemIcon sx={{ minWidth: 24 }}>
-                          <CheckCircleIcon color="success" fontSize="small" />
-                        </ListItemIcon>
-                        <ListItemText 
-                          primary={feature}
-                          primaryTypographyProps={{ variant: 'body2' }}
-                        />
-                      </ListItem>
-                    ))}
-                  </List>
-                </Box>
-              </CardContent>
-            </Card>
-          </Grid>
+            {/* Framework Metrics */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+              <div className="bg-blue-50 rounded-lg p-3">
+                <p className="text-sm font-medium text-blue-600">Implementation</p>
+                <p className="text-xl font-bold text-blue-900">{framework.implementationScore}%</p>
+              </div>
+              <div className="bg-green-50 rounded-lg p-3">
+                <p className="text-sm font-medium text-green-600">User Satisfaction</p>
+                <p className="text-xl font-bold text-green-900">{framework.userSatisfaction}%</p>
+              </div>
+              <div className="bg-purple-50 rounded-lg p-3">
+                <p className="text-sm font-medium text-purple-600">Cultural Accuracy</p>
+                <p className="text-xl font-bold text-purple-900">{framework.culturalAccuracy}%</p>
+              </div>
+            </div>
+
+            {/* Framework Details */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <h4 className="font-medium text-gray-900 mb-3">Cultural Characteristics</h4>
+                <div className="space-y-2">
+                  {framework.characteristics.map((characteristic, index) => (
+                    <div key={index} className="flex items-center space-x-2">
+                      <CheckCircle className="h-4 w-4 text-green-500" />
+                      <span className="text-sm text-gray-700">{characteristic}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              
+              <div>
+                <h4 className="font-medium text-gray-900 mb-3">Relationship Patterns</h4>
+                <div className="space-y-2">
+                  {framework.relationshipPatterns.map((pattern, index) => (
+                    <div key={index} className="flex items-center space-x-2">
+                      <Heart className="h-4 w-4 text-red-500" />
+                      <span className="text-sm text-gray-700">{pattern}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Adaptation Strategies */}
+            <div className="mt-4">
+              <h4 className="font-medium text-gray-900 mb-3">Adaptation Strategies</h4>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                {framework.adaptationStrategies.map((strategy, index) => (
+                  <div key={index} className="flex items-center space-x-2 p-2 bg-gray-50 rounded">
+                    <Target className="h-4 w-4 text-blue-500" />
+                    <span className="text-sm text-gray-700">{strategy}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex space-x-2 mt-4">
+              <button 
+                onClick={() => setSelectedCulture(framework)}
+                className="inline-flex items-center px-3 py-2 bg-blue-50 text-blue-600 rounded-lg text-sm font-medium hover:bg-blue-100"
+              >
+                <Eye className="h-4 w-4 mr-1" />
+                View Details
+              </button>
+              <button className="inline-flex items-center px-3 py-2 bg-gray-50 text-gray-600 rounded-lg text-sm font-medium hover:bg-gray-100">
+                <Edit className="h-4 w-4 mr-1" />
+                Edit Framework
+              </button>
+              <button className="inline-flex items-center px-3 py-2 bg-gray-50 text-gray-600 rounded-lg text-sm font-medium hover:bg-gray-100">
+                <BarChart3 className="h-4 w-4 mr-1" />
+                Analytics
+              </button>
+            </div>
+          </div>
         ))}
-      </Grid>
-    </Box>
+      </div>
+    </div>
   );
 
-  const renderGlobalAnalytics = () => (
-    <Box>
-      <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-        <AnalyticsIcon color="primary" />
-        Global Analytics & Localization Insights
-      </Typography>
-      
-      <Alert severity="info" sx={{ mb: 3 }}>
-        📊 Comprehensive global analytics with real-time localization performance monitoring, 
-        user engagement analysis, and business impact assessment across all regions.
-      </Alert>
+  const renderLanguagesTab = () => (
+    <div className="space-y-6">
+      <div className="flex justify-between items-center">
+        <div>
+          <h2 className="text-2xl font-bold text-gray-900">Language Support</h2>
+          <p className="text-gray-600">Comprehensive multi-language support and translation accuracy metrics</p>
+        </div>
+        <button className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700">
+          <Plus className="h-4 w-4 mr-2" />
+          Add Language
+        </button>
+      </div>
 
-      {/* Performance Categories */}
-      <Grid container spacing={3} sx={{ mb: 4 }}>
-        <Grid item xs={12} md={3}>
-          <Card variant="outlined">
-            <CardContent>
-              <Typography variant="h6" gutterBottom sx={{ fontWeight: 600 }}>
-                Global Coverage
-              </Typography>
-              
-              <List dense>
-                {[
-                  { metric: 'Languages Supported', value: `${regionalizationMetrics.globalCoverage?.languagesSupported || 12}` },
-                  { metric: 'Regions Adapted', value: `${regionalizationMetrics.globalCoverage?.regionsAdapted || 8}` },
-                  { metric: 'Countries Supported', value: `${regionalizationMetrics.globalCoverage?.countriesSupported || 67}` },
-                  { metric: 'Population Coverage', value: `${regionalizationMetrics.globalCoverage?.populationCoverage || 85.7}%` },
-                  { metric: 'Translation Accuracy', value: `${regionalizationMetrics.globalCoverage?.translationAccuracy || 95.3}%` }
-                ].map((item, index) => (
-                  <ListItem key={index} sx={{ px: 0 }}>
-                    <ListItemText 
-                      primary={item.metric}
-                      secondary={item.value}
-                    />
-                  </ListItem>
-                ))}
-              </List>
-            </CardContent>
-          </Card>
-        </Grid>
-        
-        <Grid item xs={12} md={3}>
-          <Card variant="outlined">
-            <CardContent>
-              <Typography variant="h6" gutterBottom sx={{ fontWeight: 600 }}>
-                Localization Quality
-              </Typography>
-              
-              <List dense>
-                {[
-                  { metric: 'Translation Quality', value: `${regionalizationMetrics.localizationQuality?.translationQuality || 94.7}%` },
-                  { metric: 'Cultural Adaptation', value: `${regionalizationMetrics.localizationQuality?.culturalAdaptation || 91.6}%` },
-                  { metric: 'User Experience', value: `${regionalizationMetrics.localizationQuality?.userExperience || 93.2}%` },
-                  { metric: 'Technical Implementation', value: `${regionalizationMetrics.localizationQuality?.technicalImplementation || 96.8}%` },
-                  { metric: 'Content Relevance', value: `${regionalizationMetrics.localizationQuality?.contentRelevance || 89.4}%` }
-                ].map((item, index) => (
-                  <ListItem key={index} sx={{ px: 0 }}>
-                    <ListItemText 
-                      primary={item.metric}
-                      secondary={item.value}
-                    />
-                  </ListItem>
-                ))}
-              </List>
-            </CardContent>
-          </Card>
-        </Grid>
-        
-        <Grid item xs={12} md={3}>
-          <Card variant="outlined">
-            <CardContent>
-              <Typography variant="h6" gutterBottom sx={{ fontWeight: 600 }}>
-                User Engagement
-              </Typography>
-              
-              <List dense>
-                {[
-                  { metric: 'Global Satisfaction', value: `${regionalizationMetrics.userEngagement?.globalUserSatisfaction || 4.6}/5` },
-                  { metric: 'Localized Engagement', value: `${regionalizationMetrics.userEngagement?.localizedContentEngagement || 78.9}%` },
-                  { metric: 'Cross-Cultural Interaction', value: `${regionalizationMetrics.userEngagement?.crossCulturalInteraction || 67.3}%` },
-                  { metric: 'Language Preference', value: `${regionalizationMetrics.userEngagement?.languagePreferenceAdherence || 94.2}%` },
-                  { metric: 'Cultural Sensitivity', value: `${regionalizationMetrics.userEngagement?.culturalSensitivityScore || 88.7}%` }
-                ].map((item, index) => (
-                  <ListItem key={index} sx={{ px: 0 }}>
-                    <ListItemText 
-                      primary={item.metric}
-                      secondary={item.value}
-                    />
-                  </ListItem>
-                ))}
-              </List>
-            </CardContent>
-          </Card>
-        </Grid>
-        
-        <Grid item xs={12} md={3}>
-          <Card variant="outlined">
-            <CardContent>
-              <Typography variant="h6" gutterBottom sx={{ fontWeight: 600 }}>
-                Business Impact
-              </Typography>
-              
-              <List dense>
-                {[
-                  { metric: 'Market Penetration', value: `${regionalizationMetrics.businessImpact?.marketPenetration || 73.4}%` },
-                  { metric: 'International Revenue', value: `${regionalizationMetrics.businessImpact?.revenueFromInternational || 42.8}%` },
-                  { metric: 'User Acquisition', value: `${regionalizationMetrics.businessImpact?.userAcquisitionInternational || 56.7}%` },
-                  { metric: 'Retention Rate', value: `${regionalizationMetrics.businessImpact?.retentionRateInternational || 81.3}%` },
-                  { metric: 'Conversion Rate', value: `${regionalizationMetrics.businessImpact?.conversionRateInternational || 34.9}%` }
-                ].map((item, index) => (
-                  <ListItem key={index} sx={{ px: 0 }}>
-                    <ListItemText 
-                      primary={item.metric}
-                      secondary={item.value}
-                    />
-                  </ListItem>
-                ))}
-              </List>
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid>
+      {/* Language Support Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {localizationData.localizationMetrics.languageAccuracy.map((language, index) => (
+          <div key={index} className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center space-x-3">
+                <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                  <span className="text-sm font-medium text-blue-600">
+                    {language.language.slice(0, 2).toUpperCase()}
+                  </span>
+                </div>
+                <div>
+                  <h3 className="font-semibold text-gray-900">{language.language}</h3>
+                  <p className="text-sm text-gray-500">Translation Support</p>
+                </div>
+              </div>
+              <button className="p-1 text-gray-400 hover:text-gray-600">
+                <MoreHorizontal className="h-4 w-4" />
+              </button>
+            </div>
 
-      {/* Global Performance Trends */}
-      <Typography variant="h6" gutterBottom>
-        Global Performance Trends (Last 30 Days)
-      </Typography>
-      
-      <Grid container spacing={3}>
-        <Grid item xs={12} md={3}>
-          <Card variant="outlined">
-            <CardContent sx={{ textAlign: 'center' }}>
-              <Typography variant="h4" sx={{ fontWeight: 700, color: 'success.main' }}>
-                +12.7%
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                International User Growth
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-        
-        <Grid item xs={12} md={3}>
-          <Card variant="outlined">
-            <CardContent sx={{ textAlign: 'center' }}>
-              <Typography variant="h4" sx={{ fontWeight: 700, color: 'primary.main' }}>
-                +8.3%
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                Translation Quality Improvement
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-        
-        <Grid item xs={12} md={3}>
-          <Card variant="outlined">
-            <CardContent sx={{ textAlign: 'center' }}>
-              <Typography variant="h4" sx={{ fontWeight: 700, color: 'warning.main' }}>
-                +15.6%
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                Cultural Engagement Increase
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-        
-        <Grid item xs={12} md={3}>
-          <Card variant="outlined">
-            <CardContent sx={{ textAlign: 'center' }}>
-              <Typography variant="h4" sx={{ fontWeight: 700, color: 'info.main' }}>
-                +23.4%
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                International Revenue Growth
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid>
-    </Box>
+            <div className="space-y-4">
+              <div>
+                <div className="flex justify-between mb-2">
+                  <span className="text-sm text-gray-600">Translation Accuracy</span>
+                  <span className={`text-sm font-medium ${getAccuracyColor(language.accuracy)}`}>
+                    {language.accuracy}%
+                  </span>
+                </div>
+                <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div 
+                    className={`h-2 rounded-full ${
+                      language.accuracy >= 95 ? 'bg-green-500' :
+                      language.accuracy >= 90 ? 'bg-yellow-500' : 'bg-red-500'
+                    }`}
+                    style={{ width: `${language.accuracy}%` }}
+                  ></div>
+                </div>
+              </div>
+
+              <div>
+                <div className="flex justify-between mb-2">
+                  <span className="text-sm text-gray-600">Content Coverage</span>
+                  <span className="text-sm font-medium text-gray-900">{language.coverage}%</span>
+                </div>
+                <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div 
+                    className="bg-blue-500 h-2 rounded-full" 
+                    style={{ width: `${language.coverage}%` }}
+                  ></div>
+                </div>
+              </div>
+
+              <div className="flex justify-between items-center pt-2">
+                <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                  language.accuracy >= 95 ? 'bg-green-100 text-green-800' :
+                  language.accuracy >= 90 ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800'
+                }`}>
+                  {language.accuracy >= 95 ? 'Excellent' :
+                   language.accuracy >= 90 ? 'Good' : 'Needs Improvement'}
+                </span>
+                <button className="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                  View Details
+                </button>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Language Performance Summary */}
+      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+        <h3 className="text-lg font-semibold text-gray-900 mb-6">Language Performance Summary</h3>
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+          <div className="text-center">
+            <p className="text-3xl font-bold text-blue-600">{localizationData.overview.supportedLanguages}</p>
+            <p className="text-sm text-gray-600">Supported Languages</p>
+          </div>
+          <div className="text-center">
+            <p className="text-3xl font-bold text-green-600">
+              {(localizationData.localizationMetrics.languageAccuracy.reduce((sum, lang) => sum + lang.accuracy, 0) / localizationData.localizationMetrics.languageAccuracy.length).toFixed(1)}%
+            </p>
+            <p className="text-sm text-gray-600">Average Accuracy</p>
+          </div>
+          <div className="text-center">
+            <p className="text-3xl font-bold text-purple-600">
+              {(localizationData.localizationMetrics.languageAccuracy.reduce((sum, lang) => sum + lang.coverage, 0) / localizationData.localizationMetrics.languageAccuracy.length).toFixed(1)}%
+            </p>
+            <p className="text-sm text-gray-600">Average Coverage</p>
+          </div>
+          <div className="text-center">
+            <p className="text-3xl font-bold text-yellow-600">
+              {localizationData.localizationMetrics.languageAccuracy.filter(lang => lang.accuracy >= 95).length}
+            </p>
+            <p className="text-sm text-gray-600">Excellent Quality</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  const renderAdaptationTab = () => (
+    <div className="space-y-6">
+      <div className="flex justify-between items-center">
+        <div>
+          <h2 className="text-2xl font-bold text-gray-900">Cultural Adaptation</h2>
+          <p className="text-gray-600">Advanced cultural adaptation strategies and implementation effectiveness</p>
+        </div>
+        <button className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700">
+          <Plus className="h-4 w-4 mr-2" />
+          New Strategy
+        </button>
+      </div>
+
+      {/* Adaptation Strategies */}
+      <div className="grid grid-cols-1 gap-6">
+        {localizationData.adaptationStrategies.map((strategy) => (
+          <div key={strategy.id} className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+            <div className="flex items-start justify-between mb-4">
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">{strategy.strategy}</h3>
+                <p className="text-gray-600 mb-3">{strategy.description}</p>
+                <div className="flex flex-wrap gap-2">
+                  {strategy.regions.map((region, index) => (
+                    <span key={index} className="inline-flex items-center px-2 py-1 bg-blue-50 text-blue-600 rounded text-xs">
+                      {region}
+                    </span>
+                  ))}
+                </div>
+              </div>
+              <div className="text-right">
+                <p className={`text-2xl font-bold ${getAccuracyColor(strategy.effectiveness)}`}>
+                  {strategy.effectiveness}%
+                </p>
+                <p className="text-sm text-gray-500">Effectiveness</p>
+              </div>
+            </div>
+
+            <div>
+              <h4 className="font-medium text-gray-900 mb-3">Implementation Details</h4>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                {strategy.implementation.map((item, index) => (
+                  <div key={index} className="flex items-center space-x-2 p-2 bg-gray-50 rounded">
+                    <CheckCircle className="h-4 w-4 text-green-500" />
+                    <span className="text-sm text-gray-700">{item}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="mt-4 p-4 bg-blue-50 rounded-lg">
+              <h4 className="font-medium text-blue-900 mb-2">User Feedback</h4>
+              <p className="text-sm text-blue-800">{strategy.userFeedback}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+
+  const renderAnalyticsTab = () => (
+    <div className="space-y-6">
+      <div className="flex justify-between items-center">
+        <div>
+          <h2 className="text-2xl font-bold text-gray-900">Localization Analytics</h2>
+          <p className="text-gray-600">Comprehensive analytics and insights for global localization performance</p>
+        </div>
+        <button className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700">
+          <Download className="h-4 w-4 mr-2" />
+          Export Report
+        </button>
+      </div>
+
+      {/* Analytics Overview */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-gray-600">Global Reach</p>
+              <p className="text-2xl font-bold text-gray-900">{localizationData.overview.totalRegions} regions</p>
+            </div>
+            <Globe className="h-8 w-8 text-blue-600" />
+          </div>
+        </div>
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-gray-600">Cultural Accuracy</p>
+              <p className="text-2xl font-bold text-green-600">{localizationData.overview.culturalAccuracy}%</p>
+            </div>
+            <Heart className="h-8 w-8 text-green-600" />
+          </div>
+        </div>
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-gray-600">Localization Coverage</p>
+              <p className="text-2xl font-bold text-purple-600">{localizationData.overview.localizationCoverage}%</p>
+            </div>
+            <Target className="h-8 w-8 text-purple-600" />
+          </div>
+        </div>
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-gray-600">Adaptation Score</p>
+              <p className="text-2xl font-bold text-yellow-600">{localizationData.overview.adaptationScore}%</p>
+            </div>
+            <Star className="h-8 w-8 text-yellow-600" />
+          </div>
+        </div>
+      </div>
+
+      {/* Analytics Charts */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">Regional Performance</h3>
+          <div className="h-64 bg-gray-50 rounded-lg flex items-center justify-center">
+            <BarChart3 className="h-16 w-16 text-gray-400" />
+          </div>
+        </div>
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">Cultural Adaptation Trends</h3>
+          <div className="h-64 bg-gray-50 rounded-lg flex items-center justify-center">
+            <TrendingUp className="h-16 w-16 text-gray-400" />
+          </div>
+        </div>
+      </div>
+
+      {/* Detailed Analytics */}
+      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+        <h3 className="text-lg font-semibold text-gray-900 mb-6">Localization Performance Metrics</h3>
+        <div className="overflow-x-auto">
+          <table className="min-w-full divide-y divide-gray-200">
+            <thead className="bg-gray-50">
+              <tr>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Region</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Users</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Penetration</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Adaptation</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Revenue</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {localizationData.regions.map((region) => (
+                <tr key={region.id}>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="flex items-center">
+                      <Flag className="h-4 w-4 text-blue-600 mr-2" />
+                      <span className="text-sm font-medium text-gray-900">{region.name}</span>
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {region.users.toLocaleString()}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {region.marketPenetration}%
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <span className={`text-sm font-medium ${getAccuracyColor(region.adaptationScore)}`}>
+                      {region.adaptationScore}%
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {region.revenueContribution}%
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${statusColors[region.localizationStatus]}`}>
+                      {region.localizationStatus}
+                    </span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
   );
 
   return (
-    <Container maxWidth="lg" sx={{ py: 4 }}>
-      <Box sx={{ mb: 4 }}>
-        <Typography variant="h4" gutterBottom sx={{ fontWeight: 700, color: 'primary.main' }}>
-          🌍 Global Localization & Cultural Adaptation
-        </Typography>
-        <Typography variant="subtitle1" color="text.secondary" sx={{ mb: 3 }}>
-          Comprehensive global platform with {supportedLanguages.length} languages, {culturalAdaptations.length} cultural regions, 
-          and advanced localization covering {(culturalAdaptations.reduce((sum, region) => sum + region.population, 0) / 1000000000).toFixed(1)}B+ people worldwide.
-        </Typography>
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <div className="bg-white shadow-sm border-b border-gray-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center py-6">
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900">Global Localization & Cultural Adaptation</h1>
+              <p className="text-gray-600">Comprehensive international expansion and cultural adaptation platform</p>
+            </div>
+            <div className="flex items-center space-x-4">
+              <div className="flex items-center space-x-2">
+                <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                <span className="text-sm text-gray-600">{localizationData.overview.totalRegions} Regions Active</span>
+              </div>
+              <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
+                <span className="text-white text-sm font-medium">GL</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
-        {/* Global Localization Status Banner */}
-        <Alert severity="success" sx={{ mb: 3 }}>
-          <Typography variant="h6" gutterBottom>
-            🚀 GLOBAL LOCALIZATION PLATFORM FULLY OPERATIONAL!
-          </Typography>
-          <Typography>
-            {localizationData.globalSatisfaction}/5 global satisfaction across {localizationData.languagesActive} active languages 
-            serving {localizationData.internationalUsers?.toLocaleString()} international users with {localizationData.localizationAccuracy}% accuracy.
-          </Typography>
-        </Alert>
-      </Box>
+      {/* Navigation Tabs */}
+      <div className="bg-white border-b border-gray-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <nav className="flex space-x-8">
+            {tabs.map((tab) => {
+              const Icon = tab.icon;
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`flex items-center space-x-2 py-4 px-1 border-b-2 font-medium text-sm ${
+                    activeTab === tab.id
+                      ? 'border-blue-500 text-blue-600'
+                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  }`}
+                >
+                  <Icon className="h-5 w-5" />
+                  <span>{tab.label}</span>
+                </button>
+              );
+            })}
+          </nav>
+        </div>
+      </div>
 
-      {/* Main Content Tabs */}
-      <Paper sx={{ mb: 4 }}>
-        <Tabs 
-          value={activeTab} 
-          onChange={(e, newValue) => setActiveTab(newValue)}
-          variant="fullWidth"
-          sx={{ borderBottom: 1, borderColor: 'divider' }}
-        >
-          <Tab 
-            label="Language Support" 
-            icon={<LanguageIcon />} 
-            iconPosition="start"
-          />
-          <Tab 
-            label="Cultural Adaptation" 
-            icon={<CultureIcon />} 
-            iconPosition="start"
-          />
-          <Tab 
-            label="Regional Settings" 
-            icon={<LocationOnIcon />} 
-            iconPosition="start"
-          />
-          <Tab 
-            label="Global Analytics" 
-            icon={<AnalyticsIcon />} 
-            iconPosition="start"
-          />
-        </Tabs>
+      {/* Main Content */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {activeTab === 'overview' && renderOverviewTab()}
+        {activeTab === 'regions' && renderRegionsTab()}
+        {activeTab === 'cultures' && renderCulturesTab()}
+        {activeTab === 'languages' && renderLanguagesTab()}
+        {activeTab === 'adaptation' && renderAdaptationTab()}
+        {activeTab === 'analytics' && renderAnalyticsTab()}
+      </div>
 
-        <Box sx={{ p: 4 }}>
-          {activeTab === 0 && renderLanguageSupport()}
-          {activeTab === 1 && renderCulturalAdaptation()}
-          {activeTab === 2 && renderRegionalSettings()}
-          {activeTab === 3 && renderGlobalAnalytics()}
-        </Box>
-      </Paper>
-
-      {/* Action Buttons */}
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 4 }}>
-        <Box sx={{ display: 'flex', gap: 2 }}>
-          <Button
-            variant="outlined"
-            startIcon={<HelpIcon />}
-          >
-            Localization Guide
-          </Button>
-          <Button
-            variant="outlined"
-            startIcon={<ShareIcon />}
-          >
-            Export Report
-          </Button>
-        </Box>
-        
-        <Box sx={{ display: 'flex', gap: 2 }}>
-          <Button 
-            variant="outlined" 
-            size="large" 
-            startIcon={<AnalyticsIcon />}
-            onClick={() => setActiveTab(3)}
-          >
-            View Analytics
-          </Button>
-          <Button 
-            variant="contained" 
-            size="large"
-            startIcon={<PublicIcon />}
-            onClick={() => setActiveTab(0)}
-            sx={{ minWidth: 200 }}
-          >
-            Global Dashboard
-          </Button>
-        </Box>
-      </Box>
-
-      {/* Localization Summary */}
-      <Box sx={{ mt: 4, textAlign: 'center' }}>
-        <Typography variant="body2" color="text.secondary" gutterBottom>
-          Global Localization Summary
-        </Typography>
-        <LinearProgress 
-          variant="determinate" 
-          value={localizationData.localizationAccuracy} 
-          sx={{ height: 8, borderRadius: 4, mb: 1 }}
-        />
-        <Typography variant="body2" color="text.secondary">
-          {localizationData.localizationAccuracy}% Accuracy | {localizationData.languagesActive} Languages | {localizationData.regionsActive} Regions | {(localizationData.internationalUsers / 1000).toFixed(0)}K International Users
-        </Typography>
-      </Box>
-    </Container>
+      {/* Dr. Love AI Integration Footer */}
+      <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-4">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-3">
+              <div className="w-8 h-8 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
+                <Globe className="h-5 w-5" />
+              </div>
+              <div>
+                <p className="font-semibold">Dr. Love Global Platform</p>
+                <p className="text-sm opacity-90">Culturally-aware relationship guidance across 47 regions worldwide</p>
+              </div>
+            </div>
+            <div className="text-right">
+              <p className="text-sm opacity-90">Global Localization v2.0</p>
+              <p className="text-xs opacity-75">Advanced cultural adaptation with 94.7% accuracy across diverse populations</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
 
