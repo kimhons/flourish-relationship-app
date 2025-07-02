@@ -645,20 +645,25 @@ const PremiumFeaturesSubscriptionManagement = () => {
     const plans = {
       basic: {
         name: 'Basic Plan',
-        price: 9.99,
+        price: 4.99,
         billingCycle: 'monthly',
+        trialDays: 7,
+        trialPrice: 0,
         features: [
+          '7-day free trial included',
           'Basic matching algorithm',
           'Standard messaging',
           'Profile creation',
           'Basic safety features',
-          'Mobile app access'
+          'Mobile app access',
+          'Cancel anytime during trial'
         ],
         subscribers: 45678,
-        revenue: 456789.22,
-        conversionRate: 12.3,
-        churnRate: 8.7,
-        satisfaction: 4.2
+        revenue: 227889.22,
+        conversionRate: 18.7,
+        churnRate: 6.2,
+        satisfaction: 4.4,
+        trialConversion: 78.3
       },
       premium: {
         name: 'Premium Plan',
