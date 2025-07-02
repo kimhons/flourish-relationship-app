@@ -1,1576 +1,761 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Container,
   Typography,
   Card,
   CardContent,
-  Button,
-  LinearProgress,
-  Chip,
   Grid,
-  Avatar,
-  Paper,
+  Switch,
+  FormControlLabel,
+  Slider,
+  Button,
+  Tabs,
+  Tab,
+  Chip,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+  TextField,
+  Alert,
+  LinearProgress,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemIcon,
+  IconButton,
   Dialog,
   DialogTitle,
   DialogContent,
   DialogActions,
-  Alert,
   Divider,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  IconButton,
-  Tooltip,
-  Badge,
-  Fade,
-  Slide,
-  Zoom,
-  Collapse,
-  Stack,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  Switch,
-  FormControlLabel,
-  TextField,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
-  Slider,
+  Paper,
   Rating,
+  Badge,
+  ToggleButton,
+  ToggleButtonGroup,
+  Avatar,
   Stepper,
   Step,
   StepLabel,
-  StepContent,
-  Tabs,
-  Tab,
-  TabPanel,
-  Fab,
-  SpeedDial,
-  SpeedDialAction,
-  SpeedDialIcon,
-  Backdrop,
+  Timeline,
+  TimelineItem,
+  TimelineSeparator,
+  TimelineConnector,
+  TimelineContent,
+  TimelineDot,
   CircularProgress,
-  Snackbar,
-  SnackbarContent,
-  RadioGroup,
-  Radio,
-  FormGroup,
-  Checkbox,
-  ImageList,
-  ImageListItem,
-  ImageListItemBar,
-  ListSubheader,
-  ListItemSecondaryAction,
-  ButtonGroup,
-  ToggleButton,
-  ToggleButtonGroup,
-  TextareaAutosize,
-  FormHelperText,
-  CardActions,
-  CardHeader,
-  CardMedia,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
-  TableRow,
-  TablePagination
+  TableRow
 } from '@mui/material';
 import {
-  NavigateNext,
-  NavigateBefore,
-  Integration,
-  BugReport,
-  Speed,
-  Security,
-  CheckCircle,
-  Error,
-  Warning,
-  Info,
-  PlayArrow,
-  Pause,
-  Stop,
-  Refresh,
-  Build,
-  Code,
-  Api,
-  Cloud,
-  Storage,
-  Memory,
-  NetworkCheck,
-  Wifi,
-  Bluetooth,
-  Smartphone,
-  Computer,
-  Tablet,
-  Watch,
-  Tv,
-  Cast,
-  ConnectedTv,
-  DeviceHub,
-  Devices,
-  DevicesOther,
-  Router,
-  Cable,
-  Usb,
-  Nfc,
-  QrCode,
-  QrCodeScanner,
-  QrCode2,
-  Fingerprint,
-  Face,
-  VpnKey,
-  Key,
-  Lock,
-  LockOpen,
-  Shield,
-  VerifiedUser,
-  Verified,
-  GppGood,
-  GppBad,
-  GppMaybe,
-  SafetyCheck,
-  HealthAndSafety,
-  MonitorHeart,
-  Favorite,
-  FavoriteBorder,
-  ThumbUp,
-  ThumbDown,
-  Star,
-  StarBorder,
-  Grade,
-  Recommend,
-  TrendingUp,
-  TrendingDown,
-  TrendingFlat,
-  ShowChart,
-  Timeline,
-  BarChart,
-  PieChart,
-  Analytics,
-  Assessment,
-  Poll,
-  Quiz,
-  QuestionAnswer,
-  LiveTv,
-  ConnectWithoutContact,
-  ContactSupport,
-  LiveHelp,
-  Help,
-  HelpOutline,
-  Announcement,
-  Campaign,
-  RecordVoiceOver,
-  VoiceChat,
-  Hearing,
-  VolumeUp,
-  VolumeOff,
-  Mic,
-  MicOff,
-  Videocam,
-  VideocamOff,
-  Camera,
-  CameraAlt,
-  CameraEnhance,
-  CameraFront,
-  CameraRear,
-  CameraRoll,
-  PhotoCamera,
-  PhotoLibrary,
-  PhotoAlbum,
-  PhotoFilter,
-  Image,
-  ImageAspectRatio,
-  ImageNotSupported,
-  ImageSearch,
-  Collections,
-  CollectionsBookmark,
-  Folder,
-  FolderOpen,
-  FolderShared,
-  FolderSpecial,
-  CreateNewFolder,
-  DriveFileMove,
-  DriveFileMoveOutline,
-  DriveFileRenameOutline,
-  FileCopy,
-  FileDownload,
-  FileDownloadDone,
-  FileDownloadOff,
-  FileUpload,
-  CloudDownload,
-  CloudUpload,
-  CloudDone,
-  CloudOff,
-  CloudQueue,
-  CloudSync,
-  CloudCircle,
-  Backup,
-  BackupTable,
-  Restore,
-  RestorePage,
-  RestoreFromTrash,
-  Delete,
-  DeleteForever,
-  DeleteOutline,
-  DeleteSweep,
-  Clear,
-  ClearAll,
-  Close,
-  Cancel,
-  CancelPresentation,
-  DoNotDisturb,
-  DoNotDisturbAlt,
-  DoNotDisturbOff,
-  DoNotDisturbOn,
-  NotInterested,
-  RemoveCircle,
-  RemoveCircleOutline,
-  Highlight,
-  HighlightOff,
-  HighlightAlt,
-  StarRate,
-  BookmarkAdd,
-  BookmarkAdded,
-  BookmarkRemove,
-  Bookmark,
-  BookmarkBorder,
-  Bookmarks,
-  TurnedIn,
-  TurnedInNot,
-  Label,
-  LabelImportant,
-  LabelOff,
-  NewLabel,
-  LocalOffer,
-  Loyalty,
-  CardMembership,
-  ConfirmationNumber,
-  Redeem,
-  CardGiftcard,
-  Discount,
-  Sell,
-  MonetizationOn,
-  AttachMoney,
-  Euro,
-  EuroSymbol,
-  CurrencyBitcoin,
-  CurrencyExchange,
-  CurrencyFranc,
-  CurrencyLira,
-  CurrencyPound,
-  CurrencyRuble,
-  CurrencyRupee,
-  CurrencyYen,
-  CurrencyYuan,
-  RequestQuote,
-  PriceChange,
-  PriceCheck,
-  Payment,
-  CreditCard,
-  AccountBalance,
-  AccountBalanceWallet,
-  Savings,
-  ScreenShare,
-  StopScreenShare,
-  PresentToAll,
-  AirPlay,
-  BluetoothAudio,
-  BluetoothConnected,
-  BluetoothDisabled,
-  BluetoothDrive,
-  BluetoothSearching,
-  WifiOff,
-  WifiProtectedSetup,
-  WifiCalling,
-  WifiCalling3,
-  WifiFind,
-  WifiLock,
-  WifiPassword,
-  WifiTethering,
-  WifiTetheringError,
-  WifiTetheringOff,
-  SignalCellular0Bar,
-  SignalCellular1Bar,
-  SignalCellular2Bar,
-  SignalCellular3Bar,
-  SignalCellular4Bar,
-  SignalCellularAlt,
-  SignalCellularConnectedNoInternet0Bar,
-  SignalCellularConnectedNoInternet1Bar,
-  SignalCellularConnectedNoInternet2Bar,
-  SignalCellularConnectedNoInternet3Bar,
-  SignalCellularConnectedNoInternet4Bar,
-  SignalCellularNoSim,
-  SignalCellularNull,
-  SignalCellularOff,
-  SignalWifi0Bar,
-  SignalWifi1Bar,
-  SignalWifi1BarLock,
-  SignalWifi2Bar,
-  SignalWifi2BarLock,
-  SignalWifi3Bar,
-  SignalWifi3BarLock,
-  SignalWifi4Bar,
-  SignalWifi4BarLock,
-  SignalWifiBad,
-  SignalWifiConnectedNoInternet4,
-  SignalWifiOff,
-  SignalWifiStatusbar4Bar,
-  SignalWifiStatusbarConnectedNoInternet4,
-  SignalWifiStatusbarNull,
-  NetworkLocked,
-  DeviceUnknown,
-  LaptopChromebook,
-  LaptopMac,
-  LaptopWindows,
-  DesktopMac,
-  DesktopWindows,
-  TabletAndroid,
-  TabletMac,
-  WatchLater,
-  WatchOff,
-  SmartWatch,
-  CellWifi,
-  CellTower,
-  UsbOff,
-  UsbConnected,
-  Power,
-  PowerOff,
-  PowerInput,
-  PowerSettingsNew,
-  Battery20,
-  Battery30,
-  Battery50,
-  Battery60,
-  Battery80,
-  Battery90,
-  BatteryFull,
-  BatteryUnknown,
-  BatteryAlert,
-  BatteryChargingFull,
-  BatterySaver,
-  BatteryStd,
-  SdStorage,
-  SdCard,
-  SdCardAlert,
-  SimCard,
-  SimCardAlert,
-  SimCardDownload,
-  MobileFriendly,
-  MobileOff,
-  LocationOn,
-  LocationOff,
-  LocationDisabled,
-  LocationSearching,
-  NearMe,
-  NearMeDisabled,
-  MyLocation,
-  GpsFixed,
-  GpsOff,
-  GpsNotFixed,
-  Navigation,
-  Compass,
-  Route,
-  Directions,
-  Flight,
-  Hotel,
-  Restaurant,
-  LocalDining,
-  LocalCafe,
-  LocalBar,
-  Fastfood,
-  IceCream,
-  Wine,
-  SportsBar,
-  NightLife,
-  LocalActivity,
-  Attractions,
-  Festival,
-  Place,
-  Map,
-  Explore,
-  ExploreOff,
-  NearbyError,
-  NearbyOff,
-  PinDrop,
-  WhereToVote,
-  FlightTakeoff,
-  FlightLand,
-  ConnectingAirports,
-  AirplanemodeActive,
-  AirplanemodeInactive,
-  FlightClass,
-  TravelExplore,
-  Groups,
-  Group,
-  People,
-  Person,
-  PersonAdd,
-  PersonRemove,
-  GroupAdd,
-  GroupRemove,
-  Community,
-  Public,
-  Language,
-  Translate,
-  GTranslate,
-  Diversity3,
-  FamilyRestroom,
-  Handshake,
-  VolunteerActivism,
-  Pets,
-  Child,
-  Elderly,
-  Pregnant,
-  Accessible,
-  Man,
-  Woman,
-  Boy,
-  Girl,
-  Baby,
-  Face2,
-  Face3,
-  Face4,
-  Face5,
-  Face6,
-  EmojiPeople,
-  EmojiEmotions,
-  EmojiNature,
-  EmojiFood,
-  EmojiTransportation,
-  EmojiEvents,
-  EmojiObjects,
-  EmojiSymbols,
-  SentimentVeryDissatisfied,
-  SentimentDissatisfied,
-  SentimentNeutral,
-  SentimentSatisfied,
-  SentimentVerySatisfied,
-  Mood,
-  MoodBad,
-  Psychology,
-  PsychologyAlt,
-  School,
-  AutoStories,
-  MenuBook,
-  LibraryBooks,
-  ImportContacts,
-  Book,
-  Class,
-  Engineering,
-  Science,
-  Biotech,
-  Work,
-  Business,
-  Store,
-  ShoppingCart,
-  ShoppingBag,
-  ShoppingBasket,
-  ShoppingCartCheckout,
-  AddShoppingCart,
-  RemoveShoppingCart,
-  ProductionQuantityLimits,
-  Inventory,
-  Inventory2,
-  InventoryOutlined,
-  Storefront,
-  LocalMall,
-  LocalGroceryStore,
-  LocalConvenienceStore,
-  LocalPharmacy,
-  LocalLibrary,
-  LocalPostOffice,
-  LocalGasStation,
-  LocalCarWash,
-  LocalLaundryService,
-  LocalShipping,
-  LocalTaxi,
-  LocalAtm,
-  LocalSee,
-  LocalFlorist,
-  LocalDrink,
-  LocalPlay,
-  LocalPrintshop,
-  LocalMovies,
-  TheaterComedy,
-  Theaters,
-  Inbox,
-  Drafts,
-  ReplyAll,
-  MailOutline,
-  Send,
-  Attachment,
-  GifBox,
-  Chat,
-  ChatBubble,
-  Message,
-  Sms,
-  Email,
-  Forum,
-  Notifications,
-  NotificationsActive,
-  NotificationsOff,
-  Report,
-  Flag,
-  HeartBroken,
-  Home,
-  Wc,
-  Male,
-  Female,
-  Transgender,
-  Schedule,
-  AccessTime,
-  Alarm,
-  AlarmAdd,
-  AlarmOff,
-  AvTimer,
-  HourglassEmpty,
-  HourglassFull,
-  MoreTime,
-  Timer,
-  TimerOff,
-  Today,
-  CalendarToday,
-  DateRange,
-  Event,
-  EventAvailable,
-  EventBusy,
-  EventNote,
-  EventSeat,
-  CalendarViewDay,
-  CalendarViewMonth,
-  CalendarViewWeek,
-  EditCalendar,
-  History,
-  HistoryEdu,
-  HistoryToggleOff,
-  Update,
-  SystemUpdateAlt,
-  Sync,
-  SyncAlt,
-  SyncDisabled,
-  SyncLock,
-  SyncProblem,
-  Cached,
-  Autorenew,
-  Loop,
-  ChangeCircle,
-  SwapHoriz,
-  SwapVert,
-  CompareArrows,
-  ImportExport,
-  CallMade,
-  CallReceived,
-  Merge,
-  Archive,
-  ColorLens,
-  Gradient,
-  Opacity,
-  Layers,
-  FilterNone,
-  Flare,
-  Flash,
-  Lens,
-  Looks,
-  Nature,
-  NetworkCell,
-  NetworkWifi,
-  NewReleases,
-  Panorama,
-  Portrait,
-  Receipt,
-  RecentActors,
-  Scanner,
-  Slideshow,
-  SwitchAccount,
-  SwitchCamera,
-  TagFaces,
-  Transform,
-  Undo,
-  Redo,
-  Vignette,
-  Widgets,
-  Construction,
-  Handyman,
-  AutoFixNormal,
-  AutoFixOff,
-  AutoFixHigh,
-  Colorize,
-  Palette,
-  Brush,
-  FormatPaint,
-  Style,
-  Design,
-  Category,
-  Tag,
-  FiberNew,
-  Upgrade,
-  SystemUpdate,
-  InstallMobile,
-  Extension,
-  Apps,
-  SpaceDashboard,
-  GridView,
-  ViewAgenda,
-  ViewComfy,
-  ViewCompact,
-  TableChart,
-  Reorder,
-  DragHandle,
-  OpenWith,
-  TouchApp,
-  Gesture,
-  RadioButtonUnchecked,
-  RadioButtonChecked,
-  IndeterminateCheckBox,
-  CheckBox,
-  CheckBoxOutlineBlank,
-  ExpandMore,
-  ExpandLess,
-  ChevronLeft,
-  ChevronRight,
-  KeyboardArrowUp,
-  KeyboardArrowDown,
-  ArrowUpward,
-  ArrowDownward,
-  ArrowBack,
-  ArrowForward,
-  FirstPage,
-  LastPage,
-  MoreHoriz,
-  MoreVert,
-  Menu,
-  MenuOpen,
-  Settings,
-  SettingsApplications,
-  Tune,
-  SettingsBackupRestore,
-  SettingsBluetooth,
-  SettingsBrightness,
-  SettingsCell,
-  SettingsEthernet,
-  SettingsInputAntenna,
-  SettingsInputComponent,
-  SettingsInputComposite,
-  SettingsInputHdmi,
-  SettingsInputSvideo,
-  SettingsOverscan,
-  SettingsPhone,
-  SettingsPower,
-  SettingsRemote,
-  SettingsSystemDaydream,
-  SettingsVoice,
-  BuildCircle,
-  HomeRepairService,
-  Plumbing,
-  ElectricalServices,
-  Carpenter,
-  Architecture,
-  Precision,
-  Rule,
-  StraightenOutlined,
-  SquareFoot,
-  Height,
-  AspectRatio,
-  CropFree,
-  CropOriginal,
-  Crop,
-  CropSquare,
-  CropPortrait,
-  CropLandscape,
-  Crop169,
-  Crop32,
-  Crop54,
-  Crop75,
-  CropDin,
-  CropRotate,
-  FlipCameraAndroid,
-  FlipCameraIos,
-  Flip,
-  RotateLeft,
-  RotateRight,
-  Straighten,
-  FormatColorFill,
-  FormatColorReset,
-  FormatColorText,
-  InvertColors,
-  InvertColorsOff,
-  Tonality,
-  Contrast,
-  Exposure,
-  ExposurePlus1,
-  ExposurePlus2,
-  ExposureNeg1,
-  ExposureNeg2,
-  ExposureZero,
-  WbIncandescent,
-  WbIridescent,
-  WbSunny,
-  WbCloudy,
-  WbShade,
-  WbTwilight,
-  WbFluorescent,
-  WbAuto,
-  FlashOn,
-  FlashOff,
-  FlashAuto,
-  Grain,
-  Texture,
-  Dehaze,
-  Blur,
-  BlurOn,
-  BlurOff,
-  BlurCircular,
-  BlurLinear,
-  MotionPhotosOn,
-  MotionPhotosOff,
-  MotionPhotosPause,
-  MotionPhotosAuto,
-  Timelapse,
-  SlowMotionVideo,
-  Hdr,
-  HdrOn,
-  HdrOff,
-  HdrAuto,
-  HdrAutoSelect,
-  HdrEnhancedSelect,
-  HdrOnSelect,
-  HdrPlus,
-  HdrStrong,
-  HdrWeak,
-  Looks3,
-  Looks4,
-  Looks5,
-  Looks6,
-  LooksOne,
-  LooksTwo,
-  Filter,
-  Filter1,
-  Filter2,
-  Filter3,
-  Filter4,
-  Filter5,
-  Filter6,
-  Filter7,
-  Filter8,
-  Filter9,
-  Filter9Plus,
-  FilterBAndW,
-  FilterCenterFocus,
-  FilterDrama,
-  FilterFrames,
-  FilterHdr,
-  FilterTiltShift,
-  FilterVintage,
-  TipsAndUpdates,
-  Lightbulb,
-  AutoAwesome,
-  Whatshot,
-  Trending,
-  EmojiEvents,
-  Celebration,
-  Party,
-  Cake,
-  WorkspacePremium
+  ExpandMore as ExpandMoreIcon,
+  Integration as IntegrationIcon,
+  BugReport as TestingIcon,
+  Devices as DeviceIcon,
+  Assessment as MetricsIcon,
+  CheckCircle as PassIcon,
+  Error as FailIcon,
+  Warning as WarningIcon,
+  PlayArrow as RunIcon,
+  Refresh as RefreshIcon,
+  CloudSync as CloudIcon,
+  Api as ApiIcon,
+  Storage as DatabaseIcon,
+  Security as SecurityIcon,
+  Speed as PerformanceIcon,
+  Accessibility as AccessibilityIcon,
+  PhoneAndroid as MobileIcon,
+  Computer as DesktopIcon,
+  Tablet as TabletIcon,
+  Language as BrowserIcon,
+  NetworkCheck as NetworkIcon,
+  Memory as MemoryIcon,
+  Timer as LoadTimeIcon,
+  TrendingUp as ThroughputIcon,
+  Shield as SecurityTestIcon,
+  Visibility as UITestIcon,
+  Code as CodeTestIcon,
+  DataUsage as DataTestIcon,
+  Psychology as AITestIcon,
+  Message as CommunicationTestIcon,
+  Notifications as NotificationTestIcon,
+  AccountCircle as UserTestIcon,
+  Settings as ConfigIcon,
+  Dashboard as DashboardIcon,
+  Analytics as AnalyticsIcon,
+  Report as ReportIcon,
+  Download as ExportIcon,
+  Share as ShareIcon,
+  Schedule as ScheduleIcon,
+  AutoAwesome as AutomationIcon,
+  Science as ExperimentIcon,
+  Insights as InsightsIcon
 } from '@mui/icons-material';
 
 const PlatformIntegrationTesting = () => {
-  const [selectedTab, setSelectedTab] = useState(0);
-  const [integrationProgress, setIntegrationProgress] = useState(0);
-  const [testingInProgress, setTestingInProgress] = useState(false);
-  const [integrationData, setIntegrationData] = useState({
-    systems: {
-      authentication: { status: 'Connected', health: 98, lastTest: '2 minutes ago' },
-      database: { status: 'Connected', health: 96, lastTest: '1 minute ago' },
-      aiServices: { status: 'Connected', health: 94, lastTest: '30 seconds ago' },
-      messaging: { status: 'Connected', health: 97, lastTest: '1 minute ago' },
-      notifications: { status: 'Connected', health: 95, lastTest: '2 minutes ago' },
-      payments: { status: 'Connected', health: 99, lastTest: '5 minutes ago' },
-      analytics: { status: 'Connected', health: 93, lastTest: '3 minutes ago' },
-      storage: { status: 'Connected', health: 98, lastTest: '1 minute ago' },
-      security: { status: 'Connected', health: 99, lastTest: '30 seconds ago' },
-      thirdParty: { status: 'Connected', health: 91, lastTest: '4 minutes ago' }
+  const [activeTab, setActiveTab] = useState(0);
+  const [systemIntegration, setSystemIntegration] = useState({
+    apiConnections: { status: 'connected', health: 98, tests: 45, passed: 44 },
+    databaseSystems: { status: 'connected', health: 96, tests: 32, passed: 31 },
+    cloudServices: { status: 'connected', health: 99, tests: 28, passed: 28 },
+    thirdPartyServices: { status: 'connected', health: 94, tests: 22, passed: 21 },
+    aiServices: { status: 'connected', health: 97, tests: 38, passed: 37 },
+    communicationSystems: { status: 'connected', health: 95, tests: 26, passed: 25 },
+    notificationServices: { status: 'connected', health: 93, tests: 34, passed: 32 },
+    securitySystems: { status: 'connected', health: 99, tests: 41, passed: 41 }
+  });
+
+  const [testingSuite, setTestingSuite] = useState({
+    unitTests: { total: 1247, passed: 1235, failed: 8, coverage: 94.2 },
+    integrationTests: { total: 342, passed: 338, failed: 3, coverage: 91.8 },
+    endToEndTests: { total: 156, passed: 152, failed: 2, coverage: 87.5 },
+    performanceTests: { total: 89, passed: 86, failed: 1, coverage: 96.6 },
+    securityTests: { total: 127, passed: 125, failed: 1, coverage: 98.4 },
+    accessibilityTests: { total: 78, passed: 76, failed: 1, coverage: 97.4 },
+    uiTests: { total: 234, passed: 230, failed: 3, coverage: 92.3 },
+    apiTests: { total: 198, passed: 195, failed: 2, coverage: 95.5 }
+  });
+
+  const [deviceCompatibility, setDeviceCompatibility] = useState({
+    mobile: {
+      ios: { compatibility: 98, devices: 24, tested: 23, issues: 1 },
+      android: { compatibility: 96, devices: 32, tested: 31, issues: 2 },
+      responsive: { compatibility: 99, breakpoints: 8, tested: 8, issues: 0 }
     },
-    testing: {
-      unitTests: { passed: 1247, failed: 3, coverage: 98.7, status: 'Passed' },
-      integrationTests: { passed: 342, failed: 1, coverage: 96.2, status: 'Passed' },
-      e2eTests: { passed: 89, failed: 0, coverage: 94.5, status: 'Passed' },
-      performanceTests: { passed: 156, failed: 2, coverage: 92.1, status: 'Warning' },
-      securityTests: { passed: 78, failed: 0, coverage: 100, status: 'Passed' },
-      accessibilityTests: { passed: 234, failed: 1, coverage: 97.8, status: 'Passed' },
-      loadTests: { passed: 45, failed: 0, coverage: 95.6, status: 'Passed' },
-      apiTests: { passed: 167, failed: 1, coverage: 98.2, status: 'Passed' }
+    desktop: {
+      windows: { compatibility: 97, browsers: 6, tested: 6, issues: 1 },
+      macos: { compatibility: 99, browsers: 5, tested: 5, issues: 0 },
+      linux: { compatibility: 95, browsers: 4, tested: 4, issues: 1 }
     },
-    devices: {
-      mobile: {
-        ios: { compatibility: 98, tested: true, issues: 1 },
-        android: { compatibility: 97, tested: true, issues: 2 },
-        responsive: { compatibility: 99, tested: true, issues: 0 }
-      },
-      desktop: {
-        chrome: { compatibility: 99, tested: true, issues: 0 },
-        firefox: { compatibility: 97, tested: true, issues: 1 },
-        safari: { compatibility: 96, tested: true, issues: 2 },
-        edge: { compatibility: 98, tested: true, issues: 1 }
-      },
-      tablet: {
-        ipad: { compatibility: 98, tested: true, issues: 1 },
-        android: { compatibility: 96, tested: true, issues: 2 }
-      }
-    },
-    performance: {
-      loadTime: { value: 1.2, target: 2.0, status: 'Excellent' },
-      responseTime: { value: 0.8, target: 1.5, status: 'Excellent' },
-      throughput: { value: 2500, target: 2000, status: 'Excellent' },
-      errorRate: { value: 0.02, target: 0.1, status: 'Excellent' },
-      uptime: { value: 99.97, target: 99.9, status: 'Excellent' },
-      memoryUsage: { value: 68, target: 80, status: 'Good' },
-      cpuUsage: { value: 45, target: 70, status: 'Good' },
-      networkLatency: { value: 45, target: 100, status: 'Excellent' }
+    browsers: {
+      chrome: { compatibility: 99, versions: 5, tested: 5, issues: 0 },
+      firefox: { compatibility: 97, versions: 4, tested: 4, issues: 1 },
+      safari: { compatibility: 98, versions: 3, tested: 3, issues: 0 },
+      edge: { compatibility: 96, versions: 3, tested: 3, issues: 1 }
     }
   });
 
-  const [showSystemDialog, setShowSystemDialog] = useState(false);
-  const [showTestDialog, setShowTestDialog] = useState(false);
-  const [showDeviceDialog, setShowDeviceDialog] = useState(false);
-  const [showPerformanceDialog, setShowPerformanceDialog] = useState(false);
+  const [performanceMetrics, setPerformanceMetrics] = useState({
+    loadTime: { average: 1.2, target: 2.0, status: 'excellent' },
+    throughput: { current: 2847, target: 2000, status: 'excellent' },
+    memoryUsage: { average: 156, target: 200, status: 'good' },
+    cpuUsage: { average: 23, target: 40, status: 'excellent' },
+    networkLatency: { average: 45, target: 100, status: 'excellent' },
+    errorRate: { current: 0.02, target: 0.1, status: 'excellent' },
+    uptime: { current: 99.97, target: 99.9, status: 'excellent' },
+    responseTime: { average: 0.8, target: 1.5, status: 'excellent' }
+  });
+
+  const [integrationScore, setIntegrationScore] = useState(0);
+  const [testingProgress, setTestingProgress] = useState(0);
+  const [runningTests, setRunningTests] = useState(false);
 
   // Calculate integration score
   useEffect(() => {
-    const calculateIntegrationScore = () => {
-      const systems = integrationData.systems;
-      const testing = integrationData.testing;
-      const devices = integrationData.devices;
-      const performance = integrationData.performance;
-      
+    const calculateScore = () => {
       let score = 0;
-      let maxScore = 100;
-
-      // System health (30 points)
-      const systemHealthAvg = Object.values(systems).reduce((sum, system) => sum + system.health, 0) / Object.values(systems).length;
-      score += (systemHealthAvg / 100) * 30;
-
+      
+      // System integration health (30 points)
+      const avgHealth = Object.values(systemIntegration).reduce((sum, system) => sum + system.health, 0) / Object.keys(systemIntegration).length;
+      score += (avgHealth / 100) * 30;
+      
       // Testing coverage (25 points)
-      const testCoverageAvg = Object.values(testing).reduce((sum, test) => sum + test.coverage, 0) / Object.values(testing).length;
-      score += (testCoverageAvg / 100) * 25;
-
+      const avgCoverage = Object.values(testingSuite).reduce((sum, test) => sum + test.coverage, 0) / Object.keys(testingSuite).length;
+      score += (avgCoverage / 100) * 25;
+      
       // Device compatibility (25 points)
-      let deviceCompatibilitySum = 0;
-      let deviceCount = 0;
+      const mobileAvg = (deviceCompatibility.mobile.ios.compatibility + deviceCompatibility.mobile.android.compatibility + deviceCompatibility.mobile.responsive.compatibility) / 3;
+      const desktopAvg = (deviceCompatibility.desktop.windows.compatibility + deviceCompatibility.desktop.macos.compatibility + deviceCompatibility.desktop.linux.compatibility) / 3;
+      const browserAvg = (deviceCompatibility.browsers.chrome.compatibility + deviceCompatibility.browsers.firefox.compatibility + deviceCompatibility.browsers.safari.compatibility + deviceCompatibility.browsers.edge.compatibility) / 4;
+      const compatibilityAvg = (mobileAvg + desktopAvg + browserAvg) / 3;
+      score += (compatibilityAvg / 100) * 25;
       
-      Object.values(devices.mobile).forEach(device => {
-        deviceCompatibilitySum += device.compatibility;
-        deviceCount++;
-      });
-      Object.values(devices.desktop).forEach(device => {
-        deviceCompatibilitySum += device.compatibility;
-        deviceCount++;
-      });
-      Object.values(devices.tablet).forEach(device => {
-        deviceCompatibilitySum += device.compatibility;
-        deviceCount++;
-      });
-      
-      const deviceCompatibilityAvg = deviceCompatibilitySum / deviceCount;
-      score += (deviceCompatibilityAvg / 100) * 25;
-
       // Performance metrics (20 points)
-      let performanceScore = 0;
-      performanceScore += performance.loadTime.status === 'Excellent' ? 3 : performance.loadTime.status === 'Good' ? 2 : 1;
-      performanceScore += performance.responseTime.status === 'Excellent' ? 3 : performance.responseTime.status === 'Good' ? 2 : 1;
-      performanceScore += performance.throughput.status === 'Excellent' ? 3 : performance.throughput.status === 'Good' ? 2 : 1;
-      performanceScore += performance.errorRate.status === 'Excellent' ? 3 : performance.errorRate.status === 'Good' ? 2 : 1;
-      performanceScore += performance.uptime.status === 'Excellent' ? 4 : performance.uptime.status === 'Good' ? 3 : 2;
-      performanceScore += performance.memoryUsage.status === 'Excellent' ? 2 : performance.memoryUsage.status === 'Good' ? 1.5 : 1;
-      performanceScore += performance.cpuUsage.status === 'Excellent' ? 1 : performance.cpuUsage.status === 'Good' ? 0.5 : 0;
+      const performanceScore = Object.values(performanceMetrics).filter(metric => metric.status === 'excellent').length / Object.keys(performanceMetrics).length;
+      score += performanceScore * 20;
       
-      score += performanceScore;
-
-      const finalScore = Math.round(score);
-      setIntegrationProgress(finalScore);
+      setIntegrationScore(Math.round(score));
+      
+      // Calculate testing progress
+      const totalTests = Object.values(testingSuite).reduce((sum, test) => sum + test.total, 0);
+      const passedTests = Object.values(testingSuite).reduce((sum, test) => sum + test.passed, 0);
+      setTestingProgress(Math.round((passedTests / totalTests) * 100));
     };
 
-    calculateIntegrationScore();
-  }, [integrationData]);
+    calculateScore();
+  }, [systemIntegration, testingSuite, deviceCompatibility, performanceMetrics]);
 
-  // Get integration level
-  const getIntegrationLevel = (score) => {
-    if (score >= 95) return { level: 'Production Ready', color: '#4caf50', icon: <CheckCircle /> };
-    if (score >= 85) return { level: 'Near Production', color: '#1976d2', icon: <Integration /> };
-    if (score >= 75) return { level: 'Testing Phase', color: '#ff9800', icon: <BugReport /> };
-    if (score >= 60) return { level: 'Development', color: '#f44336', icon: <Build /> };
-    return { level: 'Setup Required', color: '#d32f2f', icon: <Error /> };
+  const runTestSuite = async () => {
+    setRunningTests(true);
+    // Simulate test execution
+    await new Promise(resolve => setTimeout(resolve, 3000));
+    setRunningTests(false);
   };
 
-  // Run comprehensive test
-  const runComprehensiveTest = async () => {
-    setTestingInProgress(true);
-    
-    // Simulate testing process
-    for (let i = 0; i <= 100; i += 10) {
-      await new Promise(resolve => setTimeout(resolve, 200));
-      // Update progress here if needed
-    }
-    
-    setTestingInProgress(false);
+  const getScoreLevel = (score) => {
+    if (score >= 95) return { level: 'Exceptional', color: 'success', description: 'Production-ready platform' };
+    if (score >= 85) return { level: 'Excellent', color: 'info', description: 'High-quality integration' };
+    if (score >= 75) return { level: 'Good', color: 'warning', description: 'Solid platform foundation' };
+    return { level: 'Needs Work', color: 'error', description: 'Requires optimization' };
   };
 
-  // Render integration overview
-  const renderIntegrationOverview = () => {
-    const integrationLevel = getIntegrationLevel(integrationProgress);
+  const scoreInfo = getScoreLevel(integrationScore);
 
-    return (
-      <Box sx={{ mb: 4 }}>
-        <Paper sx={{ p: 4, mb: 4, background: 'linear-gradient(45deg, #1976d2 30%, #00bcd4 90%)', color: 'white' }}>
-          <Typography variant="h4" gutterBottom sx={{ fontWeight: 'bold', textAlign: 'center' }}>
-            Platform Integration & Testing
-          </Typography>
-          
-          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mb: 4 }}>
-            <Box sx={{ position: 'relative', display: 'inline-flex' }}>
-              <CircularProgress
-                variant="determinate"
-                value={integrationProgress}
-                size={120}
-                thickness={6}
-                sx={{ color: 'white' }}
-              />
-              <Box
-                sx={{
-                  top: 0,
-                  left: 0,
-                  bottom: 0,
-                  right: 0,
-                  position: 'absolute',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
-              >
-                <Typography variant="h3" component="div" sx={{ fontWeight: 'bold' }}>
-                  {integrationProgress}%
-                </Typography>
-                <Typography variant="body2" component="div">
-                  Integration
-                </Typography>
-              </Box>
-            </Box>
-          </Box>
-
-          <Box sx={{ textAlign: 'center', mb: 2 }}>
-            <Chip
-              icon={integrationLevel.icon}
-              label={integrationLevel.level}
-              sx={{
-                backgroundColor: integrationLevel.color,
-                color: 'white',
-                fontWeight: 'bold',
-                fontSize: '1rem',
-                px: 2,
-                py: 1
-              }}
-            />
-          </Box>
-
-          <Typography variant="h6" sx={{ textAlign: 'center', mb: 2 }}>
-            Your Integration Score
-          </Typography>
-          <Typography variant="body1" sx={{ textAlign: 'center' }}>
-            Comprehensive platform integration with full system testing and device compatibility.
-          </Typography>
-        </Paper>
-
-        <Grid container spacing={3} sx={{ mb: 4 }}>
-          <Grid item xs={12} md={3}>
-            <Card sx={{ textAlign: 'center', p: 3, border: '2px solid #4caf50' }}>
-              <Avatar
-                sx={{
-                  width: 60,
-                  height: 60,
-                  mx: 'auto',
-                  mb: 2,
-                  backgroundColor: '#4caf50',
-                  color: 'white'
-                }}
-              >
-                <Integration />
-              </Avatar>
-              <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 1 }}>
-                System Health
-              </Typography>
-              <Typography variant="h4" sx={{ fontWeight: 'bold', color: '#4caf50', mb: 1 }}>
-                {Math.round(Object.values(integrationData.systems).reduce((sum, system) => sum + system.health, 0) / Object.values(integrationData.systems).length)}%
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                All systems operational
-              </Typography>
-            </Card>
-          </Grid>
-          
-          <Grid item xs={12} md={3}>
-            <Card sx={{ textAlign: 'center', p: 3, border: '2px solid #1976d2' }}>
-              <Avatar
-                sx={{
-                  width: 60,
-                  height: 60,
-                  mx: 'auto',
-                  mb: 2,
-                  backgroundColor: '#1976d2',
-                  color: 'white'
-                }}
-              >
-                <BugReport />
-              </Avatar>
-              <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 1 }}>
-                Test Coverage
-              </Typography>
-              <Typography variant="h4" sx={{ fontWeight: 'bold', color: '#1976d2', mb: 1 }}>
-                {Math.round(Object.values(integrationData.testing).reduce((sum, test) => sum + test.coverage, 0) / Object.values(integrationData.testing).length)}%
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                Comprehensive testing
-              </Typography>
-            </Card>
-          </Grid>
-          
-          <Grid item xs={12} md={3}>
-            <Card sx={{ textAlign: 'center', p: 3, border: '2px solid #ff9800' }}>
-              <Avatar
-                sx={{
-                  width: 60,
-                  height: 60,
-                  mx: 'auto',
-                  mb: 2,
-                  backgroundColor: '#ff9800',
-                  color: 'white'
-                }}
-              >
-                <Devices />
-              </Avatar>
-              <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 1 }}>
-                Device Support
-              </Typography>
-              <Typography variant="h4" sx={{ fontWeight: 'bold', color: '#ff9800', mb: 1 }}>
-                98%
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                Cross-platform ready
-              </Typography>
-            </Card>
-          </Grid>
-          
-          <Grid item xs={12} md={3}>
-            <Card sx={{ textAlign: 'center', p: 3, border: '2px solid #e91e63' }}>
-              <Avatar
-                sx={{
-                  width: 60,
-                  height: 60,
-                  mx: 'auto',
-                  mb: 2,
-                  backgroundColor: '#e91e63',
-                  color: 'white'
-                }}
-              >
-                <Speed />
-              </Avatar>
-              <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 1 }}>
-                Performance
-              </Typography>
-              <Typography variant="h4" sx={{ fontWeight: 'bold', color: '#e91e63', mb: 1 }}>
-                {integrationData.performance.uptime.value}%
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                Uptime & reliability
-              </Typography>
-            </Card>
-          </Grid>
-        </Grid>
-
-        <Alert severity="success" sx={{ mb: 3 }}>
-          <Typography variant="body2">
-            <strong>Integration Status:</strong> All systems are integrated and tested with 
-            excellent performance metrics and comprehensive device compatibility.
-          </Typography>
-        </Alert>
-      </Box>
-    );
-  };
-
-  // Render system integration section
-  const renderSystemIntegrationSection = () => (
-    <Box sx={{ mb: 4 }}>
-      <Typography variant="h5" gutterBottom sx={{ fontWeight: 'bold', mb: 3 }}>
-        System Integration Status
+  const renderSystemIntegration = () => (
+    <Box>
+      <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+        <IntegrationIcon color="primary" />
+        System Integration
       </Typography>
       
+      <Alert severity="info" sx={{ mb: 3 }}>
+        Monitor and manage all system integrations to ensure seamless connectivity across 
+        APIs, databases, cloud services, and third-party platforms.
+      </Alert>
+
       <Grid container spacing={3}>
-        <Grid item xs={12} md={8}>
-          <Card sx={{ p: 3 }}>
-            <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 3 }}>
-              Connected Systems
-            </Typography>
-            
-            <List>
-              {Object.entries(integrationData.systems).map(([key, system]) => (
-                <ListItem key={key}>
-                  <ListItemIcon>
-                    {system.status === 'Connected' ? 
-                      <CheckCircle sx={{ color: '#4caf50' }} /> : 
-                      <Error sx={{ color: '#f44336' }} />
-                    }
-                  </ListItemIcon>
-                  <ListItemText
-                    primary={key.charAt(0).toUpperCase() + key.slice(1).replace(/([A-Z])/g, ' $1')}
-                    secondary={`Health: ${system.health}% • Last tested: ${system.lastTest}`}
+        {Object.entries(systemIntegration).map(([system, data]) => (
+          <Grid item xs={12} md={6} lg={4} key={system}>
+            <Card variant="outlined">
+              <CardContent>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+                  <Typography variant="subtitle1" sx={{ fontWeight: 600, textTransform: 'capitalize' }}>
+                    {system.replace(/([A-Z])/g, ' $1').trim()}
+                  </Typography>
+                  <Chip 
+                    label={data.status} 
+                    color={data.status === 'connected' ? 'success' : 'error'}
+                    size="small"
                   />
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                    <LinearProgress
-                      variant="determinate"
-                      value={system.health}
-                      sx={{ width: 100, height: 6, borderRadius: 3 }}
-                    />
-                    <Chip 
-                      label={system.status} 
-                      size="small" 
-                      sx={{ 
-                        backgroundColor: system.status === 'Connected' ? '#4caf50' : '#f44336', 
-                        color: 'white' 
-                      }} 
-                    />
+                </Box>
+                
+                <Box sx={{ mb: 2 }}>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+                    <Typography variant="body2">Health Score</Typography>
+                    <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                      {data.health}%
+                    </Typography>
                   </Box>
-                </ListItem>
+                  <LinearProgress 
+                    variant="determinate" 
+                    value={data.health} 
+                    sx={{ height: 6, borderRadius: 3 }}
+                    color={data.health >= 95 ? 'success' : data.health >= 85 ? 'info' : 'warning'}
+                  />
+                </Box>
+                
+                <Grid container spacing={2}>
+                  <Grid item xs={6}>
+                    <Typography variant="body2" color="text.secondary">
+                      Tests: {data.tests}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Typography variant="body2" color="text.secondary">
+                      Passed: {data.passed}
+                    </Typography>
+                  </Grid>
+                </Grid>
+                
+                <Box sx={{ mt: 2, display: 'flex', gap: 1 }}>
+                  <Button size="small" startIcon={<RunIcon />}>
+                    Test
+                  </Button>
+                  <Button size="small" startIcon={<RefreshIcon />}>
+                    Refresh
+                  </Button>
+                </Box>
+              </CardContent>
+            </Card>
+          </Grid>
+        ))}
+      </Grid>
+    </Box>
+  );
+
+  const renderTestingSuite = () => (
+    <Box>
+      <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+        <TestingIcon color="primary" />
+        Testing Suite
+      </Typography>
+      
+      <Alert severity="info" sx={{ mb: 3 }}>
+        Comprehensive testing framework covering unit tests, integration tests, performance tests, 
+        and security validation to ensure platform reliability.
+      </Alert>
+
+      <Box sx={{ mb: 3 }}>
+        <Button 
+          variant="contained" 
+          onClick={runTestSuite}
+          disabled={runningTests}
+          startIcon={runningTests ? <CircularProgress size={20} /> : <RunIcon />}
+          sx={{ mr: 2 }}
+        >
+          {runningTests ? 'Running Tests...' : 'Run Full Test Suite'}
+        </Button>
+        <Button variant="outlined" startIcon={<ReportIcon />}>
+          Generate Report
+        </Button>
+      </Box>
+
+      <Grid container spacing={3}>
+        {Object.entries(testingSuite).map(([testType, data]) => (
+          <Grid item xs={12} md={6} lg={4} key={testType}>
+            <Card variant="outlined">
+              <CardContent>
+                <Typography variant="subtitle1" gutterBottom sx={{ fontWeight: 600, textTransform: 'capitalize' }}>
+                  {testType.replace(/([A-Z])/g, ' $1').trim()}
+                </Typography>
+                
+                <Box sx={{ mb: 2 }}>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+                    <Typography variant="body2">Coverage</Typography>
+                    <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                      {data.coverage}%
+                    </Typography>
+                  </Box>
+                  <LinearProgress 
+                    variant="determinate" 
+                    value={data.coverage} 
+                    sx={{ height: 6, borderRadius: 3 }}
+                    color={data.coverage >= 95 ? 'success' : data.coverage >= 85 ? 'info' : 'warning'}
+                  />
+                </Box>
+                
+                <Grid container spacing={1}>
+                  <Grid item xs={4}>
+                    <Box sx={{ textAlign: 'center' }}>
+                      <Typography variant="h6" color="primary">
+                        {data.total}
+                      </Typography>
+                      <Typography variant="caption" color="text.secondary">
+                        Total
+                      </Typography>
+                    </Box>
+                  </Grid>
+                  <Grid item xs={4}>
+                    <Box sx={{ textAlign: 'center' }}>
+                      <Typography variant="h6" color="success.main">
+                        {data.passed}
+                      </Typography>
+                      <Typography variant="caption" color="text.secondary">
+                        Passed
+                      </Typography>
+                    </Box>
+                  </Grid>
+                  <Grid item xs={4}>
+                    <Box sx={{ textAlign: 'center' }}>
+                      <Typography variant="h6" color="error.main">
+                        {data.failed}
+                      </Typography>
+                      <Typography variant="caption" color="text.secondary">
+                        Failed
+                      </Typography>
+                    </Box>
+                  </Grid>
+                </Grid>
+              </CardContent>
+            </Card>
+          </Grid>
+        ))}
+      </Grid>
+    </Box>
+  );
+
+  const renderDeviceCompatibility = () => (
+    <Box>
+      <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+        <DeviceIcon color="primary" />
+        Device Compatibility
+      </Typography>
+      
+      <Alert severity="info" sx={{ mb: 3 }}>
+        Ensure optimal user experience across all devices, operating systems, and browsers 
+        with comprehensive compatibility testing and validation.
+      </Alert>
+
+      <Grid container spacing={3}>
+        <Grid item xs={12} md={4}>
+          <Card variant="outlined">
+            <CardContent>
+              <Typography variant="subtitle1" gutterBottom sx={{ fontWeight: 600, display: 'flex', alignItems: 'center', gap: 1 }}>
+                <MobileIcon />
+                Mobile Devices
+              </Typography>
+              
+              {Object.entries(deviceCompatibility.mobile).map(([platform, data]) => (
+                <Box key={platform} sx={{ mb: 2 }}>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+                    <Typography variant="body2" sx={{ textTransform: 'capitalize' }}>
+                      {platform}
+                    </Typography>
+                    <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                      {data.compatibility}%
+                    </Typography>
+                  </Box>
+                  <LinearProgress 
+                    variant="determinate" 
+                    value={data.compatibility} 
+                    sx={{ height: 4, borderRadius: 2, mb: 1 }}
+                    color={data.compatibility >= 95 ? 'success' : 'warning'}
+                  />
+                  <Typography variant="caption" color="text.secondary">
+                    {platform === 'responsive' ? `${data.breakpoints} breakpoints` : `${data.devices} devices`} tested, {data.issues} issues
+                  </Typography>
+                </Box>
               ))}
-            </List>
+            </CardContent>
           </Card>
         </Grid>
-        
+
         <Grid item xs={12} md={4}>
-          <Card sx={{ p: 3, textAlign: 'center', border: '2px solid #4caf50' }}>
-            <Integration sx={{ fontSize: 60, color: '#4caf50', mb: 2 }} />
-            <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2 }}>
-              System Integration
-            </Typography>
-            <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-              All critical systems are connected and operating at optimal performance levels.
-            </Typography>
-            
-            <Stack spacing={2}>
-              <Button
-                variant="contained"
-                fullWidth
-                startIcon={<Refresh />}
-                sx={{ backgroundColor: '#4caf50' }}
-                onClick={() => setShowSystemDialog(true)}
-              >
-                Test All Systems
-              </Button>
-              <Button
-                variant="outlined"
-                fullWidth
-                startIcon={<Settings />}
-              >
-                System Settings
-              </Button>
-            </Stack>
+          <Card variant="outlined">
+            <CardContent>
+              <Typography variant="subtitle1" gutterBottom sx={{ fontWeight: 600, display: 'flex', alignItems: 'center', gap: 1 }}>
+                <DesktopIcon />
+                Desktop Systems
+              </Typography>
+              
+              {Object.entries(deviceCompatibility.desktop).map(([os, data]) => (
+                <Box key={os} sx={{ mb: 2 }}>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+                    <Typography variant="body2" sx={{ textTransform: 'capitalize' }}>
+                      {os}
+                    </Typography>
+                    <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                      {data.compatibility}%
+                    </Typography>
+                  </Box>
+                  <LinearProgress 
+                    variant="determinate" 
+                    value={data.compatibility} 
+                    sx={{ height: 4, borderRadius: 2, mb: 1 }}
+                    color={data.compatibility >= 95 ? 'success' : 'warning'}
+                  />
+                  <Typography variant="caption" color="text.secondary">
+                    {data.browsers} browsers tested, {data.issues} issues
+                  </Typography>
+                </Box>
+              ))}
+            </CardContent>
+          </Card>
+        </Grid>
+
+        <Grid item xs={12} md={4}>
+          <Card variant="outlined">
+            <CardContent>
+              <Typography variant="subtitle1" gutterBottom sx={{ fontWeight: 600, display: 'flex', alignItems: 'center', gap: 1 }}>
+                <BrowserIcon />
+                Browser Support
+              </Typography>
+              
+              {Object.entries(deviceCompatibility.browsers).map(([browser, data]) => (
+                <Box key={browser} sx={{ mb: 2 }}>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+                    <Typography variant="body2" sx={{ textTransform: 'capitalize' }}>
+                      {browser}
+                    </Typography>
+                    <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                      {data.compatibility}%
+                    </Typography>
+                  </Box>
+                  <LinearProgress 
+                    variant="determinate" 
+                    value={data.compatibility} 
+                    sx={{ height: 4, borderRadius: 2, mb: 1 }}
+                    color={data.compatibility >= 95 ? 'success' : 'warning'}
+                  />
+                  <Typography variant="caption" color="text.secondary">
+                    {data.versions} versions tested, {data.issues} issues
+                  </Typography>
+                </Box>
+              ))}
+            </CardContent>
           </Card>
         </Grid>
       </Grid>
     </Box>
   );
 
+  const renderPerformanceMetrics = () => (
+    <Box>
+      <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+        <MetricsIcon color="primary" />
+        Performance Metrics
+      </Typography>
+      
+      <Alert severity="info" sx={{ mb: 3 }}>
+        Monitor real-time performance metrics to ensure optimal platform speed, reliability, 
+        and resource efficiency across all user interactions.
+      </Alert>
+
+      <Grid container spacing={3}>
+        {Object.entries(performanceMetrics).map(([metric, data]) => (
+          <Grid item xs={12} md={6} lg={3} key={metric}>
+            <Card variant="outlined">
+              <CardContent>
+                <Typography variant="subtitle2" gutterBottom sx={{ textTransform: 'capitalize' }}>
+                  {metric.replace(/([A-Z])/g, ' $1').trim()}
+                </Typography>
+                
+                <Box sx={{ textAlign: 'center', mb: 2 }}>
+                  <Typography variant="h4" sx={{ fontWeight: 700 }}>
+                    {typeof data.current !== 'undefined' ? data.current : data.average}
+                    {metric.includes('Time') || metric.includes('Latency') ? 's' : 
+                     metric.includes('Usage') ? 'MB' : 
+                     metric.includes('Rate') ? '%' : 
+                     metric.includes('uptime') ? '%' : ''}
+                  </Typography>
+                  <Chip 
+                    label={data.status} 
+                    color={data.status === 'excellent' ? 'success' : data.status === 'good' ? 'info' : 'warning'}
+                    size="small"
+                  />
+                </Box>
+                
+                <Box sx={{ mb: 1 }}>
+                  <Typography variant="caption" color="text.secondary">
+                    Target: {data.target}{metric.includes('Time') || metric.includes('Latency') ? 's' : 
+                            metric.includes('Usage') ? 'MB' : 
+                            metric.includes('Rate') ? '%' : 
+                            metric.includes('uptime') ? '%' : ''}
+                  </Typography>
+                </Box>
+                
+                <LinearProgress 
+                  variant="determinate" 
+                  value={Math.min(((typeof data.current !== 'undefined' ? data.current : data.average) / data.target) * 100, 100)}
+                  sx={{ height: 6, borderRadius: 3 }}
+                  color={data.status === 'excellent' ? 'success' : data.status === 'good' ? 'info' : 'warning'}
+                />
+              </CardContent>
+            </Card>
+          </Grid>
+        ))}
+      </Grid>
+
+      <Box sx={{ mt: 3 }}>
+        <Card variant="outlined">
+          <CardContent>
+            <Typography variant="subtitle1" gutterBottom sx={{ fontWeight: 600 }}>
+              Performance Summary
+            </Typography>
+            <TableContainer>
+              <Table size="small">
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Metric</TableCell>
+                    <TableCell align="right">Current</TableCell>
+                    <TableCell align="right">Target</TableCell>
+                    <TableCell align="right">Status</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {Object.entries(performanceMetrics).map(([metric, data]) => (
+                    <TableRow key={metric}>
+                      <TableCell sx={{ textTransform: 'capitalize' }}>
+                        {metric.replace(/([A-Z])/g, ' $1').trim()}
+                      </TableCell>
+                      <TableCell align="right">
+                        {typeof data.current !== 'undefined' ? data.current : data.average}
+                      </TableCell>
+                      <TableCell align="right">{data.target}</TableCell>
+                      <TableCell align="right">
+                        <Chip 
+                          label={data.status} 
+                          color={data.status === 'excellent' ? 'success' : data.status === 'good' ? 'info' : 'warning'}
+                          size="small"
+                        />
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </CardContent>
+        </Card>
+      </Box>
+    </Box>
+  );
+
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>
-      {/* Header */}
-      <Box sx={{ textAlign: 'center', mb: 4 }}>
-        <Typography variant="h3" component="h1" gutterBottom sx={{ fontWeight: 'bold' }}>
-          🔧 Platform Integration & Testing
+      <Box sx={{ mb: 4 }}>
+        <Typography variant="h4" gutterBottom sx={{ fontWeight: 700, color: 'primary.main' }}>
+          Platform Integration & Testing
         </Typography>
-        <Typography variant="h6" color="text.secondary" sx={{ mb: 3 }}>
-          Comprehensive system integration with full testing suite and device compatibility
+        <Typography variant="subtitle1" color="text.secondary" sx={{ mb: 3 }}>
+          Comprehensive platform integration monitoring and testing suite ensuring seamless connectivity, 
+          optimal performance, and reliable user experience across all systems and devices.
         </Typography>
-      </Box>
 
-      {/* Integration Overview */}
-      {renderIntegrationOverview()}
+        {/* Integration Score Dashboard */}
+        <Card sx={{ mb: 4, background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', color: 'white' }}>
+          <CardContent>
+            <Grid container spacing={3} alignItems="center">
+              <Grid item xs={12} md={3}>
+                <Box sx={{ textAlign: 'center' }}>
+                  <Typography variant="h3" sx={{ fontWeight: 700, mb: 1 }}>
+                    {integrationScore}
+                  </Typography>
+                  <Typography variant="body2" sx={{ opacity: 0.9 }}>
+                    Integration Score
+                  </Typography>
+                  <Chip 
+                    label={scoreInfo.level} 
+                    sx={{ 
+                      mt: 1, 
+                      bgcolor: 'rgba(255,255,255,0.2)', 
+                      color: 'white',
+                      fontWeight: 600 
+                    }} 
+                  />
+                </Box>
+              </Grid>
+              <Grid item xs={12} md={9}>
+                <Grid container spacing={2}>
+                  <Grid item xs={6} md={3}>
+                    <Box sx={{ textAlign: 'center' }}>
+                      <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                        {testingProgress}%
+                      </Typography>
+                      <Typography variant="body2" sx={{ opacity: 0.8 }}>
+                        Tests Passed
+                      </Typography>
+                    </Box>
+                  </Grid>
+                  <Grid item xs={6} md={3}>
+                    <Box sx={{ textAlign: 'center' }}>
+                      <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                        {Object.values(systemIntegration).filter(s => s.status === 'connected').length}
+                      </Typography>
+                      <Typography variant="body2" sx={{ opacity: 0.8 }}>
+                        Systems Online
+                      </Typography>
+                    </Box>
+                  </Grid>
+                  <Grid item xs={6} md={3}>
+                    <Box sx={{ textAlign: 'center' }}>
+                      <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                        {Math.round((deviceCompatibility.mobile.ios.compatibility + deviceCompatibility.mobile.android.compatibility) / 2)}%
+                      </Typography>
+                      <Typography variant="body2" sx={{ opacity: 0.8 }}>
+                        Mobile Compatible
+                      </Typography>
+                    </Box>
+                  </Grid>
+                  <Grid item xs={6} md={3}>
+                    <Box sx={{ textAlign: 'center' }}>
+                      <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                        {Object.values(performanceMetrics).filter(m => m.status === 'excellent').length}
+                      </Typography>
+                      <Typography variant="body2" sx={{ opacity: 0.8 }}>
+                        Excellent Metrics
+                      </Typography>
+                    </Box>
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Grid>
+          </CardContent>
+        </Card>
+      </Box>
 
       {/* Main Content Tabs */}
-      <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 4 }}>
-        <Tabs value={selectedTab} onChange={(e, newValue) => setSelectedTab(newValue)}>
-          <Tab label="System Integration" />
-          <Tab label="Testing Suite" />
-          <Tab label="Device Compatibility" />
-          <Tab label="Performance Metrics" />
+      <Paper sx={{ mb: 4 }}>
+        <Tabs 
+          value={activeTab} 
+          onChange={(e, newValue) => setActiveTab(newValue)}
+          variant="fullWidth"
+          sx={{ borderBottom: 1, borderColor: 'divider' }}
+        >
+          <Tab 
+            label="System Integration" 
+            icon={<IntegrationIcon />} 
+            iconPosition="start"
+          />
+          <Tab 
+            label="Testing Suite" 
+            icon={<TestingIcon />} 
+            iconPosition="start"
+          />
+          <Tab 
+            label="Device Compatibility" 
+            icon={<DeviceIcon />} 
+            iconPosition="start"
+          />
+          <Tab 
+            label="Performance Metrics" 
+            icon={<MetricsIcon />} 
+            iconPosition="start"
+          />
         </Tabs>
+
+        <Box sx={{ p: 4 }}>
+          {activeTab === 0 && renderSystemIntegration()}
+          {activeTab === 1 && renderTestingSuite()}
+          {activeTab === 2 && renderDeviceCompatibility()}
+          {activeTab === 3 && renderPerformanceMetrics()}
+        </Box>
+      </Paper>
+
+      {/* Action Buttons */}
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 4 }}>
+        <Box sx={{ display: 'flex', gap: 2 }}>
+          <Button
+            variant="outlined"
+            startIcon={<AutomationIcon />}
+          >
+            Automated Testing
+          </Button>
+          <Button
+            variant="outlined"
+            startIcon={<ExportIcon />}
+          >
+            Export Reports
+          </Button>
+        </Box>
+        
+        <Box sx={{ display: 'flex', gap: 2 }}>
+          <Button variant="outlined" size="large">
+            Schedule Tests
+          </Button>
+          <Button 
+            variant="contained" 
+            size="large"
+            startIcon={<PassIcon />}
+            sx={{ minWidth: 200 }}
+          >
+            Platform Ready
+          </Button>
+        </Box>
       </Box>
 
-      {/* Tab Content */}
-      {selectedTab === 0 && renderSystemIntegrationSection()}
-      {selectedTab === 1 && (
-        <Box>
-          <Typography variant="h5" gutterBottom sx={{ fontWeight: 'bold', mb: 3 }}>
-            Comprehensive Testing Suite
-          </Typography>
-          
-          <Grid container spacing={3}>
-            <Grid item xs={12} md={8}>
-              <Card sx={{ p: 3 }}>
-                <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 3 }}>
-                  Test Results
-                </Typography>
-                
-                <List>
-                  {Object.entries(integrationData.testing).map(([key, test]) => (
-                    <ListItem key={key}>
-                      <ListItemIcon>
-                        {test.status === 'Passed' ? 
-                          <CheckCircle sx={{ color: '#4caf50' }} /> : 
-                          test.status === 'Warning' ?
-                          <Warning sx={{ color: '#ff9800' }} /> :
-                          <Error sx={{ color: '#f44336' }} />
-                        }
-                      </ListItemIcon>
-                      <ListItemText
-                        primary={key.charAt(0).toUpperCase() + key.slice(1).replace(/([A-Z])/g, ' $1')}
-                        secondary={`Passed: ${test.passed} • Failed: ${test.failed} • Coverage: ${test.coverage}%`}
-                      />
-                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                        <LinearProgress
-                          variant="determinate"
-                          value={test.coverage}
-                          sx={{ width: 100, height: 6, borderRadius: 3 }}
-                        />
-                        <Chip 
-                          label={test.status} 
-                          size="small" 
-                          sx={{ 
-                            backgroundColor: test.status === 'Passed' ? '#4caf50' : test.status === 'Warning' ? '#ff9800' : '#f44336', 
-                            color: 'white' 
-                          }} 
-                        />
-                      </Box>
-                    </ListItem>
-                  ))}
-                </List>
-              </Card>
-            </Grid>
-            
-            <Grid item xs={12} md={4}>
-              <Card sx={{ p: 3, textAlign: 'center', border: '2px solid #1976d2' }}>
-                <BugReport sx={{ fontSize: 60, color: '#1976d2', mb: 2 }} />
-                <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2 }}>
-                  Testing Status
-                </Typography>
-                <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-                  Comprehensive test suite with excellent coverage across all testing categories.
-                </Typography>
-                
-                <Stack spacing={2}>
-                  <Button
-                    variant="contained"
-                    fullWidth
-                    startIcon={testingInProgress ? <CircularProgress size={20} color="inherit" /> : <PlayArrow />}
-                    sx={{ backgroundColor: '#1976d2' }}
-                    onClick={runComprehensiveTest}
-                    disabled={testingInProgress}
-                  >
-                    {testingInProgress ? 'Running Tests...' : 'Run All Tests'}
-                  </Button>
-                  <Button
-                    variant="outlined"
-                    fullWidth
-                    startIcon={<Assessment />}
-                    onClick={() => setShowTestDialog(true)}
-                  >
-                    View Reports
-                  </Button>
-                </Stack>
-              </Card>
-            </Grid>
-          </Grid>
-        </Box>
-      )}
-      {selectedTab === 2 && (
-        <Box>
-          <Typography variant="h5" gutterBottom sx={{ fontWeight: 'bold', mb: 3 }}>
-            Device Compatibility Testing
-          </Typography>
-          
-          <Grid container spacing={3}>
-            <Grid item xs={12} md={4}>
-              <Card sx={{ p: 3 }}>
-                <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 3, display: 'flex', alignItems: 'center' }}>
-                  <Smartphone sx={{ mr: 1 }} />
-                  Mobile Devices
-                </Typography>
-                
-                <List>
-                  <ListItem>
-                    <ListItemText
-                      primary="iOS"
-                      secondary={`Compatibility: ${integrationData.devices.mobile.ios.compatibility}%`}
-                    />
-                    <Chip 
-                      label={integrationData.devices.mobile.ios.issues === 0 ? "Perfect" : `${integrationData.devices.mobile.ios.issues} issues`} 
-                      size="small" 
-                      sx={{ 
-                        backgroundColor: integrationData.devices.mobile.ios.issues === 0 ? '#4caf50' : '#ff9800', 
-                        color: 'white' 
-                      }} 
-                    />
-                  </ListItem>
-                  
-                  <ListItem>
-                    <ListItemText
-                      primary="Android"
-                      secondary={`Compatibility: ${integrationData.devices.mobile.android.compatibility}%`}
-                    />
-                    <Chip 
-                      label={integrationData.devices.mobile.android.issues === 0 ? "Perfect" : `${integrationData.devices.mobile.android.issues} issues`} 
-                      size="small" 
-                      sx={{ 
-                        backgroundColor: integrationData.devices.mobile.android.issues === 0 ? '#4caf50' : '#ff9800', 
-                        color: 'white' 
-                      }} 
-                    />
-                  </ListItem>
-                  
-                  <ListItem>
-                    <ListItemText
-                      primary="Responsive Design"
-                      secondary={`Compatibility: ${integrationData.devices.mobile.responsive.compatibility}%`}
-                    />
-                    <Chip 
-                      label={integrationData.devices.mobile.responsive.issues === 0 ? "Perfect" : `${integrationData.devices.mobile.responsive.issues} issues`} 
-                      size="small" 
-                      sx={{ 
-                        backgroundColor: integrationData.devices.mobile.responsive.issues === 0 ? '#4caf50' : '#ff9800', 
-                        color: 'white' 
-                      }} 
-                    />
-                  </ListItem>
-                </List>
-              </Card>
-            </Grid>
-            
-            <Grid item xs={12} md={4}>
-              <Card sx={{ p: 3 }}>
-                <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 3, display: 'flex', alignItems: 'center' }}>
-                  <Computer sx={{ mr: 1 }} />
-                  Desktop Browsers
-                </Typography>
-                
-                <List>
-                  {Object.entries(integrationData.devices.desktop).map(([browser, data]) => (
-                    <ListItem key={browser}>
-                      <ListItemText
-                        primary={browser.charAt(0).toUpperCase() + browser.slice(1)}
-                        secondary={`Compatibility: ${data.compatibility}%`}
-                      />
-                      <Chip 
-                        label={data.issues === 0 ? "Perfect" : `${data.issues} issues`} 
-                        size="small" 
-                        sx={{ 
-                          backgroundColor: data.issues === 0 ? '#4caf50' : '#ff9800', 
-                          color: 'white' 
-                        }} 
-                      />
-                    </ListItem>
-                  ))}
-                </List>
-              </Card>
-            </Grid>
-            
-            <Grid item xs={12} md={4}>
-              <Card sx={{ p: 3 }}>
-                <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 3, display: 'flex', alignItems: 'center' }}>
-                  <Tablet sx={{ mr: 1 }} />
-                  Tablet Devices
-                </Typography>
-                
-                <List>
-                  {Object.entries(integrationData.devices.tablet).map(([device, data]) => (
-                    <ListItem key={device}>
-                      <ListItemText
-                        primary={device === 'ipad' ? 'iPad' : 'Android Tablet'}
-                        secondary={`Compatibility: ${data.compatibility}%`}
-                      />
-                      <Chip 
-                        label={data.issues === 0 ? "Perfect" : `${data.issues} issues`} 
-                        size="small" 
-                        sx={{ 
-                          backgroundColor: data.issues === 0 ? '#4caf50' : '#ff9800', 
-                          color: 'white' 
-                        }} 
-                      />
-                    </ListItem>
-                  ))}
-                </List>
-              </Card>
-            </Grid>
-          </Grid>
-        </Box>
-      )}
-      {selectedTab === 3 && (
-        <Box>
-          <Typography variant="h5" gutterBottom sx={{ fontWeight: 'bold', mb: 3 }}>
-            Performance Metrics & Monitoring
-          </Typography>
-          
-          <Grid container spacing={3}>
-            <Grid item xs={12} md={6}>
-              <Card sx={{ p: 3 }}>
-                <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 3 }}>
-                  Performance Indicators
-                </Typography>
-                
-                <List>
-                  {Object.entries(integrationData.performance).map(([key, metric]) => (
-                    <ListItem key={key}>
-                      <ListItemIcon>
-                        {metric.status === 'Excellent' ? 
-                          <CheckCircle sx={{ color: '#4caf50' }} /> : 
-                          metric.status === 'Good' ?
-                          <Info sx={{ color: '#1976d2' }} /> :
-                          <Warning sx={{ color: '#ff9800' }} />
-                        }
-                      </ListItemIcon>
-                      <ListItemText
-                        primary={key.charAt(0).toUpperCase() + key.slice(1).replace(/([A-Z])/g, ' $1')}
-                        secondary={`Current: ${metric.value}${key.includes('Time') || key.includes('Latency') ? 's' : key.includes('Rate') ? '%' : key.includes('Usage') ? '%' : key.includes('uptime') ? '%' : ''} • Target: ${metric.target}${key.includes('Time') || key.includes('Latency') ? 's' : key.includes('Rate') ? '%' : key.includes('Usage') ? '%' : key.includes('uptime') ? '%' : ''}`}
-                      />
-                      <Chip 
-                        label={metric.status} 
-                        size="small" 
-                        sx={{ 
-                          backgroundColor: metric.status === 'Excellent' ? '#4caf50' : metric.status === 'Good' ? '#1976d2' : '#ff9800', 
-                          color: 'white' 
-                        }} 
-                      />
-                    </ListItem>
-                  ))}
-                </List>
-              </Card>
-            </Grid>
-            
-            <Grid item xs={12} md={6}>
-              <Card sx={{ p: 3 }}>
-                <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 3 }}>
-                  Performance Summary
-                </Typography>
-                
-                <Box sx={{ mb: 3 }}>
-                  <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-                    <Typography variant="body2">Overall Performance</Typography>
-                    <Typography variant="body2" sx={{ fontWeight: 'bold' }}>96%</Typography>
-                  </Box>
-                  <LinearProgress variant="determinate" value={96} sx={{ height: 8, borderRadius: 4 }} />
-                </Box>
-                
-                <Box sx={{ mb: 3 }}>
-                  <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-                    <Typography variant="body2">Reliability Score</Typography>
-                    <Typography variant="body2" sx={{ fontWeight: 'bold' }}>99%</Typography>
-                  </Box>
-                  <LinearProgress variant="determinate" value={99} sx={{ height: 8, borderRadius: 4 }} />
-                </Box>
-                
-                <Box sx={{ mb: 3 }}>
-                  <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-                    <Typography variant="body2">User Experience</Typography>
-                    <Typography variant="body2" sx={{ fontWeight: 'bold' }}>98%</Typography>
-                  </Box>
-                  <LinearProgress variant="determinate" value={98} sx={{ height: 8, borderRadius: 4 }} />
-                </Box>
-                
-                <Typography variant="body2" color="text.secondary">
-                  Excellent performance across all metrics with industry-leading reliability and user experience.
-                </Typography>
-              </Card>
-            </Grid>
-          </Grid>
-        </Box>
-      )}
-
-      {/* Navigation Buttons */}
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 6 }}>
-        <Button
-          variant="outlined"
-          startIcon={<NavigateBefore />}
-          onClick={() => {
-            // Navigate to previous screen (User Experience Optimization)
-            console.log('Navigate to previous screen');
-          }}
-        >
-          Back to UX Optimization
-        </Button>
-
-        <Button
-          variant="contained"
-          endIcon={<NavigateNext />}
-          onClick={() => {
-            // Save integration data and continue to final screen
-            localStorage.setItem('integrationData', JSON.stringify({
-              ...integrationData,
-              timestamp: new Date().toISOString()
-            }));
-            console.log('Platform integration & testing complete - moving to final launch preparation');
-          }}
-          sx={{
-            background: 'linear-gradient(45deg, #1976d2 30%, #00bcd4 90%)',
-            color: 'white'
-          }}
-        >
-          Ready for Launch
-        </Button>
-      </Box>
-
-      {/* System Dialog */}
-      <Dialog open={showSystemDialog} onClose={() => setShowSystemDialog(false)} maxWidth="md" fullWidth>
-        <DialogTitle>
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Integration sx={{ mr: 1 }} />
-            System Integration Test
-          </Box>
-        </DialogTitle>
-        <DialogContent>
-          <Box sx={{ py: 2 }}>
-            <Typography variant="h6" sx={{ mb: 2 }}>
-              Comprehensive System Test
-            </Typography>
-            <Typography variant="body1" sx={{ mb: 2 }}>
-              Run a comprehensive test of all integrated systems including authentication, 
-              database, AI services, messaging, and security components.
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              This test will verify all system connections and performance metrics.
-            </Typography>
-          </Box>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setShowSystemDialog(false)}>
-            Close
-          </Button>
-          <Button variant="contained" color="primary">
-            Run System Test
-          </Button>
-        </DialogActions>
-      </Dialog>
-
-      {/* Final Integration Notice */}
-      <Alert severity="success" sx={{ mt: 4 }}>
-        <Typography variant="body2">
-          <strong>Integration Complete:</strong> All systems are fully integrated and tested 
-          with excellent performance metrics, comprehensive device compatibility, and 
-          production-ready status achieved.
+      {/* Progress Indicator */}
+      <Box sx={{ mt: 4, textAlign: 'center' }}>
+        <Typography variant="body2" color="text.secondary" gutterBottom>
+          Platform Integration Progress
         </Typography>
-      </Alert>
+        <LinearProgress 
+          variant="determinate" 
+          value={integrationScore} 
+          sx={{ height: 8, borderRadius: 4, mb: 1 }}
+        />
+        <Typography variant="body2" color="text.secondary">
+          {scoreInfo.description}
+        </Typography>
+      </Box>
     </Container>
   );
 };
