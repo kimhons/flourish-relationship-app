@@ -5,679 +5,849 @@ import {
   Typography,
   Card,
   CardContent,
-  Button,
-  Tabs,
-  Tab,
   Grid,
   Switch,
   FormControlLabel,
   Slider,
+  Button,
+  Tabs,
+  Tab,
+  Chip,
   Select,
   MenuItem,
   FormControl,
   InputLabel,
-  Chip,
-  Avatar,
+  TextField,
+  Alert,
   LinearProgress,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemIcon,
+  IconButton,
   Dialog,
   DialogTitle,
   DialogContent,
   DialogActions,
-  Alert,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
-  Rating,
   Divider,
-  IconButton,
-  Tooltip,
-  TextField,
-  TimePicker,
-  LocalizationProvider,
-  Badge,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  ListItemSecondary,
-  ToggleButton,
-  ToggleButtonGroup,
-  Stepper,
-  Step,
-  StepLabel
+  Paper,
+  Rating,
+  Badge
 } from '@mui/material';
 import {
+  ExpandMore as ExpandMoreIcon,
   Notifications as NotificationsIcon,
   Message as MessageIcon,
-  Schedule as ScheduleIcon,
-  Psychology as PsychologyIcon,
-  ExpandMore as ExpandMoreIcon,
-  Settings as SettingsIcon,
-  VolumeUp as VolumeUpIcon,
-  Vibration as VibrationIcon,
+  Phone as PhoneIcon,
   Email as EmailIcon,
-  Sms as SmsIcon,
-  PhoneAndroid as PhoneIcon,
-  Desktop as DesktopIcon,
-  Watch as WatchIcon,
-  Favorite as FavoriteIcon,
-  Star as StarIcon,
-  TrendingUp as TrendingUpIcon,
   Security as SecurityIcon,
-  Language as LanguageIcon,
-  DarkMode as DarkModeIcon,
-  LightMode as LightModeIcon,
-  AutoAwesome as AutoAwesomeIcon,
-  PersonalVideo as PersonalVideoIcon,
-  TouchApp as TouchAppIcon,
-  Visibility as VisibilityIcon,
-  Timer as TimerIcon,
-  Battery as BatteryIcon,
-  Wifi as WifiIcon,
-  Priority as PriorityIcon,
-  FilterList as FilterListIcon,
-  SmartToy as SmartToyIcon,
-  Group as GroupIcon,
-  Person as PersonIcon,
-  Chat as ChatIcon,
-  VideoCall as VideoCallIcon,
-  Call as CallIcon,
-  Event as EventIcon,
-  Celebration as CelebrationIcon,
+  SmartToy as AIIcon,
+  VolumeUp as VolumeIcon,
+  Vibration as VibrationIcon,
+  Lightbulb as LEDIcon,
+  Translate as TranslateIcon,
+  Psychology as SentimentIcon,
+  AutoAwesome as SmartIcon,
+  Shield as PrivacyIcon,
+  Block as BlockIcon,
+  Report as ReportIcon,
+  Lock as EncryptionIcon,
+  Visibility as ReadReceiptIcon,
+  Edit as TypingIcon,
+  Emergency as EmergencyIcon,
+  TrendingUp as MetricsIcon,
+  Settings as SettingsIcon,
+  CheckCircle as CheckIcon,
   Warning as WarningIcon,
-  Info as InfoIcon,
-  CheckCircle as CheckCircleIcon,
-  Cancel as CancelIcon,
-  Pause as PauseIcon,
-  PlayArrow as PlayArrowIcon,
-  Tune as TuneIcon,
-  Analytics as AnalyticsIcon
+  Info as InfoIcon
 } from '@mui/icons-material';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 
 const AdvancedNotificationManagement = () => {
   const [activeTab, setActiveTab] = useState(0);
-  const [notificationScore, setNotificationScore] = useState(0);
-  const [showOptimizationDialog, setShowOptimizationDialog] = useState(false);
-  const [currentStep, setCurrentStep] = useState(0);
-
-  // Notification Settings State
-  const [notificationSettings, setNotificationSettings] = useState({
-    // General Settings
-    masterEnabled: true,
-    quietHoursEnabled: true,
-    quietHoursStart: '22:00',
-    quietHoursEnd: '08:00',
-    weekendMode: false,
-    vacationMode: false,
-    
-    // Channel Preferences
-    pushNotifications: true,
-    emailNotifications: true,
-    smsNotifications: false,
-    inAppNotifications: true,
-    desktopNotifications: true,
-    wearableNotifications: false,
-    
-    // Content Categories
-    matches: { enabled: true, priority: 'high', sound: true, vibration: true },
-    messages: { enabled: true, priority: 'high', sound: true, vibration: true },
-    likes: { enabled: true, priority: 'medium', sound: false, vibration: true },
-    profileViews: { enabled: true, priority: 'low', sound: false, vibration: false },
-    coachingReminders: { enabled: true, priority: 'medium', sound: true, vibration: false },
-    safetyAlerts: { enabled: true, priority: 'critical', sound: true, vibration: true },
-    events: { enabled: true, priority: 'medium', sound: false, vibration: false },
-    updates: { enabled: false, priority: 'low', sound: false, vibration: false },
-    
-    // AI Optimization
-    smartTiming: true,
-    behaviorLearning: true,
-    contextAware: true,
-    batchSimilar: true,
-    predictiveFiltering: true,
-    emotionalTiming: true,
-    
-    // Advanced Features
-    locationBased: false,
-    calendarIntegration: true,
-    activityBasedTiming: true,
-    socialContextAware: true,
-    urgencyDetection: true,
-    spamFiltering: true,
-    duplicateDetection: true,
-    
-    // Communication Preferences
-    responseTimeExpectation: 'flexible',
-    communicationStyle: 'balanced',
-    availabilitySharing: 'smart',
-    autoResponses: false,
-    readReceipts: true,
-    typingIndicators: true,
-    onlineStatus: 'smart'
+  const [notificationPreferences, setNotificationPreferences] = useState({
+    matches: { enabled: true, sound: true, vibration: true, popup: true, led: false },
+    messages: { enabled: true, sound: true, vibration: true, popup: true, led: true },
+    likes: { enabled: true, sound: false, vibration: true, popup: false, led: false },
+    superLikes: { enabled: true, sound: true, vibration: true, popup: true, led: true },
+    profileViews: { enabled: false, sound: false, vibration: false, popup: false, led: false },
+    coachingReminders: { enabled: true, sound: false, vibration: true, popup: true, led: false },
+    safetyAlerts: { enabled: true, sound: true, vibration: true, popup: true, led: true },
+    eventInvites: { enabled: true, sound: false, vibration: true, popup: true, led: false },
+    communityUpdates: { enabled: false, sound: false, vibration: false, popup: false, led: false },
+    premiumOffers: { enabled: false, sound: false, vibration: false, popup: false, led: false },
+    weeklyInsights: { enabled: true, sound: false, vibration: false, popup: false, led: false },
+    milestoneAchievements: { enabled: true, sound: true, vibration: true, popup: true, led: true },
+    dateReminders: { enabled: true, sound: true, vibration: true, popup: true, led: false },
+    profileBoosts: { enabled: true, sound: false, vibration: true, popup: true, led: false },
+    subscriptionUpdates: { enabled: true, sound: false, vibration: false, popup: false, led: false },
+    securityAlerts: { enabled: true, sound: true, vibration: true, popup: true, led: true },
+    backupReminders: { enabled: false, sound: false, vibration: false, popup: false, led: false },
+    feedbackRequests: { enabled: false, sound: false, vibration: false, popup: false, led: false },
+    systemUpdates: { enabled: true, sound: false, vibration: false, popup: false, led: false },
+    maintenanceNotices: { enabled: true, sound: false, vibration: false, popup: true, led: false }
   });
 
-  const [optimizationResults, setOptimizationResults] = useState({
-    relevance: 94,
-    timing: 91,
-    frequency: 88,
-    engagement: 92
+  const [communicationChannels, setCommunicationChannels] = useState({
+    inApp: { enabled: true, priority: 'high' },
+    email: { enabled: true, priority: 'medium', frequency: 'daily' },
+    sms: { enabled: false, priority: 'high', emergencyOnly: true },
+    pushNotifications: { enabled: true, priority: 'high' },
+    whatsapp: { enabled: false, priority: 'medium' },
+    telegram: { enabled: false, priority: 'low' },
+    slack: { enabled: false, priority: 'low' },
+    discord: { enabled: false, priority: 'low' }
   });
 
-  const notificationCategories = [
-    {
-      id: 'general',
-      title: 'General Settings',
-      icon: <SettingsIcon />,
-      description: 'Master controls and quiet hours management',
-      settings: [
-        { key: 'masterEnabled', label: 'Master Notifications', type: 'switch', description: 'Enable/disable all notifications' },
-        { key: 'quietHoursEnabled', label: 'Quiet Hours', type: 'switch', description: 'Automatically silence notifications during specified hours' },
-        { key: 'weekendMode', label: 'Weekend Mode', type: 'switch', description: 'Reduced notifications on weekends' },
-        { key: 'vacationMode', label: 'Vacation Mode', type: 'switch', description: 'Minimal notifications during vacation' }
-      ]
-    },
-    {
-      id: 'channels',
-      title: 'Notification Channels',
-      icon: <NotificationsIcon />,
-      description: 'Configure delivery channels and devices',
-      settings: [
-        { key: 'pushNotifications', label: 'Push Notifications', type: 'switch', description: 'Mobile push notifications' },
-        { key: 'emailNotifications', label: 'Email Notifications', type: 'switch', description: 'Email delivery for important updates' },
-        { key: 'smsNotifications', label: 'SMS Notifications', type: 'switch', description: 'Text message notifications for critical alerts' },
-        { key: 'inAppNotifications', label: 'In-App Notifications', type: 'switch', description: 'Notifications within the app' },
-        { key: 'desktopNotifications', label: 'Desktop Notifications', type: 'switch', description: 'Browser and desktop notifications' },
-        { key: 'wearableNotifications', label: 'Wearable Notifications', type: 'switch', description: 'Smartwatch and wearable device notifications' }
-      ]
-    },
-    {
-      id: 'content',
-      title: 'Content Categories',
-      icon: <FilterListIcon />,
-      description: 'Customize notifications by content type',
-      categories: [
-        { key: 'matches', label: 'New Matches', icon: <FavoriteIcon />, description: 'When you receive a new match' },
-        { key: 'messages', label: 'Messages', icon: <MessageIcon />, description: 'New messages from matches' },
-        { key: 'likes', label: 'Likes & Interest', icon: <StarIcon />, description: 'When someone likes your profile' },
-        { key: 'profileViews', label: 'Profile Views', icon: <VisibilityIcon />, description: 'When someone views your profile' },
-        { key: 'coachingReminders', label: 'Coaching Reminders', icon: <PsychologyIcon />, description: 'AI coach session reminders' },
-        { key: 'safetyAlerts', label: 'Safety Alerts', icon: <SecurityIcon />, description: 'Important safety notifications' },
-        { key: 'events', label: 'Events & Activities', icon: <EventIcon />, description: 'Community events and activities' },
-        { key: 'updates', label: 'App Updates', icon: <InfoIcon />, description: 'Feature updates and announcements' }
-      ]
-    },
-    {
-      id: 'ai',
-      title: 'AI Optimization',
-      icon: <SmartToyIcon />,
-      description: 'AI-powered notification intelligence',
-      settings: [
-        { key: 'smartTiming', label: 'Smart Timing', type: 'switch', description: 'AI optimizes notification timing based on your activity' },
-        { key: 'behaviorLearning', label: 'Behavior Learning', type: 'switch', description: 'Learn from your interaction patterns' },
-        { key: 'contextAware', label: 'Context Awareness', type: 'switch', description: 'Consider your current context and activity' },
-        { key: 'batchSimilar', label: 'Batch Similar', type: 'switch', description: 'Group similar notifications together' },
-        { key: 'predictiveFiltering', label: 'Predictive Filtering', type: 'switch', description: 'Filter notifications based on predicted relevance' },
-        { key: 'emotionalTiming', label: 'Emotional Timing', type: 'switch', description: 'Consider emotional context for timing' }
-      ]
-    }
-  ];
+  const [aiCommunicationSettings, setAiCommunicationSettings] = useState({
+    smartReplies: { enabled: true, confidence: 80 },
+    sentimentAnalysis: { enabled: true, sensitivity: 70 },
+    conversationSummaries: { enabled: true, frequency: 'weekly' },
+    proactiveSuggestions: { enabled: true, timing: 'contextual' },
+    languageTranslation: { enabled: false, autoDetect: true },
+    toneAdjustment: { enabled: true, style: 'friendly' },
+    responseOptimization: { enabled: true, learningMode: true },
+    communicationInsights: { enabled: true, privacy: 'anonymous' }
+  });
 
-  const priorityLevels = [
-    { value: 'critical', label: 'Critical', color: 'error', description: 'Immediate attention required' },
-    { value: 'high', label: 'High', color: 'warning', description: 'Important but not urgent' },
-    { value: 'medium', label: 'Medium', color: 'info', description: 'Moderate importance' },
-    { value: 'low', label: 'Low', color: 'success', description: 'Low priority, can wait' }
-  ];
+  const [privacySecuritySettings, setPrivacySecuritySettings] = useState({
+    readReceipts: { enabled: true, mutualOnly: true },
+    typingIndicators: { enabled: true, mutualOnly: false },
+    messageEncryption: { enabled: true, level: 'end-to-end' },
+    blockingReporting: { enabled: true, autoBlock: false },
+    emergencyContacts: { enabled: false, contacts: [] },
+    dataRetention: { period: '1year', autoDelete: true },
+    communicationLogs: { enabled: false, duration: '30days' },
+    thirdPartySharing: { enabled: false, anonymized: true }
+  });
 
-  const optimizationSteps = [
-    'Analyzing Notification Patterns',
-    'Learning User Preferences',
-    'Optimizing Timing',
-    'Configuring Filters',
-    'Personalizing Experience'
-  ];
+  const [communicationScore, setCommunicationScore] = useState(0);
+  const [notificationVolume, setNotificationVolume] = useState(0);
+  const [engagementMetrics, setEngagementMetrics] = useState({
+    dailyNotifications: 0,
+    responseRate: 0,
+    averageResponseTime: 0,
+    communicationHealth: 0
+  });
 
+  const [showAdvancedSettings, setShowAdvancedSettings] = useState(false);
+
+  // Calculate communication score
   useEffect(() => {
-    calculateNotificationScore();
-  }, [notificationSettings]);
-
-  const calculateNotificationScore = () => {
-    const weights = {
-      relevance: 0.3,
-      timing: 0.25,
-      frequency: 0.25,
-      personalization: 0.2
+    const calculateScore = () => {
+      let score = 0;
+      
+      // Notification optimization (30 points)
+      const enabledNotifications = Object.values(notificationPreferences).filter(pref => pref.enabled).length;
+      const optimalNotifications = 12; // Sweet spot for engagement without overwhelm
+      const notificationRatio = Math.min(enabledNotifications / optimalNotifications, 1);
+      score += notificationRatio * 30;
+      
+      // Channel diversity (25 points)
+      const enabledChannels = Object.values(communicationChannels).filter(channel => channel.enabled).length;
+      const channelScore = Math.min(enabledChannels / 4, 1) * 25;
+      score += channelScore;
+      
+      // AI assistance utilization (25 points)
+      const enabledAIFeatures = Object.values(aiCommunicationSettings).filter(setting => setting.enabled).length;
+      const aiScore = Math.min(enabledAIFeatures / 6, 1) * 25;
+      score += aiScore;
+      
+      // Privacy & security (20 points)
+      const securityFeatures = Object.values(privacySecuritySettings).filter(setting => setting.enabled).length;
+      const securityScore = Math.min(securityFeatures / 5, 1) * 20;
+      score += securityScore;
+      
+      setCommunicationScore(Math.round(score));
+      
+      // Calculate notification volume
+      const volume = enabledNotifications * 2.5; // Average notifications per day
+      setNotificationVolume(Math.round(volume));
     };
 
-    let totalScore = 0;
-    
-    // Relevance score based on content filtering
-    const contentEnabled = Object.values(notificationSettings).filter(setting => 
-      typeof setting === 'object' && setting.enabled
-    ).length;
-    const relevanceScore = Math.min((contentEnabled / 8) * 100, 100);
-    
-    // Timing score based on smart features
-    const timingFeatures = ['smartTiming', 'contextAware', 'emotionalTiming', 'quietHoursEnabled'].filter(key => 
-      notificationSettings[key]
-    ).length;
-    const timingScore = (timingFeatures / 4) * 100;
-    
-    // Frequency score based on optimization features
-    const frequencyFeatures = ['batchSimilar', 'predictiveFiltering', 'spamFiltering', 'duplicateDetection'].filter(key => 
-      notificationSettings[key]
-    ).length;
-    const frequencyScore = (frequencyFeatures / 4) * 100;
-    
-    // Personalization score based on AI features
-    const aiFeatures = ['behaviorLearning', 'contextAware', 'predictiveFiltering', 'emotionalTiming'].filter(key => 
-      notificationSettings[key]
-    ).length;
-    const personalizationScore = (aiFeatures / 4) * 100;
+    calculateScore();
+  }, [notificationPreferences, communicationChannels, aiCommunicationSettings, privacySecuritySettings]);
 
-    totalScore = (relevanceScore * weights.relevance) + 
-                  (timingScore * weights.timing) + 
-                  (frequencyScore * weights.frequency) + 
-                  (personalizationScore * weights.personalization);
-
-    setNotificationScore(Math.round(totalScore));
-  };
-
-  const handleSettingChange = (key, value) => {
-    setNotificationSettings(prev => ({
+  const handleNotificationChange = (type, setting, value) => {
+    setNotificationPreferences(prev => ({
       ...prev,
-      [key]: value
-    }));
-  };
-
-  const handleCategoryChange = (category, field, value) => {
-    setNotificationSettings(prev => ({
-      ...prev,
-      [category]: {
-        ...prev[category],
-        [field]: value
+      [type]: {
+        ...prev[type],
+        [setting]: value
       }
     }));
   };
 
-  const runOptimization = () => {
-    setShowOptimizationDialog(true);
-    setCurrentStep(0);
-    
-    const interval = setInterval(() => {
-      setCurrentStep(prev => {
-        if (prev >= optimizationSteps.length - 1) {
-          clearInterval(interval);
-          return prev;
-        }
-        return prev + 1;
-      });
-    }, 1000);
+  const handleChannelChange = (channel, setting, value) => {
+    setCommunicationChannels(prev => ({
+      ...prev,
+      [channel]: {
+        ...prev[channel],
+        [setting]: value
+      }
+    }));
   };
 
-  const renderCategorySettings = (category) => (
-    <Card variant="outlined" sx={{ mb: 2 }}>
-      <CardContent>
-        <Box display="flex" alignItems="center" justifyContent="space-between" mb={2}>
-          <Box display="flex" alignItems="center">
-            {category.icon}
-            <Box ml={2}>
-              <Typography variant="h6">{category.label}</Typography>
-              <Typography variant="body2" color="text.secondary">
-                {category.description}
-              </Typography>
-            </Box>
-          </Box>
-          <Switch
-            checked={notificationSettings[category.key]?.enabled || false}
-            onChange={(e) => handleCategoryChange(category.key, 'enabled', e.target.checked)}
-            color="primary"
-          />
-        </Box>
-        
-        {notificationSettings[category.key]?.enabled && (
-          <Grid container spacing={2}>
-            <Grid item xs={12} md={4}>
-              <FormControl fullWidth size="small">
-                <InputLabel>Priority</InputLabel>
-                <Select
-                  value={notificationSettings[category.key]?.priority || 'medium'}
-                  onChange={(e) => handleCategoryChange(category.key, 'priority', e.target.value)}
-                  label="Priority"
-                >
-                  {priorityLevels.map(level => (
-                    <MenuItem key={level.value} value={level.value}>
-                      <Chip 
-                        label={level.label} 
-                        color={level.color} 
-                        size="small" 
-                        sx={{ mr: 1 }}
+  const handleAISettingChange = (setting, property, value) => {
+    setAiCommunicationSettings(prev => ({
+      ...prev,
+      [setting]: {
+        ...prev[setting],
+        [property]: value
+      }
+    }));
+  };
+
+  const handlePrivacyChange = (setting, property, value) => {
+    setPrivacySecuritySettings(prev => ({
+      ...prev,
+      [setting]: {
+        ...prev[setting],
+        [property]: value
+      }
+    }));
+  };
+
+  const getScoreLevel = (score) => {
+    if (score >= 90) return { level: 'Excellent', color: 'success', description: 'Optimal communication setup' };
+    if (score >= 75) return { level: 'Very Good', color: 'info', description: 'Well-configured communication' };
+    if (score >= 60) return { level: 'Good', color: 'warning', description: 'Decent communication setup' };
+    return { level: 'Needs Improvement', color: 'error', description: 'Consider optimizing settings' };
+  };
+
+  const scoreInfo = getScoreLevel(communicationScore);
+
+  const renderNotificationPreferences = () => (
+    <Box>
+      <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+        <NotificationsIcon color="primary" />
+        Notification Preferences
+      </Typography>
+      
+      <Alert severity="info" sx={{ mb: 3 }}>
+        Customize your notification settings to stay connected without being overwhelmed. 
+        We recommend enabling 8-12 notification types for optimal engagement.
+      </Alert>
+
+      <Grid container spacing={2}>
+        {Object.entries(notificationPreferences).map(([type, settings]) => (
+          <Grid item xs={12} key={type}>
+            <Card variant="outlined">
+              <CardContent>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+                  <Typography variant="subtitle1" sx={{ textTransform: 'capitalize', fontWeight: 600 }}>
+                    {type.replace(/([A-Z])/g, ' $1').trim()}
+                  </Typography>
+                  <Switch
+                    checked={settings.enabled}
+                    onChange={(e) => handleNotificationChange(type, 'enabled', e.target.checked)}
+                    color="primary"
+                  />
+                </Box>
+                
+                {settings.enabled && (
+                  <Grid container spacing={2}>
+                    <Grid item xs={3}>
+                      <FormControlLabel
+                        control={
+                          <Switch
+                            checked={settings.sound}
+                            onChange={(e) => handleNotificationChange(type, 'sound', e.target.checked)}
+                            size="small"
+                          />
+                        }
+                        label={<Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                          <VolumeIcon fontSize="small" />
+                          Sound
+                        </Box>}
                       />
-                      {level.description}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
-            <Grid item xs={6} md={4}>
-              <FormControlLabel
-                control={
-                  <Switch
-                    checked={notificationSettings[category.key]?.sound || false}
-                    onChange={(e) => handleCategoryChange(category.key, 'sound', e.target.checked)}
-                    size="small"
-                  />
-                }
-                label="Sound"
-              />
-            </Grid>
-            <Grid item xs={6} md={4}>
-              <FormControlLabel
-                control={
-                  <Switch
-                    checked={notificationSettings[category.key]?.vibration || false}
-                    onChange={(e) => handleCategoryChange(category.key, 'vibration', e.target.checked)}
-                    size="small"
-                  />
-                }
-                label="Vibration"
-              />
-            </Grid>
+                    </Grid>
+                    <Grid item xs={3}>
+                      <FormControlLabel
+                        control={
+                          <Switch
+                            checked={settings.vibration}
+                            onChange={(e) => handleNotificationChange(type, 'vibration', e.target.checked)}
+                            size="small"
+                          />
+                        }
+                        label={<Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                          <VibrationIcon fontSize="small" />
+                          Vibration
+                        </Box>}
+                      />
+                    </Grid>
+                    <Grid item xs={3}>
+                      <FormControlLabel
+                        control={
+                          <Switch
+                            checked={settings.popup}
+                            onChange={(e) => handleNotificationChange(type, 'popup', e.target.checked)}
+                            size="small"
+                          />
+                        }
+                        label={<Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                          <InfoIcon fontSize="small" />
+                          Pop-up
+                        </Box>}
+                      />
+                    </Grid>
+                    <Grid item xs={3}>
+                      <FormControlLabel
+                        control={
+                          <Switch
+                            checked={settings.led}
+                            onChange={(e) => handleNotificationChange(type, 'led', e.target.checked)}
+                            size="small"
+                          />
+                        }
+                        label={<Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                          <LEDIcon fontSize="small" />
+                          LED
+                        </Box>}
+                      />
+                    </Grid>
+                  </Grid>
+                )}
+              </CardContent>
+            </Card>
           </Grid>
-        )}
-      </CardContent>
-    </Card>
+        ))}
+      </Grid>
+    </Box>
   );
 
-  const TabPanel = ({ children, value, index }) => (
-    <div hidden={value !== index}>
-      {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
-    </div>
+  const renderCommunicationChannels = () => (
+    <Box>
+      <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+        <MessageIcon color="primary" />
+        Communication Channels
+      </Typography>
+      
+      <Alert severity="info" sx={{ mb: 3 }}>
+        Configure multiple communication channels to ensure you never miss important updates. 
+        Set priorities to control which channels receive different types of notifications.
+      </Alert>
+
+      <Grid container spacing={3}>
+        {Object.entries(communicationChannels).map(([channel, settings]) => (
+          <Grid item xs={12} md={6} key={channel}>
+            <Card variant="outlined">
+              <CardContent>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+                  <Typography variant="subtitle1" sx={{ textTransform: 'capitalize', fontWeight: 600 }}>
+                    {channel.replace(/([A-Z])/g, ' $1').trim()}
+                  </Typography>
+                  <Switch
+                    checked={settings.enabled}
+                    onChange={(e) => handleChannelChange(channel, 'enabled', e.target.checked)}
+                    color="primary"
+                  />
+                </Box>
+                
+                {settings.enabled && (
+                  <Box sx={{ mt: 2 }}>
+                    <FormControl fullWidth sx={{ mb: 2 }}>
+                      <InputLabel>Priority Level</InputLabel>
+                      <Select
+                        value={settings.priority}
+                        onChange={(e) => handleChannelChange(channel, 'priority', e.target.value)}
+                        label="Priority Level"
+                      >
+                        <MenuItem value="high">High Priority</MenuItem>
+                        <MenuItem value="medium">Medium Priority</MenuItem>
+                        <MenuItem value="low">Low Priority</MenuItem>
+                      </Select>
+                    </FormControl>
+                    
+                    {channel === 'email' && (
+                      <FormControl fullWidth>
+                        <InputLabel>Email Frequency</InputLabel>
+                        <Select
+                          value={settings.frequency}
+                          onChange={(e) => handleChannelChange(channel, 'frequency', e.target.value)}
+                          label="Email Frequency"
+                        >
+                          <MenuItem value="immediate">Immediate</MenuItem>
+                          <MenuItem value="hourly">Hourly Digest</MenuItem>
+                          <MenuItem value="daily">Daily Digest</MenuItem>
+                          <MenuItem value="weekly">Weekly Summary</MenuItem>
+                        </Select>
+                      </FormControl>
+                    )}
+                    
+                    {channel === 'sms' && (
+                      <FormControlLabel
+                        control={
+                          <Switch
+                            checked={settings.emergencyOnly}
+                            onChange={(e) => handleChannelChange(channel, 'emergencyOnly', e.target.checked)}
+                          />
+                        }
+                        label="Emergency Only"
+                      />
+                    )}
+                  </Box>
+                )}
+              </CardContent>
+            </Card>
+          </Grid>
+        ))}
+      </Grid>
+    </Box>
+  );
+
+  const renderAICommunicationAssistant = () => (
+    <Box>
+      <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+        <AIIcon color="primary" />
+        AI Communication Assistant
+      </Typography>
+      
+      <Alert severity="info" sx={{ mb: 3 }}>
+        Enhance your communication with AI-powered features that help you connect more effectively 
+        while maintaining your authentic voice and style.
+      </Alert>
+
+      <Grid container spacing={3}>
+        <Grid item xs={12} md={6}>
+          <Card variant="outlined">
+            <CardContent>
+              <Typography variant="subtitle1" gutterBottom sx={{ fontWeight: 600 }}>
+                Smart Replies
+              </Typography>
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={aiCommunicationSettings.smartReplies.enabled}
+                    onChange={(e) => handleAISettingChange('smartReplies', 'enabled', e.target.checked)}
+                  />
+                }
+                label="Enable Smart Reply Suggestions"
+              />
+              {aiCommunicationSettings.smartReplies.enabled && (
+                <Box sx={{ mt: 2 }}>
+                  <Typography gutterBottom>Confidence Threshold: {aiCommunicationSettings.smartReplies.confidence}%</Typography>
+                  <Slider
+                    value={aiCommunicationSettings.smartReplies.confidence}
+                    onChange={(e, value) => handleAISettingChange('smartReplies', 'confidence', value)}
+                    min={50}
+                    max={95}
+                    step={5}
+                    marks
+                    valueLabelDisplay="auto"
+                  />
+                </Box>
+              )}
+            </CardContent>
+          </Card>
+        </Grid>
+
+        <Grid item xs={12} md={6}>
+          <Card variant="outlined">
+            <CardContent>
+              <Typography variant="subtitle1" gutterBottom sx={{ fontWeight: 600 }}>
+                Sentiment Analysis
+              </Typography>
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={aiCommunicationSettings.sentimentAnalysis.enabled}
+                    onChange={(e) => handleAISettingChange('sentimentAnalysis', 'enabled', e.target.checked)}
+                  />
+                }
+                label="Analyze Message Sentiment"
+              />
+              {aiCommunicationSettings.sentimentAnalysis.enabled && (
+                <Box sx={{ mt: 2 }}>
+                  <Typography gutterBottom>Sensitivity Level: {aiCommunicationSettings.sentimentAnalysis.sensitivity}%</Typography>
+                  <Slider
+                    value={aiCommunicationSettings.sentimentAnalysis.sensitivity}
+                    onChange={(e, value) => handleAISettingChange('sentimentAnalysis', 'sensitivity', value)}
+                    min={30}
+                    max={90}
+                    step={10}
+                    marks
+                    valueLabelDisplay="auto"
+                  />
+                </Box>
+              )}
+            </CardContent>
+          </Card>
+        </Grid>
+
+        <Grid item xs={12} md={6}>
+          <Card variant="outlined">
+            <CardContent>
+              <Typography variant="subtitle1" gutterBottom sx={{ fontWeight: 600 }}>
+                Conversation Summaries
+              </Typography>
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={aiCommunicationSettings.conversationSummaries.enabled}
+                    onChange={(e) => handleAISettingChange('conversationSummaries', 'enabled', e.target.checked)}
+                  />
+                }
+                label="Generate Conversation Summaries"
+              />
+              {aiCommunicationSettings.conversationSummaries.enabled && (
+                <FormControl fullWidth sx={{ mt: 2 }}>
+                  <InputLabel>Summary Frequency</InputLabel>
+                  <Select
+                    value={aiCommunicationSettings.conversationSummaries.frequency}
+                    onChange={(e) => handleAISettingChange('conversationSummaries', 'frequency', e.target.value)}
+                    label="Summary Frequency"
+                  >
+                    <MenuItem value="daily">Daily</MenuItem>
+                    <MenuItem value="weekly">Weekly</MenuItem>
+                    <MenuItem value="monthly">Monthly</MenuItem>
+                  </Select>
+                </FormControl>
+              )}
+            </CardContent>
+          </Card>
+        </Grid>
+
+        <Grid item xs={12} md={6}>
+          <Card variant="outlined">
+            <CardContent>
+              <Typography variant="subtitle1" gutterBottom sx={{ fontWeight: 600 }}>
+                Language Translation
+              </Typography>
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={aiCommunicationSettings.languageTranslation.enabled}
+                    onChange={(e) => handleAISettingChange('languageTranslation', 'enabled', e.target.checked)}
+                  />
+                }
+                label="Enable Real-time Translation"
+              />
+              {aiCommunicationSettings.languageTranslation.enabled && (
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={aiCommunicationSettings.languageTranslation.autoDetect}
+                      onChange={(e) => handleAISettingChange('languageTranslation', 'autoDetect', e.target.checked)}
+                    />
+                  }
+                  label="Auto-detect Languages"
+                  sx={{ mt: 1 }}
+                />
+              )}
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
+    </Box>
+  );
+
+  const renderPrivacySecurity = () => (
+    <Box>
+      <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+        <SecurityIcon color="primary" />
+        Privacy & Security
+      </Typography>
+      
+      <Alert severity="warning" sx={{ mb: 3 }}>
+        Configure your privacy and security settings to protect your communications while maintaining 
+        meaningful connections. All settings respect your privacy preferences.
+      </Alert>
+
+      <Grid container spacing={3}>
+        <Grid item xs={12} md={6}>
+          <Card variant="outlined">
+            <CardContent>
+              <Typography variant="subtitle1" gutterBottom sx={{ fontWeight: 600 }}>
+                Read Receipts
+              </Typography>
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={privacySecuritySettings.readReceipts.enabled}
+                    onChange={(e) => handlePrivacyChange('readReceipts', 'enabled', e.target.checked)}
+                  />
+                }
+                label="Show Read Receipts"
+              />
+              {privacySecuritySettings.readReceipts.enabled && (
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={privacySecuritySettings.readReceipts.mutualOnly}
+                      onChange={(e) => handlePrivacyChange('readReceipts', 'mutualOnly', e.target.checked)}
+                    />
+                  }
+                  label="Only for Mutual Matches"
+                  sx={{ mt: 1 }}
+                />
+              )}
+            </CardContent>
+          </Card>
+        </Grid>
+
+        <Grid item xs={12} md={6}>
+          <Card variant="outlined">
+            <CardContent>
+              <Typography variant="subtitle1" gutterBottom sx={{ fontWeight: 600 }}>
+                Message Encryption
+              </Typography>
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={privacySecuritySettings.messageEncryption.enabled}
+                    onChange={(e) => handlePrivacyChange('messageEncryption', 'enabled', e.target.checked)}
+                  />
+                }
+                label="Enable Message Encryption"
+              />
+              {privacySecuritySettings.messageEncryption.enabled && (
+                <FormControl fullWidth sx={{ mt: 2 }}>
+                  <InputLabel>Encryption Level</InputLabel>
+                  <Select
+                    value={privacySecuritySettings.messageEncryption.level}
+                    onChange={(e) => handlePrivacyChange('messageEncryption', 'level', e.target.value)}
+                    label="Encryption Level"
+                  >
+                    <MenuItem value="basic">Basic Encryption</MenuItem>
+                    <MenuItem value="advanced">Advanced Encryption</MenuItem>
+                    <MenuItem value="end-to-end">End-to-End Encryption</MenuItem>
+                  </Select>
+                </FormControl>
+              )}
+            </CardContent>
+          </Card>
+        </Grid>
+
+        <Grid item xs={12} md={6}>
+          <Card variant="outlined">
+            <CardContent>
+              <Typography variant="subtitle1" gutterBottom sx={{ fontWeight: 600 }}>
+                Blocking & Reporting
+              </Typography>
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={privacySecuritySettings.blockingReporting.enabled}
+                    onChange={(e) => handlePrivacyChange('blockingReporting', 'enabled', e.target.checked)}
+                  />
+                }
+                label="Enable Advanced Blocking"
+              />
+              {privacySecuritySettings.blockingReporting.enabled && (
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={privacySecuritySettings.blockingReporting.autoBlock}
+                      onChange={(e) => handlePrivacyChange('blockingReporting', 'autoBlock', e.target.checked)}
+                    />
+                  }
+                  label="Auto-block Suspicious Users"
+                  sx={{ mt: 1 }}
+                />
+              )}
+            </CardContent>
+          </Card>
+        </Grid>
+
+        <Grid item xs={12} md={6}>
+          <Card variant="outlined">
+            <CardContent>
+              <Typography variant="subtitle1" gutterBottom sx={{ fontWeight: 600 }}>
+                Data Retention
+              </Typography>
+              <FormControl fullWidth sx={{ mb: 2 }}>
+                <InputLabel>Retention Period</InputLabel>
+                <Select
+                  value={privacySecuritySettings.dataRetention.period}
+                  onChange={(e) => handlePrivacyChange('dataRetention', 'period', e.target.value)}
+                  label="Retention Period"
+                >
+                  <MenuItem value="30days">30 Days</MenuItem>
+                  <MenuItem value="90days">90 Days</MenuItem>
+                  <MenuItem value="6months">6 Months</MenuItem>
+                  <MenuItem value="1year">1 Year</MenuItem>
+                  <MenuItem value="indefinite">Indefinite</MenuItem>
+                </Select>
+              </FormControl>
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={privacySecuritySettings.dataRetention.autoDelete}
+                    onChange={(e) => handlePrivacyChange('dataRetention', 'autoDelete', e.target.checked)}
+                  />
+                }
+                label="Auto-delete Old Messages"
+              />
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
+    </Box>
   );
 
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>
-      {/* Header */}
-      <Box textAlign="center" mb={4}>
-        <Typography variant="h3" component="h1" gutterBottom color="primary" fontWeight="bold">
-          Advanced Notification Management
+      <Box sx={{ mb: 4 }}>
+        <Typography variant="h4" gutterBottom sx={{ fontWeight: 700, color: 'primary.main' }}>
+          Advanced Notification & Communication Management
         </Typography>
-        <Typography variant="h6" color="text.secondary" mb={3}>
-          Intelligent notification system with AI-powered optimization and personalization
+        <Typography variant="subtitle1" color="text.secondary" sx={{ mb: 3 }}>
+          Configure comprehensive notification and communication settings to optimize your relationship journey 
+          while maintaining perfect balance between connection and privacy.
         </Typography>
-        
-        {/* Notification Score */}
-        <Card sx={{ maxWidth: 400, mx: 'auto', mb: 3 }}>
+
+        {/* Communication Score Dashboard */}
+        <Card sx={{ mb: 4, background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', color: 'white' }}>
           <CardContent>
-            <Box display="flex" alignItems="center" justifyContent="center" mb={2}>
-              <NotificationsIcon sx={{ fontSize: 40, color: 'primary.main', mr: 2 }} />
-              <Box>
-                <Typography variant="h4" color="primary" fontWeight="bold">
-                  {notificationScore}%
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  Optimization Score
-                </Typography>
-              </Box>
-            </Box>
-            <LinearProgress 
-              variant="determinate" 
-              value={notificationScore} 
-              sx={{ height: 8, borderRadius: 4 }}
-            />
-            <Button
-              variant="contained"
-              onClick={runOptimization}
-              startIcon={<SmartToyIcon />}
-              fullWidth
-              sx={{ mt: 2 }}
-            >
-              AI Optimize Notifications
-            </Button>
+            <Grid container spacing={3} alignItems="center">
+              <Grid item xs={12} md={3}>
+                <Box sx={{ textAlign: 'center' }}>
+                  <Typography variant="h3" sx={{ fontWeight: 700, mb: 1 }}>
+                    {communicationScore}
+                  </Typography>
+                  <Typography variant="body2" sx={{ opacity: 0.9 }}>
+                    Communication Score
+                  </Typography>
+                  <Chip 
+                    label={scoreInfo.level} 
+                    sx={{ 
+                      mt: 1, 
+                      bgcolor: 'rgba(255,255,255,0.2)', 
+                      color: 'white',
+                      fontWeight: 600 
+                    }} 
+                  />
+                </Box>
+              </Grid>
+              <Grid item xs={12} md={9}>
+                <Grid container spacing={2}>
+                  <Grid item xs={6} md={3}>
+                    <Box sx={{ textAlign: 'center' }}>
+                      <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                        {notificationVolume}
+                      </Typography>
+                      <Typography variant="body2" sx={{ opacity: 0.8 }}>
+                        Daily Notifications
+                      </Typography>
+                    </Box>
+                  </Grid>
+                  <Grid item xs={6} md={3}>
+                    <Box sx={{ textAlign: 'center' }}>
+                      <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                        {Object.values(communicationChannels).filter(c => c.enabled).length}
+                      </Typography>
+                      <Typography variant="body2" sx={{ opacity: 0.8 }}>
+                        Active Channels
+                      </Typography>
+                    </Box>
+                  </Grid>
+                  <Grid item xs={6} md={3}>
+                    <Box sx={{ textAlign: 'center' }}>
+                      <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                        {Object.values(aiCommunicationSettings).filter(s => s.enabled).length}
+                      </Typography>
+                      <Typography variant="body2" sx={{ opacity: 0.8 }}>
+                        AI Features
+                      </Typography>
+                    </Box>
+                  </Grid>
+                  <Grid item xs={6} md={3}>
+                    <Box sx={{ textAlign: 'center' }}>
+                      <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                        {Object.values(privacySecuritySettings).filter(s => s.enabled).length}
+                      </Typography>
+                      <Typography variant="body2" sx={{ opacity: 0.8 }}>
+                        Security Features
+                      </Typography>
+                    </Box>
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Grid>
           </CardContent>
         </Card>
       </Box>
 
-      {/* Main Content */}
-      <Card>
-        <Tabs
-          value={activeTab}
+      {/* Main Content Tabs */}
+      <Paper sx={{ mb: 4 }}>
+        <Tabs 
+          value={activeTab} 
           onChange={(e, newValue) => setActiveTab(newValue)}
           variant="fullWidth"
           sx={{ borderBottom: 1, borderColor: 'divider' }}
         >
-          <Tab icon={<SettingsIcon />} label="General" />
-          <Tab icon={<NotificationsIcon />} label="Channels" />
-          <Tab icon={<FilterListIcon />} label="Content" />
-          <Tab icon={<SmartToyIcon />} label="AI Optimization" />
+          <Tab 
+            label="Notification Preferences" 
+            icon={<NotificationsIcon />} 
+            iconPosition="start"
+          />
+          <Tab 
+            label="Communication Channels" 
+            icon={<MessageIcon />} 
+            iconPosition="start"
+          />
+          <Tab 
+            label="AI Communication Assistant" 
+            icon={<AIIcon />} 
+            iconPosition="start"
+          />
+          <Tab 
+            label="Privacy & Security" 
+            icon={<SecurityIcon />} 
+            iconPosition="start"
+          />
         </Tabs>
 
-        {/* General Settings Tab */}
-        <TabPanel value={activeTab} index={0}>
-          <Box>
-            <Typography variant="h5" gutterBottom fontWeight="bold">
-              General Notification Settings
-            </Typography>
-            <Typography variant="body2" color="text.secondary" mb={3}>
-              Master controls and global notification preferences
-            </Typography>
+        <Box sx={{ p: 4 }}>
+          {activeTab === 0 && renderNotificationPreferences()}
+          {activeTab === 1 && renderCommunicationChannels()}
+          {activeTab === 2 && renderAICommunicationAssistant()}
+          {activeTab === 3 && renderPrivacySecurity()}
+        </Box>
+      </Paper>
 
-            <Grid container spacing={3}>
-              {notificationCategories[0].settings.map((setting) => (
-                <Grid item xs={12} md={6} key={setting.key}>
-                  <Card variant="outlined">
-                    <CardContent>
-                      <FormControlLabel
-                        control={
-                          <Switch
-                            checked={notificationSettings[setting.key]}
-                            onChange={(e) => handleSettingChange(setting.key, e.target.checked)}
-                            color="primary"
-                          />
-                        }
-                        label={setting.label}
-                      />
-                      <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-                        {setting.description}
-                      </Typography>
-                    </CardContent>
-                  </Card>
-                </Grid>
-              ))}
-            </Grid>
-
-            {/* Quiet Hours Configuration */}
-            {notificationSettings.quietHoursEnabled && (
-              <Card sx={{ mt: 3 }}>
-                <CardContent>
-                  <Typography variant="h6" gutterBottom>
-                    Quiet Hours Configuration
-                  </Typography>
-                  <Grid container spacing={2}>
-                    <Grid item xs={6}>
-                      <TextField
-                        label="Start Time"
-                        type="time"
-                        value={notificationSettings.quietHoursStart}
-                        onChange={(e) => handleSettingChange('quietHoursStart', e.target.value)}
-                        fullWidth
-                        InputLabelProps={{ shrink: true }}
-                      />
-                    </Grid>
-                    <Grid item xs={6}>
-                      <TextField
-                        label="End Time"
-                        type="time"
-                        value={notificationSettings.quietHoursEnd}
-                        onChange={(e) => handleSettingChange('quietHoursEnd', e.target.value)}
-                        fullWidth
-                        InputLabelProps={{ shrink: true }}
-                      />
-                    </Grid>
-                  </Grid>
-                </CardContent>
-              </Card>
-            )}
-          </Box>
-        </TabPanel>
-
-        {/* Channels Tab */}
-        <TabPanel value={activeTab} index={1}>
-          <Box>
-            <Typography variant="h5" gutterBottom fontWeight="bold">
-              Notification Channels
-            </Typography>
-            <Typography variant="body2" color="text.secondary" mb={3}>
-              Configure delivery methods and device preferences
-            </Typography>
-
-            <Grid container spacing={3}>
-              {notificationCategories[1].settings.map((setting) => (
-                <Grid item xs={12} md={6} key={setting.key}>
-                  <Card variant="outlined">
-                    <CardContent>
-                      <FormControlLabel
-                        control={
-                          <Switch
-                            checked={notificationSettings[setting.key]}
-                            onChange={(e) => handleSettingChange(setting.key, e.target.checked)}
-                            color="primary"
-                          />
-                        }
-                        label={setting.label}
-                      />
-                      <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-                        {setting.description}
-                      </Typography>
-                    </CardContent>
-                  </Card>
-                </Grid>
-              ))}
-            </Grid>
-          </Box>
-        </TabPanel>
-
-        {/* Content Categories Tab */}
-        <TabPanel value={activeTab} index={2}>
-          <Box>
-            <Typography variant="h5" gutterBottom fontWeight="bold">
-              Content Categories
-            </Typography>
-            <Typography variant="body2" color="text.secondary" mb={3}>
-              Customize notifications by content type and priority
-            </Typography>
-
-            {notificationCategories[2].categories.map((category) => 
-              renderCategorySettings(category)
-            )}
-          </Box>
-        </TabPanel>
-
-        {/* AI Optimization Tab */}
-        <TabPanel value={activeTab} index={3}>
-          <Box>
-            <Typography variant="h5" gutterBottom fontWeight="bold">
-              AI-Powered Optimization
-            </Typography>
-            <Typography variant="body2" color="text.secondary" mb={3}>
-              Intelligent notification management with machine learning
-            </Typography>
-
-            <Grid container spacing={3}>
-              {notificationCategories[3].settings.map((setting) => (
-                <Grid item xs={12} md={6} key={setting.key}>
-                  <Card variant="outlined">
-                    <CardContent>
-                      <FormControlLabel
-                        control={
-                          <Switch
-                            checked={notificationSettings[setting.key]}
-                            onChange={(e) => handleSettingChange(setting.key, e.target.checked)}
-                            color="primary"
-                          />
-                        }
-                        label={setting.label}
-                      />
-                      <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-                        {setting.description}
-                      </Typography>
-                    </CardContent>
-                  </Card>
-                </Grid>
-              ))}
-            </Grid>
-
-            {/* AI Insights */}
-            <Card sx={{ mt: 3 }}>
-              <CardContent>
-                <Typography variant="h6" gutterBottom>
-                  AI Optimization Insights
-                </Typography>
-                <Grid container spacing={3}>
-                  {Object.entries(optimizationResults).map(([key, value]) => (
-                    <Grid item xs={6} md={3} key={key}>
-                      <Box textAlign="center">
-                        <Typography variant="h4" color="primary" fontWeight="bold">
-                          {value}%
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary" textTransform="capitalize">
-                          {key}
-                        </Typography>
-                        <LinearProgress 
-                          variant="determinate" 
-                          value={value} 
-                          sx={{ mt: 1, height: 6, borderRadius: 3 }}
-                        />
-                      </Box>
-                    </Grid>
-                  ))}
-                </Grid>
-              </CardContent>
-            </Card>
-          </Box>
-        </TabPanel>
-      </Card>
-
-      {/* Optimization Dialog */}
-      <Dialog open={showOptimizationDialog} maxWidth="sm" fullWidth>
-        <DialogTitle>
-          <Box display="flex" alignItems="center">
-            <SmartToyIcon sx={{ mr: 2, color: 'primary.main' }} />
-            AI Notification Optimization
-          </Box>
-        </DialogTitle>
-        <DialogContent>
-          <Stepper activeStep={currentStep} orientation="vertical">
-            {optimizationSteps.map((step, index) => (
-              <Step key={step}>
-                <StepLabel>{step}</StepLabel>
-              </Step>
-            ))}
-          </Stepper>
-          {currentStep >= optimizationSteps.length - 1 && (
-            <Alert severity="success" sx={{ mt: 2 }}>
-              Notification optimization complete! Your settings have been optimized for maximum relevance and minimal disruption.
-            </Alert>
-          )}
-        </DialogContent>
-        <DialogActions>
-          <Button 
-            onClick={() => setShowOptimizationDialog(false)}
-            disabled={currentStep < optimizationSteps.length - 1}
-          >
-            {currentStep >= optimizationSteps.length - 1 ? 'Done' : 'Optimizing...'}
+      {/* Action Buttons */}
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 4 }}>
+        <Button
+          variant="outlined"
+          onClick={() => setShowAdvancedSettings(!showAdvancedSettings)}
+          startIcon={<SettingsIcon />}
+        >
+          {showAdvancedSettings ? 'Hide' : 'Show'} Advanced Settings
+        </Button>
+        
+        <Box sx={{ display: 'flex', gap: 2 }}>
+          <Button variant="outlined" size="large">
+            Reset to Defaults
           </Button>
-        </DialogActions>
-      </Dialog>
+          <Button 
+            variant="contained" 
+            size="large"
+            startIcon={<CheckIcon />}
+            sx={{ minWidth: 200 }}
+          >
+            Save Communication Settings
+          </Button>
+        </Box>
+      </Box>
 
-      {/* Navigation */}
-      <Box display="flex" justifyContent="space-between" mt={4}>
-        <Button variant="outlined" size="large">
-          Previous
-        </Button>
-        <Button variant="contained" size="large">
-          Continue
-        </Button>
+      {/* Progress Indicator */}
+      <Box sx={{ mt: 4, textAlign: 'center' }}>
+        <Typography variant="body2" color="text.secondary" gutterBottom>
+          Communication Setup Progress
+        </Typography>
+        <LinearProgress 
+          variant="determinate" 
+          value={communicationScore} 
+          sx={{ height: 8, borderRadius: 4, mb: 1 }}
+        />
+        <Typography variant="body2" color="text.secondary">
+          {scoreInfo.description}
+        </Typography>
       </Box>
     </Container>
   );
