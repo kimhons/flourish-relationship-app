@@ -280,7 +280,7 @@ const AIRelationshipCoachIntroduction = () => {
                   <AICoachIcon sx={{ fontSize: 60 }} />
                 </Avatar>
                 <Typography variant="h5" gutterBottom sx={{ fontWeight: 700 }}>
-                  Dr. Flourish AI
+                  Dr. Love
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
                   Your Personal Relationship Coach
@@ -334,7 +334,7 @@ const AIRelationshipCoachIntroduction = () => {
           <Card variant="outlined" sx={{ height: '100%' }}>
             <CardContent>
               <Typography variant="subtitle1" gutterBottom sx={{ fontWeight: 600 }}>
-                What Makes Dr. Flourish AI Special:
+                What Makes Dr. Love Special:
               </Typography>
               
               <Box sx={{ mb: 3 }}>
@@ -981,7 +981,7 @@ const AIRelationshipCoachIntroduction = () => {
         <DialogContent>
           <Typography variant="body1" sx={{ textAlign: 'center', mb: 3 }}>
             You're about to experience the most advanced AI relationship coaching system ever created. 
-            Dr. Flourish AI combines cutting-edge artificial intelligence with proven relationship psychology 
+            Dr. Love combines cutting-edge artificial intelligence with proven relationship psychology 
             to provide personalized guidance, expert insights, and 24/7 support for your relationship journey.
           </Typography>
           <Grid container spacing={2}>

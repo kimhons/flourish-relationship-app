@@ -18,7 +18,7 @@ graph TB
     end
     
     subgraph "🧠 AI & MACHINE LEARNING CORE"
-        DRFLOURISH[🤖 Dr. Flourish AI<br/>Relationship Coach<br/>96.5% Expertise Level]
+        DRLOVE[🤖 Dr. Love AI<br/>Relationship Coach<br/>96.5% Expertise Level]
         MATCHING[🎯 Matching Engine<br/>Advanced Algorithms<br/>96.8% Accuracy]
         PERSONALIZATION[🎨 Personalization Engine<br/>Behavioral Learning<br/>94.2% Accuracy]
         PREDICTION[🔮 Prediction Models<br/>Success Forecasting<br/>94.2% Accuracy]
@@ -105,24 +105,24 @@ graph TB
     AUTH --> SECURITY
     
     %% AI Core Connections
-    API_GATEWAY --> DRFLOURISH
+    API_GATEWAY --> DRLOVE
     API_GATEWAY --> MATCHING
     API_GATEWAY --> PERSONALIZATION
     API_GATEWAY --> PREDICTION
-    DRFLOURISH --> NLP
+    DRLOVE --> NLP
     
     %% Assessment System
-    DRFLOURISH --> PERSONALITY
-    DRFLOURISH --> ATTACHMENT
-    DRFLOURISH --> COMMUNICATION
-    DRFLOURISH --> EMOTIONAL
-    DRFLOURISH --> VALUES
-    DRFLOURISH --> LOVE_LANG
+    DRLOVE --> PERSONALITY
+    DRLOVE --> ATTACHMENT
+    DRLOVE --> COMMUNICATION
+    DRLOVE --> EMOTIONAL
+    DRLOVE --> VALUES
+    DRLOVE --> LOVE_LANG
     
     %% Gaming Integration
-    DRFLOURISH --> COMM_GAMES
-    DRFLOURISH --> CONFLICT_GAMES
-    DRFLOURISH --> INTIMACY_GAMES
+    DRLOVE --> COMM_GAMES
+    DRLOVE --> CONFLICT_GAMES
+    DRLOVE --> INTIMACY_GAMES
     COMM_GAMES --> ACHIEVEMENTS
     CONFLICT_GAMES --> ACHIEVEMENTS
     INTIMACY_GAMES --> ACHIEVEMENTS
@@ -134,10 +134,10 @@ graph TB
     API_GATEWAY --> NOTIFICATIONS
     
     %% Health & Wellness
-    DRFLOURISH --> HEALTH_MONITOR
-    DRFLOURISH --> CRISIS
-    DRFLOURISH --> THERAPY
-    DRFLOURISH --> WELLNESS
+    DRLOVE --> HEALTH_MONITOR
+    DRLOVE --> CRISIS
+    DRLOVE --> THERAPY
+    DRLOVE --> WELLNESS
     
     %% Business Layer
     API_GATEWAY --> SUBSCRIPTIONS
@@ -172,7 +172,7 @@ graph TB
     %% Data Flow Connections
     DATABASE --> ANALYTICS
     DATABASE --> BUSINESS_INTEL
-    DATABASE --> DRFLOURISH
+    DATABASE --> DRLOVE
     DATABASE --> MATCHING
     DATABASE --> PERSONALIZATION
     
@@ -190,7 +190,7 @@ graph TB
     classDef integrations fill:#fce4ec,stroke:#ad1457,stroke-width:2px
     
     class WEB,MOBILE,DESKTOP,WATCH,TV clientLayer
-    class DRFLOURISH,MATCHING,PERSONALIZATION,PREDICTION,NLP aiCore
+    class DRLOVE,MATCHING,PERSONALIZATION,PREDICTION,NLP aiCore
     class PERSONALITY,ATTACHMENT,COMMUNICATION,EMOTIONAL,VALUES,LOVE_LANG assessment
     class COMM_GAMES,CONFLICT_GAMES,INTIMACY_GAMES,ACHIEVEMENTS gaming
     class MESSAGING,VIDEO_CALL,VOICE_MSG,NOTIFICATIONS communication

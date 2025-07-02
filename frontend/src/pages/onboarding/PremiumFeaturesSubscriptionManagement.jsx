@@ -730,7 +730,7 @@ const PremiumFeaturesSubscriptionManagement = () => {
       },
       aiCoaching: {
         name: 'AI Relationship Coaching',
-        description: 'Personalized relationship guidance from Dr. Flourish AI',
+        description: 'Personalized relationship guidance from Dr. Love',
         usage: 82.7,
         satisfaction: 4.9,
         adoptionRate: 91.5,

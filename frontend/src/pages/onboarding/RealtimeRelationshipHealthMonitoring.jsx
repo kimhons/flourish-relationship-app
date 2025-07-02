@@ -934,7 +934,7 @@ const RealtimeRelationshipHealthMonitoring = () => {
       </Typography>
 
       <Alert severity="success" sx={{ mb: 3 }}>
-        Dr. Flourish AI analyzes your relationship health patterns and provides personalized recommendations for improvement.
+        Dr. Love analyzes your relationship health patterns and provides personalized recommendations for improvement.
       </Alert>
 
       <Grid container spacing={3}>
@@ -1013,7 +1013,7 @@ const RealtimeRelationshipHealthMonitoring = () => {
               Analyzing Your Relationship Health
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              Dr. Flourish AI is processing your health data to generate personalized recommendations. 
+              Dr. Love is processing your health data to generate personalized recommendations. 
               Check back in a few minutes for tailored guidance.
             </Typography>
           </CardContent>

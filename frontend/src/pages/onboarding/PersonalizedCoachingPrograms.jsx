@@ -787,7 +787,7 @@ const PersonalizedCoachingPrograms = () => {
         </Alert>
       ) : (
         <Alert severity="success" sx={{ mb: 3 }}>
-          Based on your assessment, Dr. Flourish AI has identified the most suitable coaching programs 
+          Based on your assessment, Dr. Love has identified the most suitable coaching programs 
           for your relationship journey. These recommendations are personalized to your specific needs.
         </Alert>
       )}
@@ -885,7 +885,7 @@ const PersonalizedCoachingPrograms = () => {
       </Typography>
       
       <Alert severity="info" sx={{ mb: 3 }}>
-        Track your personalization progress and see how Dr. Flourish AI is customizing your 
+        Track your personalization progress and see how Dr. Love is customizing your 
         coaching experience based on your assessment and preferences.
       </Alert>
 
@@ -985,7 +985,7 @@ const PersonalizedCoachingPrograms = () => {
                   <StepLabel>Review AI Recommendations</StepLabel>
                   <StepContent>
                     <Typography variant="body2">
-                      Explore personalized program recommendations from Dr. Flourish AI
+                      Explore personalized program recommendations from Dr. Love
                     </Typography>
                   </StepContent>
                 </Step>
@@ -1001,7 +1001,7 @@ const PersonalizedCoachingPrograms = () => {
                   <StepLabel>Begin Personalized Coaching Journey</StepLabel>
                   <StepContent>
                     <Typography variant="body2">
-                      Start your customized coaching experience with Dr. Flourish AI
+                      Start your customized coaching experience with Dr. Love
                     </Typography>
                   </StepContent>
                 </Step>
@@ -1021,7 +1021,7 @@ const PersonalizedCoachingPrograms = () => {
         </Typography>
         <Typography variant="subtitle1" color="text.secondary" sx={{ mb: 3 }}>
           Discover your perfect coaching program through our comprehensive assessment and AI-powered 
-          recommendations. Dr. Flourish AI will create a personalized coaching journey tailored to your unique relationship needs.
+          recommendations. Dr. Love will create a personalized coaching journey tailored to your unique relationship needs.
         </Typography>
 
         {/* Personalization Score Dashboard */}
