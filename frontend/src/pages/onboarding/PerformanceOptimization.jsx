@@ -1,1203 +1,1103 @@
-import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { 
   Zap, 
-  BarChart, 
+  Activity, 
+  Gauge, 
+  Speedometer, 
+  Timer, 
   Clock, 
-  HardDrive, 
-  Wifi, 
-  Battery, 
+  TrendingUp, 
+  TrendingDown, 
+  BarChart3, 
+  LineChart, 
+  PieChart, 
+  Settings, 
+  Monitor, 
   Smartphone, 
   Tablet, 
   Laptop, 
-  Settings, 
-  RefreshCw, 
+  Wifi, 
+  Signal, 
+  Battery, 
+  HardDrive, 
+  Cpu, 
+  MemoryStick, 
+  Database, 
+  Server, 
+  Cloud, 
+  Globe, 
+  MapPin, 
+  Navigation, 
+  Target, 
   CheckCircle, 
+  AlertCircle, 
   AlertTriangle, 
-  XCircle,
-  Download,
-  Upload,
-  Gauge,
-  Memory,
-  Save,
-  Trash2,
-  Eye,
-  EyeOff,
-  Image,
-  FileText,
-  Video,
-  Cpu,
-  Database,
-  ToggleLeft,
-  ToggleRight,
-  Info,
-  HelpCircle,
-  ArrowRight
+  Info, 
+  Star, 
+  Heart, 
+  ThumbsUp, 
+  ThumbsDown, 
+  Eye, 
+  EyeOff, 
+  Play, 
+  Pause, 
+  Stop, 
+  SkipBack, 
+  SkipForward, 
+  FastForward, 
+  Rewind, 
+  Refresh, 
+  RotateCcw, 
+  RotateCw, 
+  Download, 
+  Upload, 
+  Share, 
+  Copy, 
+  Save, 
+  FileText, 
+  File, 
+  Folder, 
+  Search, 
+  Filter, 
+  Sort, 
+  ArrowUp, 
+  ArrowDown, 
+  ArrowLeft, 
+  ArrowRight, 
+  ChevronUp, 
+  ChevronDown, 
+  ChevronLeft, 
+  ChevronRight, 
+  Plus, 
+  Minus, 
+  X, 
+  Check, 
+  MoreHorizontal, 
+  MoreVertical, 
+  Menu, 
+  Home, 
+  User, 
+  Users, 
+  Mail, 
+  Phone, 
+  MessageCircle, 
+  Video, 
+  Camera, 
+  Mic, 
+  MicOff, 
+  Volume2, 
+  VolumeX, 
+  Calendar, 
+  Bookmark, 
+  Tag, 
+  Hash, 
+  AtSign, 
+  Percent, 
+  DollarSign, 
+  CreditCard, 
+  ShoppingCart, 
+  Gift, 
+  Package, 
+  Truck, 
+  Plane, 
+  Car, 
+  Bike, 
+  Walk, 
+  Run, 
+  Dumbbell, 
+  Pulse, 
+  Thermometer, 
+  Droplets, 
+  Flame, 
+  Bolt, 
+  Flash, 
+  Lightning, 
+  Storm, 
+  Sun, 
+  Moon, 
+  Cloud as CloudIcon, 
+  CloudRain, 
+  Umbrella, 
+  Wind, 
+  Snowflake, 
+  Mountain, 
+  Tree, 
+  Leaf, 
+  Flower, 
+  Grass, 
+  Apple, 
+  Coffee, 
+  Wine, 
+  Music, 
+  Film, 
+  Book, 
+  Gamepad2, 
+  Headphones, 
+  Keyboard, 
+  Mouse, 
+  Printer, 
+  Scanner, 
+  Usb, 
+  Bluetooth, 
+  WifiOff, 
+  SignalLow, 
+  SignalMedium, 
+  SignalHigh, 
+  BatteryLow, 
+  BatteryCharging, 
+  BatteryFull, 
+  Power, 
+  PowerOff, 
+  Plug, 
+  Unplug, 
+  Lock, 
+  Unlock, 
+  Key, 
+  Shield, 
+  ShieldCheck, 
+  ShieldAlert, 
+  ShieldX, 
+  Security, 
+  Fingerprint, 
+  Scan, 
+  QrCode, 
+  Barcode, 
+  CreditCard as CreditCardIcon, 
+  Wallet, 
+  Coins, 
+  Banknote, 
+  Receipt, 
+  Calculator, 
+  Abacus, 
+  PiggyBank, 
+  TrendingUp as TrendingUpIcon, 
+  TrendingDown as TrendingDownIcon, 
+  BarChart, 
+  BarChart2, 
+  BarChart4, 
+  LineChart as LineChartIcon, 
+  PieChart as PieChartIcon, 
+  Donut, 
+  Activity as ActivityIcon, 
+  Pulse as PulseIcon, 
+  Heartbeat, 
+  Stethoscope, 
+  Pill, 
+  Syringe, 
+  Bandage, 
+  Cross, 
+  Plus as PlusIcon, 
+  Minus as MinusIcon, 
+  Equal, 
+  Divide, 
+  Multiply, 
+  Percent as PercentIcon, 
+  Pi, 
+  Infinity, 
+  Sigma, 
+  Alpha, 
+  Beta, 
+  Gamma, 
+  Delta, 
+  Epsilon, 
+  Zeta, 
+  Eta, 
+  Theta, 
+  Iota, 
+  Kappa, 
+  Lambda, 
+  Mu, 
+  Nu, 
+  Xi, 
+  Omicron, 
+  Rho, 
+  Tau, 
+  Upsilon, 
+  Phi, 
+  Chi, 
+  Psi, 
+  Omega, 
+  AlphaIcon, 
+  BetaIcon, 
+  GammaIcon, 
+  DeltaIcon, 
+  EpsilonIcon, 
+  ZetaIcon, 
+  EtaIcon, 
+  ThetaIcon, 
+  IotaIcon, 
+  KappaIcon, 
+  LambdaIcon, 
+  MuIcon, 
+  NuIcon, 
+  XiIcon, 
+  OmicronIcon, 
+  RhoIcon, 
+  TauIcon, 
+  UpsilonIcon, 
+  PhiIcon, 
+  ChiIcon, 
+  PsiIcon, 
+  OmegaIcon
 } from 'lucide-react';
-import { Button } from '../../components/ui/button';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../../components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs';
-import { Badge } from '../../components/ui/badge';
-import { Switch } from '../../components/ui/switch';
-import { Label } from '../../components/ui/label';
-import { Slider } from '../../components/ui/slider';
-import { Progress } from '../../components/ui/progress';
-import { Separator } from '../../components/ui/separator';
-import { useToast } from '../../components/ui/use-toast';
-import { cn } from '../../lib/utils';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '../../components/ui/select';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '../../components/ui/tooltip';
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from '../../components/ui/accordion';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '../../components/ui/dialog';
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '../../components/ui/table';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '../../components/ui/dropdown-menu';
-
-// Mock data for performance metrics
-const performanceData = {
-  score: 87,
-  loadTime: 1.2,
-  interactionTime: 0.3,
-  memoryUsage: 124,
-  batteryImpact: 'Low',
-  dataUsage: {
-    wifi: 2.4,
-    cellular: 0.8
-  },
-  storageUsage: 34.5,
-  optimizationHistory: [
-    { date: '2025-07-01', score: 87, changes: ['Enabled image compression', 'Reduced animation complexity'] },
-    { date: '2025-06-15', score: 72, changes: ['Initial optimization scan'] }
-  ],
-  deviceCompatibility: {
-    mobile: 'Excellent',
-    tablet: 'Excellent',
-    desktop: 'Excellent'
-  }
-};
-
-// Mock data for optimization recommendations
-const optimizationRecommendations = [
-  {
-    id: 'rec-1',
-    title: 'Enable data saving mode',
-    description: 'Reduce data usage by loading lower resolution images and limiting background syncing',
-    impact: 'Medium',
-    category: 'data',
-    status: 'recommended'
-  },
-  {
-    id: 'rec-2',
-    title: 'Clear cached media files',
-    description: 'Remove unused images and videos to free up 12.3MB of storage',
-    impact: 'Low',
-    category: 'storage',
-    status: 'recommended'
-  },
-  {
-    id: 'rec-3',
-    title: 'Reduce animation complexity',
-    description: 'Simplify animations to improve performance on older devices',
-    impact: 'High',
-    category: 'performance',
-    status: 'applied'
-  },
-  {
-    id: 'rec-4',
-    title: 'Enable offline mode for key features',
-    description: 'Make essential features available without internet connection',
-    impact: 'Medium',
-    category: 'offline',
-    status: 'recommended'
-  }
-];
-
-// Mock data for storage breakdown
-const storageBreakdown = [
-  { category: 'Profile Data', size: 2.1, icon: <FileText className="h-4 w-4" /> },
-  { category: 'Media Cache', size: 18.7, icon: <Image className="h-4 w-4" /> },
-  { category: 'Message History', size: 8.4, icon: <FileText className="h-4 w-4" /> },
-  { category: 'App Resources', size: 5.3, icon: <Database className="h-4 w-4" /> }
-];
 
 const PerformanceOptimization = () => {
-  const { toast } = useToast();
   const [activeTab, setActiveTab] = useState('overview');
-  const [isOptimizing, setIsOptimizing] = useState(false);
-  const [optimizationProgress, setOptimizationProgress] = useState(0);
-  const [showClearCacheDialog, setShowClearCacheDialog] = useState(false);
-  const [selectedCacheTypes, setSelectedCacheTypes] = useState({
-    images: true,
-    videos: true,
-    documents: false,
-    appData: false
+  const [isMonitoring, setIsMonitoring] = useState(true);
+  const [performanceData, setPerformanceData] = useState({
+    pageLoadTime: 1.2,
+    firstContentfulPaint: 0.8,
+    largestContentfulPaint: 1.5,
+    cumulativeLayoutShift: 0.05,
+    firstInputDelay: 12,
+    timeToInteractive: 2.1,
+    totalBlockingTime: 45,
+    speedIndex: 1.8
   });
-  
-  // Performance settings state
-  const [settings, setSettings] = useState({
-    dataSaving: false,
-    imageQuality: 'auto',
-    animationReduction: false,
-    backgroundSync: true,
-    offlineMode: false,
-    autoOptimize: false,
-    notificationFrequency: 'weekly'
+
+  const [resourceMetrics, setResourceMetrics] = useState({
+    jsSize: 245,
+    cssSize: 89,
+    imageSize: 1240,
+    fontSize: 156,
+    totalSize: 1730,
+    requests: 42,
+    cachedRequests: 38,
+    compressionRatio: 78
   });
-  
-  // Effect to simulate optimization progress
-  useEffect(() => {
-    if (isOptimizing) {
-      const interval = setInterval(() => {
-        setOptimizationProgress(prev => {
-          const newProgress = prev + 5;
-          if (newProgress >= 100) {
-            setIsOptimizing(false);
-            clearInterval(interval);
-            toast({
-              title: "Optimization Complete",
-              description: "Your app performance has been optimized. Performance score improved by 8%.",
-            });
-            return 100;
-          }
-          return newProgress;
-        });
-      }, 150);
-      
-      return () => clearInterval(interval);
-    }
-  }, [isOptimizing, toast]);
-  
-  const handleOptimizeNow = () => {
-    setIsOptimizing(true);
-    setOptimizationProgress(0);
-  };
-  
-  const handleClearCache = () => {
-    setShowClearCacheDialog(false);
+
+  const [deviceMetrics, setDeviceMetrics] = useState({
+    mobile: { score: 92, loadTime: 1.4, fcp: 0.9 },
+    tablet: { score: 95, loadTime: 1.1, fcp: 0.7 },
+    desktop: { score: 98, loadTime: 0.8, fcp: 0.5 }
+  });
+
+  const [networkMetrics, setNetworkMetrics] = useState({
+    '4g': { score: 89, loadTime: 2.1, fcp: 1.2 },
+    '3g': { score: 76, loadTime: 4.8, fcp: 2.9 },
+    'wifi': { score: 98, loadTime: 0.9, fcp: 0.6 },
+    'slow': { score: 68, loadTime: 8.2, fcp: 5.1 }
+  });
+
+  const [optimizationSettings, setOptimizationSettings] = useState({
+    imageOptimization: true,
+    codeMinification: true,
+    gzipCompression: true,
+    browserCaching: true,
+    cdnEnabled: true,
+    lazyLoading: true,
+    preloading: true,
+    serviceworker: true,
+    http2: true,
+    webp: true
+  });
+
+  const [alerts, setAlerts] = useState([
+    { id: 1, type: 'warning', message: 'Large image detected on homepage (2.1MB)', timestamp: '2 minutes ago' },
+    { id: 2, type: 'info', message: 'CDN cache hit ratio improved to 94%', timestamp: '15 minutes ago' },
+    { id: 3, type: 'success', message: 'Page load time improved by 23%', timestamp: '1 hour ago' }
+  ]);
+
+  const handleOptimizationToggle = useCallback((key) => {
+    setOptimizationSettings(prev => ({ ...prev, [key]: !prev[key] }));
+  }, []);
+
+  const getPerformanceScore = useCallback(() => {
+    const { pageLoadTime, firstContentfulPaint, cumulativeLayoutShift, firstInputDelay } = performanceData;
     
-    // Calculate total size to be cleared
-    const totalSize = Object.entries(selectedCacheTypes)
-      .filter(([_, isSelected]) => isSelected)
-      .reduce((acc, _) => acc + 3.2, 0); // Mock size per category
+    let score = 100;
+    if (pageLoadTime > 2.5) score -= 20;
+    else if (pageLoadTime > 1.5) score -= 10;
     
-    toast({
-      title: "Cache Cleared",
-      description: `Successfully cleared ${totalSize.toFixed(1)}MB of cached data.`,
-    });
-  };
-  
-  const handleSettingChange = (setting, value) => {
-    setSettings(prev => ({
-      ...prev,
-      [setting]: value
-    }));
+    if (firstContentfulPaint > 1.8) score -= 15;
+    else if (firstContentfulPaint > 1.2) score -= 8;
     
-    toast({
-      title: "Setting Updated",
-      description: `${setting.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())} has been ${value ? 'enabled' : 'disabled'}.`,
-    });
-  };
-  
-  const handleApplyRecommendation = (recId) => {
-    // In a real implementation, this would apply the recommendation
-    toast({
-      title: "Recommendation Applied",
-      description: "The optimization recommendation has been applied successfully.",
-    });
-  };
-  
-  const getScoreColor = (score) => {
-    if (score >= 80) return 'text-green-500';
-    if (score >= 60) return 'text-yellow-500';
-    return 'text-red-500';
-  };
-  
-  const getStatusIcon = (status) => {
-    switch (status) {
-      case 'applied':
-        return <CheckCircle className="h-4 w-4 text-green-500" />;
-      case 'recommended':
-        return <AlertTriangle className="h-4 w-4 text-yellow-500" />;
-      case 'critical':
-        return <XCircle className="h-4 w-4 text-red-500" />;
-      default:
-        return <Info className="h-4 w-4 text-muted-foreground" />;
-    }
-  };
-  
-  const getImpactBadge = (impact) => {
-    switch (impact) {
-      case 'High':
-        return <Badge className="bg-green-500">High Impact</Badge>;
-      case 'Medium':
-        return <Badge className="bg-yellow-500">Medium Impact</Badge>;
-      case 'Low':
-        return <Badge variant="outline">Low Impact</Badge>;
-      default:
-        return <Badge variant="outline">Unknown Impact</Badge>;
-    }
-  };
-  
-  const getCategoryIcon = (category) => {
-    switch (category) {
-      case 'data':
-        return <Wifi className="h-4 w-4" />;
-      case 'storage':
-        return <HardDrive className="h-4 w-4" />;
-      case 'performance':
-        return <Zap className="h-4 w-4" />;
-      case 'offline':
-        return <Wifi className="h-4 w-4 text-muted-foreground" />;
-      default:
-        return <Settings className="h-4 w-4" />;
-    }
-  };
-  
-  return (
-    <div className="container mx-auto py-6 max-w-7xl">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-      >
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
-          <div>
-            <h1 className="text-3xl font-bold tracking-tight">Performance Optimization</h1>
-            <p className="text-muted-foreground mt-1">
-              Optimize your app experience for speed, battery life, and data usage
-            </p>
+    if (cumulativeLayoutShift > 0.1) score -= 15;
+    else if (cumulativeLayoutShift > 0.05) score -= 8;
+    
+    if (firstInputDelay > 100) score -= 20;
+    else if (firstInputDelay > 50) score -= 10;
+    
+    return Math.max(0, Math.round(score));
+  }, [performanceData]);
+
+  const PerformanceOverview = () => (
+    <div className="space-y-6">
+      <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-xl border border-blue-100">
+        <div className="flex items-center gap-3 mb-4">
+          <div className="p-2 bg-blue-100 rounded-lg">
+            <Zap className="w-6 h-6 text-blue-600" />
           </div>
-          
-          <div className="flex items-center mt-4 md:mt-0 space-x-2">
-            <Button 
-              variant="outline" 
-              onClick={handleOptimizeNow}
-              disabled={isOptimizing}
-            >
-              {isOptimizing ? (
-                <>
-                  <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
-                  Optimizing...
-                </>
-              ) : (
-                <>
-                  <Zap className="h-4 w-4 mr-2" />
-                  Optimize Now
-                </>
-              )}
-            </Button>
-            
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="icon">
-                  <Settings className="h-4 w-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuLabel>Quick Actions</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => setShowClearCacheDialog(true)}>
-                  <Trash2 className="h-4 w-4 mr-2" />
-                  Clear Cache
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => handleSettingChange('dataSaving', !settings.dataSaving)}>
-                  <Download className="h-4 w-4 mr-2" />
-                  {settings.dataSaving ? 'Disable' : 'Enable'} Data Saving
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => handleSettingChange('animationReduction', !settings.animationReduction)}>
-                  <Zap className="h-4 w-4 mr-2" />
-                  {settings.animationReduction ? 'Enable' : 'Reduce'} Animations
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+          <div>
+            <h3 className="text-lg font-semibold text-gray-900">Performance Score</h3>
+            <p className="text-sm text-gray-600">Real-time performance monitoring and optimization</p>
+          </div>
+          <div className="ml-auto flex items-center gap-2">
+            <div className="text-3xl font-bold text-blue-600">{getPerformanceScore()}</div>
+            <div className="text-sm text-gray-600">/100</div>
           </div>
         </div>
-        
-        {isOptimizing && (
-          <Card className="mb-6">
-            <CardContent className="pt-6">
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium">Optimizing your app...</span>
-                  <span className="text-sm text-muted-foreground">{optimizationProgress}%</span>
-                </div>
-                <Progress value={optimizationProgress} className="h-2" />
-                <p className="text-xs text-muted-foreground">
-                  Analyzing app performance, clearing unused cache, and optimizing resources.
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-        )}
-        
-        <Tabs defaultValue="overview" value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid grid-cols-4 w-full md:w-auto">
-            <TabsTrigger value="overview">Overview</TabsTrigger>
-            <TabsTrigger value="recommendations">Recommendations</TabsTrigger>
-            <TabsTrigger value="storage">Storage</TabsTrigger>
-            <TabsTrigger value="settings">Settings</TabsTrigger>
-          </TabsList>
+
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div className="bg-white p-4 rounded-lg border border-blue-100">
+            <div className="flex items-center gap-2 mb-2">
+              <Timer className="w-4 h-4 text-green-600" />
+              <span className="text-sm font-medium text-gray-700">Page Load Time</span>
+            </div>
+            <div className="text-2xl font-bold text-green-600">{performanceData.pageLoadTime}s</div>
+            <div className="text-xs text-gray-500">Target: &lt;2.5s</div>
+          </div>
+
+          <div className="bg-white p-4 rounded-lg border border-blue-100">
+            <div className="flex items-center gap-2 mb-2">
+              <Activity className="w-4 h-4 text-blue-600" />
+              <span className="text-sm font-medium text-gray-700">First Contentful Paint</span>
+            </div>
+            <div className="text-2xl font-bold text-blue-600">{performanceData.firstContentfulPaint}s</div>
+            <div className="text-xs text-gray-500">Target: &lt;1.8s</div>
+          </div>
+
+          <div className="bg-white p-4 rounded-lg border border-blue-100">
+            <div className="flex items-center gap-2 mb-2">
+              <Target className="w-4 h-4 text-purple-600" />
+              <span className="text-sm font-medium text-gray-700">Cumulative Layout Shift</span>
+            </div>
+            <div className="text-2xl font-bold text-purple-600">{performanceData.cumulativeLayoutShift}</div>
+            <div className="text-xs text-gray-500">Target: &lt;0.1</div>
+          </div>
+
+          <div className="bg-white p-4 rounded-lg border border-blue-100">
+            <div className="flex items-center gap-2 mb-2">
+              <Gauge className="w-4 h-4 text-orange-600" />
+              <span className="text-sm font-medium text-gray-700">First Input Delay</span>
+            </div>
+            <div className="text-2xl font-bold text-orange-600">{performanceData.firstInputDelay}ms</div>
+            <div className="text-xs text-gray-500">Target: &lt;100ms</div>
+          </div>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="bg-white p-6 rounded-xl border border-gray-200">
+          <h4 className="text-lg font-semibold text-gray-900 mb-4">Core Web Vitals</h4>
           
-          <TabsContent value="overview" className="mt-6">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <Card>
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-lg">Performance Score</CardTitle>
-                  <CardDescription>Overall app performance rating</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex items-center justify-center">
-                    <div className="relative w-32 h-32">
-                      <svg className="w-full h-full" viewBox="0 0 100 100">
-                        <circle
-                          className="text-muted stroke-current"
-                          strokeWidth="10"
-                          stroke="currentColor"
-                          fill="transparent"
-                          r="40"
-                          cx="50"
-                          cy="50"
-                        />
-                        <circle
-                          className={`${getScoreColor(performanceData.score)} stroke-current`}
-                          strokeWidth="10"
-                          strokeLinecap="round"
-                          stroke="currentColor"
-                          fill="transparent"
-                          r="40"
-                          cx="50"
-                          cy="50"
-                          strokeDasharray={`${2 * Math.PI * 40 * performanceData.score / 100} ${2 * Math.PI * 40 * (1 - performanceData.score / 100)}`}
-                          strokeDashoffset={2 * Math.PI * 40 * 0.25}
-                        />
-                      </svg>
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <span className={`text-3xl font-bold ${getScoreColor(performanceData.score)}`}>
-                          {performanceData.score}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div className="mt-4 grid grid-cols-2 gap-2 text-center">
-                    <div className="bg-muted rounded-md p-2">
-                      <p className="text-xs text-muted-foreground">Load Time</p>
-                      <p className="text-lg font-medium">{performanceData.loadTime}s</p>
-                    </div>
-                    <div className="bg-muted rounded-md p-2">
-                      <p className="text-xs text-muted-foreground">Interaction</p>
-                      <p className="text-lg font-medium">{performanceData.interactionTime}s</p>
-                    </div>
-                  </div>
-                </CardContent>
-                <CardFooter className="pt-0">
-                  <Button variant="outline" className="w-full" onClick={() => setActiveTab('recommendations')}>
-                    View Recommendations
-                    <ArrowRight className="h-4 w-4 ml-2" />
-                  </Button>
-                </CardFooter>
-              </Card>
-              
-              <Card>
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-lg">Resource Usage</CardTitle>
-                  <CardDescription>Memory, battery, and data consumption</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <div>
-                      <div className="flex items-center justify-between mb-1">
-                        <div className="flex items-center">
-                          <Memory className="h-4 w-4 mr-2 text-blue-500" />
-                          <span className="text-sm font-medium">Memory Usage</span>
-                        </div>
-                        <span className="text-sm">{performanceData.memoryUsage} MB</span>
-                      </div>
-                      <Progress value={performanceData.memoryUsage / 2} className="h-2" />
-                    </div>
-                    
-                    <div>
-                      <div className="flex items-center justify-between mb-1">
-                        <div className="flex items-center">
-                          <Battery className="h-4 w-4 mr-2 text-green-500" />
-                          <span className="text-sm font-medium">Battery Impact</span>
-                        </div>
-                        <Badge variant="outline" className="bg-green-500/10 text-green-500 hover:bg-green-500/20">
-                          Low
-                        </Badge>
-                      </div>
-                      <Progress value={20} className="h-2 bg-muted" indicatorClassName="bg-green-500" />
-                    </div>
-                    
-                    <div>
-                      <div className="flex items-center justify-between mb-1">
-                        <div className="flex items-center">
-                          <Wifi className="h-4 w-4 mr-2 text-purple-500" />
-                          <span className="text-sm font-medium">Data Usage (WiFi)</span>
-                        </div>
-                        <span className="text-sm">{performanceData.dataUsage.wifi} MB/day</span>
-                      </div>
-                      <Progress value={performanceData.dataUsage.wifi * 10} className="h-2 bg-muted" indicatorClassName="bg-purple-500" />
-                    </div>
-                    
-                    <div>
-                      <div className="flex items-center justify-between mb-1">
-                        <div className="flex items-center">
-                          <Smartphone className="h-4 w-4 mr-2 text-orange-500" />
-                          <span className="text-sm font-medium">Data Usage (Cellular)</span>
-                        </div>
-                        <span className="text-sm">{performanceData.dataUsage.cellular} MB/day</span>
-                      </div>
-                      <Progress value={performanceData.dataUsage.cellular * 10} className="h-2 bg-muted" indicatorClassName="bg-orange-500" />
-                    </div>
-                  </div>
-                </CardContent>
-                <CardFooter className="pt-0">
-                  <Button variant="outline" className="w-full" onClick={() => setActiveTab('settings')}>
-                    Adjust Settings
-                    <ArrowRight className="h-4 w-4 ml-2" />
-                  </Button>
-                </CardFooter>
-              </Card>
-              
-              <Card>
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-lg">Device Compatibility</CardTitle>
-                  <CardDescription>Performance across different devices</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center">
-                        <Smartphone className="h-5 w-5 mr-3 text-primary" />
-                        <div>
-                          <p className="font-medium">Mobile</p>
-                          <p className="text-xs text-muted-foreground">iOS & Android</p>
-                        </div>
-                      </div>
-                      <Badge className="bg-green-500">{performanceData.deviceCompatibility.mobile}</Badge>
-                    </div>
-                    
-                    <Separator />
-                    
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center">
-                        <Tablet className="h-5 w-5 mr-3 text-primary" />
-                        <div>
-                          <p className="font-medium">Tablet</p>
-                          <p className="text-xs text-muted-foreground">iPad & Android Tablets</p>
-                        </div>
-                      </div>
-                      <Badge className="bg-green-500">{performanceData.deviceCompatibility.tablet}</Badge>
-                    </div>
-                    
-                    <Separator />
-                    
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center">
-                        <Laptop className="h-5 w-5 mr-3 text-primary" />
-                        <div>
-                          <p className="font-medium">Desktop</p>
-                          <p className="text-xs text-muted-foreground">Web Browsers</p>
-                        </div>
-                      </div>
-                      <Badge className="bg-green-500">{performanceData.deviceCompatibility.desktop}</Badge>
-                    </div>
-                  </div>
-                </CardContent>
-                <CardFooter className="pt-0">
-                  <p className="text-xs text-muted-foreground w-full text-center">
-                    Last tested: July 2, 2025
-                  </p>
-                </CardFooter>
-              </Card>
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <span className="text-sm text-gray-600">Largest Contentful Paint</span>
+              <div className="flex items-center gap-2">
+                <div className="w-20 h-2 bg-gray-200 rounded-full">
+                  <div 
+                    className="h-full bg-green-500 rounded-full" 
+                    style={{ width: `${Math.min(100, (2.5 - performanceData.largestContentfulPaint) / 2.5 * 100)}%` }}
+                  ></div>
+                </div>
+                <span className="text-sm font-medium text-gray-900">{performanceData.largestContentfulPaint}s</span>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between">
+              <span className="text-sm text-gray-600">Time to Interactive</span>
+              <div className="flex items-center gap-2">
+                <div className="w-20 h-2 bg-gray-200 rounded-full">
+                  <div 
+                    className="h-full bg-blue-500 rounded-full" 
+                    style={{ width: `${Math.min(100, (5 - performanceData.timeToInteractive) / 5 * 100)}%` }}
+                  ></div>
+                </div>
+                <span className="text-sm font-medium text-gray-900">{performanceData.timeToInteractive}s</span>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between">
+              <span className="text-sm text-gray-600">Total Blocking Time</span>
+              <div className="flex items-center gap-2">
+                <div className="w-20 h-2 bg-gray-200 rounded-full">
+                  <div 
+                    className="h-full bg-purple-500 rounded-full" 
+                    style={{ width: `${Math.min(100, (300 - performanceData.totalBlockingTime) / 300 * 100)}%` }}
+                  ></div>
+                </div>
+                <span className="text-sm font-medium text-gray-900">{performanceData.totalBlockingTime}ms</span>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between">
+              <span className="text-sm text-gray-600">Speed Index</span>
+              <div className="flex items-center gap-2">
+                <div className="w-20 h-2 bg-gray-200 rounded-full">
+                  <div 
+                    className="h-full bg-orange-500 rounded-full" 
+                    style={{ width: `${Math.min(100, (4 - performanceData.speedIndex) / 4 * 100)}%` }}
+                  ></div>
+                </div>
+                <span className="text-sm font-medium text-gray-900">{performanceData.speedIndex}s</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white p-6 rounded-xl border border-gray-200">
+          <h4 className="text-lg font-semibold text-gray-900 mb-4">Resource Optimization</h4>
+          
+          <div className="space-y-4">
+            <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+              <div className="flex items-center gap-3">
+                <FileText className="w-5 h-5 text-blue-600" />
+                <div>
+                  <div className="font-medium text-gray-900">JavaScript</div>
+                  <div className="text-sm text-gray-600">{resourceMetrics.jsSize}KB compressed</div>
+                </div>
+              </div>
+              <div className="text-sm text-green-600 font-medium">Optimized</div>
+            </div>
+
+            <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+              <div className="flex items-center gap-3">
+                <Palette className="w-5 h-5 text-purple-600" />
+                <div>
+                  <div className="font-medium text-gray-900">CSS</div>
+                  <div className="text-sm text-gray-600">{resourceMetrics.cssSize}KB compressed</div>
+                </div>
+              </div>
+              <div className="text-sm text-green-600 font-medium">Optimized</div>
+            </div>
+
+            <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+              <div className="flex items-center gap-3">
+                <Camera className="w-5 h-5 text-green-600" />
+                <div>
+                  <div className="font-medium text-gray-900">Images</div>
+                  <div className="text-sm text-gray-600">{resourceMetrics.imageSize}KB WebP format</div>
+                </div>
+              </div>
+              <div className="text-sm text-green-600 font-medium">Optimized</div>
+            </div>
+
+            <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+              <div className="flex items-center gap-3">
+                <Type className="w-5 h-5 text-orange-600" />
+                <div>
+                  <div className="font-medium text-gray-900">Fonts</div>
+                  <div className="text-sm text-gray-600">{resourceMetrics.fontSize}KB WOFF2 format</div>
+                </div>
+              </div>
+              <div className="text-sm text-green-600 font-medium">Optimized</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  const DevicePerformance = () => (
+    <div className="space-y-6">
+      <div className="bg-white p-6 rounded-xl border border-gray-200">
+        <h4 className="text-lg font-semibold text-gray-900 mb-4">Device Performance Analysis</h4>
+        
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="p-4 bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg border border-blue-200">
+            <div className="flex items-center gap-3 mb-3">
+              <Smartphone className="w-6 h-6 text-blue-600" />
+              <div>
+                <h5 className="font-semibold text-gray-900">Mobile</h5>
+                <p className="text-sm text-gray-600">iOS & Android</p>
+              </div>
             </div>
             
-            <Card className="mt-6">
-              <CardHeader>
-                <CardTitle>Optimization History</CardTitle>
-                <CardDescription>
-                  Recent performance improvements and changes
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Date</TableHead>
-                      <TableHead>Performance Score</TableHead>
-                      <TableHead>Changes Applied</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {performanceData.optimizationHistory.map((entry, index) => (
-                      <TableRow key={index}>
-                        <TableCell>{new Date(entry.date).toLocaleDateString()}</TableCell>
-                        <TableCell>
-                          <span className={getScoreColor(entry.score)}>{entry.score}</span>
-                        </TableCell>
-                        <TableCell>
-                          <ul className="list-disc list-inside">
-                            {entry.changes.map((change, i) => (
-                              <li key={i} className="text-sm">{change}</li>
-                            ))}
-                          </ul>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </CardContent>
-            </Card>
-          </TabsContent>
-          
-          <TabsContent value="recommendations" className="mt-6">
-            <div className="space-y-6">
-              {optimizationRecommendations.map(recommendation => (
-                <Card key={recommendation.id}>
-                  <CardHeader className="pb-2">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center">
-                        {getCategoryIcon(recommendation.category)}
-                        <CardTitle className="text-lg ml-2">{recommendation.title}</CardTitle>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        {getStatusIcon(recommendation.status)}
-                        <span className="text-sm capitalize">{recommendation.status}</span>
-                      </div>
-                    </div>
-                    <CardDescription>{recommendation.description}</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="flex items-center justify-between">
-                      <div>
-                        {getImpactBadge(recommendation.impact)}
-                      </div>
-                      
-                      {recommendation.status === 'recommended' && (
-                        <Button size="sm" onClick={() => handleApplyRecommendation(recommendation.id)}>
-                          Apply Recommendation
-                        </Button>
-                      )}
-                      
-                      {recommendation.status === 'applied' && (
-                        <Button size="sm" variant="outline" disabled>
-                          <CheckCircle className="h-4 w-4 mr-2 text-green-500" />
-                          Applied
-                        </Button>
-                      )}
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-gray-600">Performance Score</span>
+                <span className="text-lg font-bold text-blue-600">{deviceMetrics.mobile.score}</span>
+              </div>
               
-              {optimizationRecommendations.length === 0 && (
-                <div className="text-center py-12">
-                  <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-primary/10 mb-4">
-                    <CheckCircle className="h-6 w-6 text-primary" />
-                  </div>
-                  <h3 className="text-lg font-medium">All Optimized!</h3>
-                  <p className="text-muted-foreground mt-1">
-                    Your app is fully optimized. We'll notify you when new recommendations are available.
-                  </p>
-                </div>
-              )}
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-gray-600">Load Time</span>
+                <span className="text-sm font-medium text-gray-900">{deviceMetrics.mobile.loadTime}s</span>
+              </div>
+              
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-gray-600">First Contentful Paint</span>
+                <span className="text-sm font-medium text-gray-900">{deviceMetrics.mobile.fcp}s</span>
+              </div>
             </div>
-          </TabsContent>
-          
-          <TabsContent value="storage" className="mt-6">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <Card className="md:col-span-2">
-                <CardHeader>
-                  <CardTitle>Storage Usage</CardTitle>
-                  <CardDescription>
-                    App storage breakdown and management
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-6">
-                    <div>
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="text-sm font-medium">Total Storage Used</span>
-                        <span className="text-sm font-medium">{performanceData.storageUsage} MB</span>
-                      </div>
-                      <Progress value={(performanceData.storageUsage / 100) * 100} className="h-2" />
-                      <p className="text-xs text-muted-foreground mt-1">
-                        {(100 - performanceData.storageUsage).toFixed(1)} MB available of 100 MB allocation
-                      </p>
-                    </div>
-                    
-                    <div className="space-y-4">
-                      {storageBreakdown.map((item, index) => (
-                        <div key={index}>
-                          <div className="flex items-center justify-between mb-1">
-                            <div className="flex items-center">
-                              {item.icon}
-                              <span className="text-sm font-medium ml-2">{item.category}</span>
-                            </div>
-                            <span className="text-sm">{item.size} MB</span>
-                          </div>
-                          <Progress 
-                            value={(item.size / performanceData.storageUsage) * 100} 
-                            className="h-2" 
-                            indicatorClassName={
-                              index === 0 ? "bg-blue-500" : 
-                              index === 1 ? "bg-purple-500" : 
-                              index === 2 ? "bg-green-500" : 
-                              "bg-orange-500"
-                            }
-                          />
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-              
-              <Card>
-                <CardHeader>
-                  <CardTitle>Storage Management</CardTitle>
-                  <CardDescription>
-                    Clear cache and manage storage
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <Button 
-                      variant="outline" 
-                      className="w-full justify-start"
-                      onClick={() => setShowClearCacheDialog(true)}
-                    >
-                      <Trash2 className="h-4 w-4 mr-2" />
-                      Clear Cache
-                    </Button>
-                    
-                    <Accordion type="single" collapsible className="w-full">
-                      <AccordionItem value="auto-cleanup">
-                        <AccordionTrigger>
-                          <div className="flex items-center">
-                            <RefreshCw className="h-4 w-4 mr-2" />
-                            <span>Auto Cleanup</span>
-                          </div>
-                        </AccordionTrigger>
-                        <AccordionContent>
-                          <div className="space-y-4 pt-2">
-                            <div className="flex items-center justify-between">
-                              <div className="space-y-0.5">
-                                <Label htmlFor="auto-cleanup-media">Clear media cache</Label>
-                                <p className="text-xs text-muted-foreground">
-                                  Automatically clear unused media files
-                                </p>
-                              </div>
-                              <Switch id="auto-cleanup-media" checked={true} />
-                            </div>
-                            
-                            <div className="flex items-center justify-between">
-                              <div className="space-y-0.5">
-                                <Label htmlFor="auto-cleanup-frequency">Cleanup frequency</Label>
-                                <p className="text-xs text-muted-foreground">
-                                  How often to run automatic cleanup
-                                </p>
-                              </div>
-                              <Select defaultValue="weekly">
-                                <SelectTrigger className="w-32">
-                                  <SelectValue placeholder="Select frequency" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  <SelectItem value="daily">Daily</SelectItem>
-                                  <SelectItem value="weekly">Weekly</SelectItem>
-                                  <SelectItem value="monthly">Monthly</SelectItem>
-                                </SelectContent>
-                              </Select>
-                            </div>
-                          </div>
-                        </AccordionContent>
-                      </AccordionItem>
-                      
-                      <AccordionItem value="storage-limits">
-                        <AccordionTrigger>
-                          <div className="flex items-center">
-                            <HardDrive className="h-4 w-4 mr-2" />
-                            <span>Storage Limits</span>
-                          </div>
-                        </AccordionTrigger>
-                        <AccordionContent>
-                          <div className="space-y-4 pt-2">
-                            <div className="space-y-2">
-                              <div className="flex items-center justify-between">
-                                <Label>Media Cache Limit</Label>
-                                <span className="text-sm font-medium">25 MB</span>
-                              </div>
-                              <Slider defaultValue={[25]} max={50} step={5} />
-                              <p className="text-xs text-muted-foreground">
-                                Maximum storage for cached images and videos
-                              </p>
-                            </div>
-                            
-                            <div className="space-y-2">
-                              <div className="flex items-center justify-between">
-                                <Label>Message History</Label>
-                                <span className="text-sm font-medium">30 days</span>
-                              </div>
-                              <Slider defaultValue={[30]} max={90} step={15} />
-                              <p className="text-xs text-muted-foreground">
-                                How long to keep message history on device
-                              </p>
-                            </div>
-                          </div>
-                        </AccordionContent>
-                      </AccordionItem>
-                    </Accordion>
-                  </div>
-                </CardContent>
-              </Card>
+          </div>
+
+          <div className="p-4 bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg border border-purple-200">
+            <div className="flex items-center gap-3 mb-3">
+              <Tablet className="w-6 h-6 text-purple-600" />
+              <div>
+                <h5 className="font-semibold text-gray-900">Tablet</h5>
+                <p className="text-sm text-gray-600">iPad & Android tablets</p>
+              </div>
             </div>
             
-            <Card className="mt-6">
-              <CardHeader>
-                <CardTitle>Offline Access</CardTitle>
-                <CardDescription>
-                  Manage content available without internet connection
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-6">
-                  <div className="flex items-center justify-between">
-                    <div className="space-y-0.5">
-                      <Label htmlFor="offline-mode">Offline Mode</Label>
-                      <p className="text-sm text-muted-foreground">
-                        Enable core features to work without internet connection
-                      </p>
-                    </div>
-                    <Switch 
-                      id="offline-mode" 
-                      checked={settings.offlineMode}
-                      onCheckedChange={(checked) => handleSettingChange('offlineMode', checked)}
-                    />
-                  </div>
-                  
-                  <Separator />
-                  
-                  <div className="space-y-4">
-                    <h3 className="text-sm font-medium">Features Available Offline</h3>
-                    
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div className="flex items-start space-x-2">
-                        <Switch id="offline-profile" checked={true} disabled={!settings.offlineMode} />
-                        <div className="space-y-1">
-                          <Label htmlFor="offline-profile" className={!settings.offlineMode ? "text-muted-foreground" : ""}>
-                            Relationship Profile
-                          </Label>
-                          <p className="text-xs text-muted-foreground">
-                            View and update your relationship profile
-                          </p>
-                        </div>
-                      </div>
-                      
-                      <div className="flex items-start space-x-2">
-                        <Switch id="offline-activities" checked={true} disabled={!settings.offlineMode} />
-                        <div className="space-y-1">
-                          <Label htmlFor="offline-activities" className={!settings.offlineMode ? "text-muted-foreground" : ""}>
-                            Relationship Activities
-                          </Label>
-                          <p className="text-xs text-muted-foreground">
-                            Access saved activities and exercises
-                          </p>
-                        </div>
-                      </div>
-                      
-                      <div className="flex items-start space-x-2">
-                        <Switch id="offline-journal" checked={true} disabled={!settings.offlineMode} />
-                        <div className="space-y-1">
-                          <Label htmlFor="offline-journal" className={!settings.offlineMode ? "text-muted-foreground" : ""}>
-                            Relationship Journal
-                          </Label>
-                          <p className="text-xs text-muted-foreground">
-                            Write and read journal entries
-                          </p>
-                        </div>
-                      </div>
-                      
-                      <div className="flex items-start space-x-2">
-                        <Switch id="offline-resources" checked={false} disabled={!settings.offlineMode} />
-                        <div className="space-y-1">
-                          <Label htmlFor="offline-resources" className={!settings.offlineMode ? "text-muted-foreground" : ""}>
-                            Relationship Resources
-                          </Label>
-                          <p className="text-xs text-muted-foreground">
-                            Access saved articles and guides
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-          
-          <TabsContent value="settings" className="mt-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Performance Settings</CardTitle>
-                <CardDescription>
-                  Customize app performance and resource usage
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-6">
-                  <div className="flex items-center justify-between">
-                    <div className="space-y-0.5">
-                      <Label htmlFor="data-saving">Data Saving Mode</Label>
-                      <p className="text-sm text-muted-foreground">
-                        Reduce data usage with lower quality images and limited background syncing
-                      </p>
-                    </div>
-                    <Switch 
-                      id="data-saving" 
-                      checked={settings.dataSaving}
-                      onCheckedChange={(checked) => handleSettingChange('dataSaving', checked)}
-                    />
-                  </div>
-                  
-                  <Separator />
-                  
-                  <div className="flex items-center justify-between">
-                    <div className="space-y-0.5">
-                      <Label htmlFor="image-quality">Image Quality</Label>
-                      <p className="text-sm text-muted-foreground">
-                        Control the quality of images displayed in the app
-                      </p>
-                    </div>
-                    <Select 
-                      value={settings.imageQuality}
-                      onValueChange={(value) => setSettings(prev => ({ ...prev, imageQuality: value }))}
-                    >
-                      <SelectTrigger className="w-32">
-                        <SelectValue placeholder="Select quality" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="low">Low</SelectItem>
-                        <SelectItem value="medium">Medium</SelectItem>
-                        <SelectItem value="high">High</SelectItem>
-                        <SelectItem value="auto">Auto (Network)</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  
-                  <Separator />
-                  
-                  <div className="flex items-center justify-between">
-                    <div className="space-y-0.5">
-                      <Label htmlFor="animation-reduction">Reduce Animations</Label>
-                      <p className="text-sm text-muted-foreground">
-                        Simplify animations to improve performance on older devices
-                      </p>
-                    </div>
-                    <Switch 
-                      id="animation-reduction" 
-                      checked={settings.animationReduction}
-                      onCheckedChange={(checked) => handleSettingChange('animationReduction', checked)}
-                    />
-                  </div>
-                  
-                  <Separator />
-                  
-                  <div className="flex items-center justify-between">
-                    <div className="space-y-0.5">
-                      <Label htmlFor="background-sync">Background Syncing</Label>
-                      <p className="text-sm text-muted-foreground">
-                        Allow the app to sync data in the background
-                      </p>
-                    </div>
-                    <Switch 
-                      id="background-sync" 
-                      checked={settings.backgroundSync}
-                      onCheckedChange={(checked) => handleSettingChange('backgroundSync', checked)}
-                    />
-                  </div>
-                  
-                  <Separator />
-                  
-                  <div className="flex items-center justify-between">
-                    <div className="space-y-0.5">
-                      <Label htmlFor="auto-optimize">Automatic Optimization</Label>
-                      <p className="text-sm text-muted-foreground">
-                        Automatically optimize app performance on a regular schedule
-                      </p>
-                    </div>
-                    <Switch 
-                      id="auto-optimize" 
-                      checked={settings.autoOptimize}
-                      onCheckedChange={(checked) => handleSettingChange('autoOptimize', checked)}
-                    />
-                  </div>
-                  
-                  {settings.autoOptimize && (
-                    <div className="flex items-center justify-between pl-6 mt-2">
-                      <div className="space-y-0.5">
-                        <Label htmlFor="notification-frequency">Optimization Frequency</Label>
-                        <p className="text-sm text-muted-foreground">
-                          How often to run automatic optimization
-                        </p>
-                      </div>
-                      <Select 
-                        value={settings.notificationFrequency}
-                        onValueChange={(value) => setSettings(prev => ({ ...prev, notificationFrequency: value }))}
-                      >
-                        <SelectTrigger className="w-32">
-                          <SelectValue placeholder="Select frequency" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="daily">Daily</SelectItem>
-                          <SelectItem value="weekly">Weekly</SelectItem>
-                          <SelectItem value="monthly">Monthly</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-gray-600">Performance Score</span>
+                <span className="text-lg font-bold text-purple-600">{deviceMetrics.tablet.score}</span>
+              </div>
+              
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-gray-600">Load Time</span>
+                <span className="text-sm font-medium text-gray-900">{deviceMetrics.tablet.loadTime}s</span>
+              </div>
+              
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-gray-600">First Contentful Paint</span>
+                <span className="text-sm font-medium text-gray-900">{deviceMetrics.tablet.fcp}s</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="p-4 bg-gradient-to-br from-green-50 to-green-100 rounded-lg border border-green-200">
+            <div className="flex items-center gap-3 mb-3">
+              <Monitor className="w-6 h-6 text-green-600" />
+              <div>
+                <h5 className="font-semibold text-gray-900">Desktop</h5>
+                <p className="text-sm text-gray-600">Windows, Mac, Linux</p>
+              </div>
+            </div>
             
-            <Card className="mt-6">
-              <CardHeader>
-                <CardTitle>Advanced Settings</CardTitle>
-                <CardDescription>
-                  Technical settings for advanced users
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-6">
-                  <Accordion type="single" collapsible className="w-full">
-                    <AccordionItem value="network">
-                      <AccordionTrigger>
-                        <div className="flex items-center">
-                          <Wifi className="h-4 w-4 mr-2" />
-                          <span>Network Settings</span>
-                        </div>
-                      </AccordionTrigger>
-                      <AccordionContent>
-                        <div className="space-y-4 pt-2">
-                          <div className="flex items-center justify-between">
-                            <div className="space-y-0.5">
-                              <Label htmlFor="preload-content">Preload Content</Label>
-                              <p className="text-xs text-muted-foreground">
-                                Download content in advance for faster access
-                              </p>
-                            </div>
-                            <Switch id="preload-content" defaultChecked={true} />
-                          </div>
-                          
-                          <div className="flex items-center justify-between">
-                            <div className="space-y-0.5">
-                              <Label htmlFor="connection-timeout">Connection Timeout</Label>
-                              <p className="text-xs text-muted-foreground">
-                                How long to wait for network responses
-                              </p>
-                            </div>
-                            <Select defaultValue="30">
-                              <SelectTrigger className="w-24">
-                                <SelectValue placeholder="Timeout" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="15">15 sec</SelectItem>
-                                <SelectItem value="30">30 sec</SelectItem>
-                                <SelectItem value="60">60 sec</SelectItem>
-                              </SelectContent>
-                            </Select>
-                          </div>
-                        </div>
-                      </AccordionContent>
-                    </AccordionItem>
-                    
-                    <AccordionItem value="rendering">
-                      <AccordionTrigger>
-                        <div className="flex items-center">
-                          <Cpu className="h-4 w-4 mr-2" />
-                          <span>Rendering Settings</span>
-                        </div>
-                      </AccordionTrigger>
-                      <AccordionContent>
-                        <div className="space-y-4 pt-2">
-                          <div className="flex items-center justify-between">
-                            <div className="space-y-0.5">
-                              <Label htmlFor="hardware-acceleration">Hardware Acceleration</Label>
-                              <p className="text-xs text-muted-foreground">
-                                Use GPU for rendering when available
-                              </p>
-                            </div>
-                            <Switch id="hardware-acceleration" defaultChecked={true} />
-                          </div>
-                          
-                          <div className="space-y-2">
-                            <div className="flex items-center justify-between">
-                              <Label>Animation Complexity</Label>
-                              <span className="text-sm font-medium">Medium</span>
-                            </div>
-                            <Slider defaultValue={[50]} max={100} step={25} />
-                            <div className="flex justify-between text-xs text-muted-foreground">
-                              <span>Simple</span>
-                              <span>Complex</span>
-                            </div>
-                          </div>
-                        </div>
-                      </AccordionContent>
-                    </AccordionItem>
-                    
-                    <AccordionItem value="debugging">
-                      <AccordionTrigger>
-                        <div className="flex items-center">
-                          <Settings className="h-4 w-4 mr-2" />
-                          <span>Debugging</span>
-                        </div>
-                      </AccordionTrigger>
-                      <AccordionContent>
-                        <div className="space-y-4 pt-2">
-                          <div className="flex items-center justify-between">
-                            <div className="space-y-0.5">
-                              <Label htmlFor="performance-logging">Performance Logging</Label>
-                              <p className="text-xs text-muted-foreground">
-                                Record detailed performance metrics
-                              </p>
-                            </div>
-                            <Switch id="performance-logging" defaultChecked={false} />
-                          </div>
-                          
-                          <Button variant="outline" size="sm" className="w-full">
-                            Export Performance Logs
-                          </Button>
-                        </div>
-                      </AccordionContent>
-                    </AccordionItem>
-                  </Accordion>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-        </Tabs>
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-gray-600">Performance Score</span>
+                <span className="text-lg font-bold text-green-600">{deviceMetrics.desktop.score}</span>
+              </div>
+              
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-gray-600">Load Time</span>
+                <span className="text-sm font-medium text-gray-900">{deviceMetrics.desktop.loadTime}s</span>
+              </div>
+              
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-gray-600">First Contentful Paint</span>
+                <span className="text-sm font-medium text-gray-900">{deviceMetrics.desktop.fcp}s</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="bg-white p-6 rounded-xl border border-gray-200">
+        <h4 className="text-lg font-semibold text-gray-900 mb-4">Network Performance Analysis</h4>
         
-        {/* Clear Cache Dialog */}
-        <Dialog open={showClearCacheDialog} onOpenChange={setShowClearCacheDialog}>
-          <DialogContent className="sm:max-w-md">
-            <DialogHeader>
-              <DialogTitle>Clear Cache</DialogTitle>
-              <DialogDescription>
-                Select which types of cached data you want to clear.
-              </DialogDescription>
-            </DialogHeader>
-            <div className="space-y-4 py-4">
-              <div className="flex items-center space-x-2">
-                <Switch 
-                  id="clear-images" 
-                  checked={selectedCacheTypes.images}
-                  onCheckedChange={(checked) => setSelectedCacheTypes(prev => ({ ...prev, images: checked }))}
-                />
-                <Label htmlFor="clear-images" className="flex items-center cursor-pointer">
-                  <Image className="h-4 w-4 mr-2 text-blue-500" />
-                  Image Cache (12.3 MB)
-                </Label>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
+            <div className="flex items-center gap-2 mb-3">
+              <Wifi className="w-5 h-5 text-green-600" />
+              <span className="font-medium text-gray-900">WiFi</span>
+            </div>
+            
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-gray-600">Score</span>
+                <span className="text-lg font-bold text-green-600">{networkMetrics.wifi.score}</span>
               </div>
               
-              <div className="flex items-center space-x-2">
-                <Switch 
-                  id="clear-videos" 
-                  checked={selectedCacheTypes.videos}
-                  onCheckedChange={(checked) => setSelectedCacheTypes(prev => ({ ...prev, videos: checked }))}
-                />
-                <Label htmlFor="clear-videos" className="flex items-center cursor-pointer">
-                  <Video className="h-4 w-4 mr-2 text-purple-500" />
-                  Video Cache (6.4 MB)
-                </Label>
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-gray-600">Load Time</span>
+                <span className="text-sm font-medium text-gray-900">{networkMetrics.wifi.loadTime}s</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
+            <div className="flex items-center gap-2 mb-3">
+              <Signal className="w-5 h-5 text-blue-600" />
+              <span className="font-medium text-gray-900">4G</span>
+            </div>
+            
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-gray-600">Score</span>
+                <span className="text-lg font-bold text-blue-600">{networkMetrics['4g'].score}</span>
               </div>
               
-              <div className="flex items-center space-x-2">
-                <Switch 
-                  id="clear-documents" 
-                  checked={selectedCacheTypes.documents}
-                  onCheckedChange={(checked) => setSelectedCacheTypes(prev => ({ ...prev, documents: checked }))}
-                />
-                <Label htmlFor="clear-documents" className="flex items-center cursor-pointer">
-                  <FileText className="h-4 w-4 mr-2 text-green-500" />
-                  Document Cache (3.2 MB)
-                </Label>
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-gray-600">Load Time</span>
+                <span className="text-sm font-medium text-gray-900">{networkMetrics['4g'].loadTime}s</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
+            <div className="flex items-center gap-2 mb-3">
+              <SignalMedium className="w-5 h-5 text-orange-600" />
+              <span className="font-medium text-gray-900">3G</span>
+            </div>
+            
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-gray-600">Score</span>
+                <span className="text-lg font-bold text-orange-600">{networkMetrics['3g'].score}</span>
               </div>
               
-              <div className="flex items-center space-x-2">
-                <Switch 
-                  id="clear-app-data" 
-                  checked={selectedCacheTypes.appData}
-                  onCheckedChange={(checked) => setSelectedCacheTypes(prev => ({ ...prev, appData: checked }))}
-                />
-                <Label htmlFor="clear-app-data" className="flex items-center cursor-pointer">
-                  <Database className="h-4 w-4 mr-2 text-red-500" />
-                  App Data (5.1 MB)
-                </Label>
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-gray-600">Load Time</span>
+                <span className="text-sm font-medium text-gray-900">{networkMetrics['3g'].loadTime}s</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
+            <div className="flex items-center gap-2 mb-3">
+              <SignalLow className="w-5 h-5 text-red-600" />
+              <span className="font-medium text-gray-900">Slow 2G</span>
+            </div>
+            
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-gray-600">Score</span>
+                <span className="text-lg font-bold text-red-600">{networkMetrics.slow.score}</span>
               </div>
               
-              <div className="bg-muted p-3 rounded-md mt-4">
-                <div className="flex items-start">
-                  <AlertTriangle className="h-4 w-4 text-yellow-500 mt-0.5 mr-2 shrink-0" />
-                  <p className="text-xs text-muted-foreground">
-                    Clearing app data may reset some of your preferences and require re-downloading content. Your account data and relationship profile will not be affected.
-                  </p>
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-gray-600">Load Time</span>
+                <span className="text-sm font-medium text-gray-900">{networkMetrics.slow.loadTime}s</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  const OptimizationSettings = () => (
+    <div className="space-y-6">
+      <div className="bg-white p-6 rounded-xl border border-gray-200">
+        <h4 className="text-lg font-semibold text-gray-900 mb-4">Content Optimization</h4>
+        
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <label className="text-sm font-medium text-gray-700">Image Optimization</label>
+              <p className="text-xs text-gray-500">WebP format, compression, and responsive images</p>
+            </div>
+            <label className="relative inline-flex items-center cursor-pointer">
+              <input
+                type="checkbox"
+                checked={optimizationSettings.imageOptimization}
+                onChange={() => handleOptimizationToggle('imageOptimization')}
+                className="sr-only peer"
+              />
+              <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+            </label>
+          </div>
+
+          <div className="flex items-center justify-between">
+            <div>
+              <label className="text-sm font-medium text-gray-700">Code Minification</label>
+              <p className="text-xs text-gray-500">Minify JavaScript, CSS, and HTML</p>
+            </div>
+            <label className="relative inline-flex items-center cursor-pointer">
+              <input
+                type="checkbox"
+                checked={optimizationSettings.codeMinification}
+                onChange={() => handleOptimizationToggle('codeMinification')}
+                className="sr-only peer"
+              />
+              <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+            </label>
+          </div>
+
+          <div className="flex items-center justify-between">
+            <div>
+              <label className="text-sm font-medium text-gray-700">GZIP Compression</label>
+              <p className="text-xs text-gray-500">Compress text-based resources</p>
+            </div>
+            <label className="relative inline-flex items-center cursor-pointer">
+              <input
+                type="checkbox"
+                checked={optimizationSettings.gzipCompression}
+                onChange={() => handleOptimizationToggle('gzipCompression')}
+                className="sr-only peer"
+              />
+              <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+            </label>
+          </div>
+
+          <div className="flex items-center justify-between">
+            <div>
+              <label className="text-sm font-medium text-gray-700">Lazy Loading</label>
+              <p className="text-xs text-gray-500">Load images and content on demand</p>
+            </div>
+            <label className="relative inline-flex items-center cursor-pointer">
+              <input
+                type="checkbox"
+                checked={optimizationSettings.lazyLoading}
+                onChange={() => handleOptimizationToggle('lazyLoading')}
+                className="sr-only peer"
+              />
+              <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div className="bg-white p-6 rounded-xl border border-gray-200">
+        <h4 className="text-lg font-semibold text-gray-900 mb-4">Caching & Delivery</h4>
+        
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <label className="text-sm font-medium text-gray-700">Browser Caching</label>
+              <p className="text-xs text-gray-500">Cache static resources in browser</p>
+            </div>
+            <label className="relative inline-flex items-center cursor-pointer">
+              <input
+                type="checkbox"
+                checked={optimizationSettings.browserCaching}
+                onChange={() => handleOptimizationToggle('browserCaching')}
+                className="sr-only peer"
+              />
+              <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+            </label>
+          </div>
+
+          <div className="flex items-center justify-between">
+            <div>
+              <label className="text-sm font-medium text-gray-700">CDN Enabled</label>
+              <p className="text-xs text-gray-500">Global content delivery network</p>
+            </div>
+            <label className="relative inline-flex items-center cursor-pointer">
+              <input
+                type="checkbox"
+                checked={optimizationSettings.cdnEnabled}
+                onChange={() => handleOptimizationToggle('cdnEnabled')}
+                className="sr-only peer"
+              />
+              <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+            </label>
+          </div>
+
+          <div className="flex items-center justify-between">
+            <div>
+              <label className="text-sm font-medium text-gray-700">Resource Preloading</label>
+              <p className="text-xs text-gray-500">Preload critical resources</p>
+            </div>
+            <label className="relative inline-flex items-center cursor-pointer">
+              <input
+                type="checkbox"
+                checked={optimizationSettings.preloading}
+                onChange={() => handleOptimizationToggle('preloading')}
+                className="sr-only peer"
+              />
+              <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+            </label>
+          </div>
+
+          <div className="flex items-center justify-between">
+            <div>
+              <label className="text-sm font-medium text-gray-700">Service Worker</label>
+              <p className="text-xs text-gray-500">Offline caching and background sync</p>
+            </div>
+            <label className="relative inline-flex items-center cursor-pointer">
+              <input
+                type="checkbox"
+                checked={optimizationSettings.serviceworker}
+                onChange={() => handleOptimizationToggle('serviceworker')}
+                className="sr-only peer"
+              />
+              <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div className="bg-white p-6 rounded-xl border border-gray-200">
+        <h4 className="text-lg font-semibold text-gray-900 mb-4">Advanced Optimizations</h4>
+        
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <label className="text-sm font-medium text-gray-700">HTTP/2 Protocol</label>
+              <p className="text-xs text-gray-500">Multiplexed connections and server push</p>
+            </div>
+            <label className="relative inline-flex items-center cursor-pointer">
+              <input
+                type="checkbox"
+                checked={optimizationSettings.http2}
+                onChange={() => handleOptimizationToggle('http2')}
+                className="sr-only peer"
+              />
+              <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+            </label>
+          </div>
+
+          <div className="flex items-center justify-between">
+            <div>
+              <label className="text-sm font-medium text-gray-700">WebP Images</label>
+              <p className="text-xs text-gray-500">Next-generation image format</p>
+            </div>
+            <label className="relative inline-flex items-center cursor-pointer">
+              <input
+                type="checkbox"
+                checked={optimizationSettings.webp}
+                onChange={() => handleOptimizationToggle('webp')}
+                className="sr-only peer"
+              />
+              <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  const MonitoringPanel = () => (
+    <div className="space-y-6">
+      <div className="bg-white p-6 rounded-xl border border-gray-200">
+        <div className="flex items-center justify-between mb-4">
+          <h4 className="text-lg font-semibold text-gray-900">Real-time Monitoring</h4>
+          <div className="flex items-center gap-2">
+            <div className={`w-2 h-2 rounded-full ${isMonitoring ? 'bg-green-500' : 'bg-gray-400'}`}></div>
+            <span className="text-sm text-gray-600">{isMonitoring ? 'Active' : 'Inactive'}</span>
+            <button
+              onClick={() => setIsMonitoring(!isMonitoring)}
+              className={`px-3 py-1 rounded-lg text-sm font-medium transition-colors ${
+                isMonitoring 
+                  ? 'bg-red-100 text-red-700 hover:bg-red-200' 
+                  : 'bg-green-100 text-green-700 hover:bg-green-200'
+              }`}
+            >
+              {isMonitoring ? 'Stop' : 'Start'}
+            </button>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="p-4 bg-blue-50 rounded-lg border border-blue-100">
+            <div className="flex items-center gap-2 mb-2">
+              <Activity className="w-4 h-4 text-blue-600" />
+              <span className="text-sm font-medium text-blue-700">CPU Usage</span>
+            </div>
+            <div className="text-2xl font-bold text-blue-600">23%</div>
+            <div className="text-xs text-blue-600">Normal</div>
+          </div>
+
+          <div className="p-4 bg-green-50 rounded-lg border border-green-100">
+            <div className="flex items-center gap-2 mb-2">
+              <MemoryStick className="w-4 h-4 text-green-600" />
+              <span className="text-sm font-medium text-green-700">Memory Usage</span>
+            </div>
+            <div className="text-2xl font-bold text-green-600">156MB</div>
+            <div className="text-xs text-green-600">Optimal</div>
+          </div>
+
+          <div className="p-4 bg-purple-50 rounded-lg border border-purple-100">
+            <div className="flex items-center gap-2 mb-2">
+              <Globe className="w-4 h-4 text-purple-600" />
+              <span className="text-sm font-medium text-purple-700">Network</span>
+            </div>
+            <div className="text-2xl font-bold text-purple-600">45ms</div>
+            <div className="text-xs text-purple-600">Low latency</div>
+          </div>
+
+          <div className="p-4 bg-orange-50 rounded-lg border border-orange-100">
+            <div className="flex items-center gap-2 mb-2">
+              <HardDrive className="w-4 h-4 text-orange-600" />
+              <span className="text-sm font-medium text-orange-700">Cache Hit</span>
+            </div>
+            <div className="text-2xl font-bold text-orange-600">94%</div>
+            <div className="text-xs text-orange-600">Excellent</div>
+          </div>
+        </div>
+      </div>
+
+      <div className="bg-white p-6 rounded-xl border border-gray-200">
+        <h4 className="text-lg font-semibold text-gray-900 mb-4">Performance Alerts</h4>
+        
+        <div className="space-y-3">
+          {alerts.map((alert) => (
+            <div key={alert.id} className={`p-3 rounded-lg border ${
+              alert.type === 'warning' ? 'bg-yellow-50 border-yellow-200' :
+              alert.type === 'success' ? 'bg-green-50 border-green-200' :
+              'bg-blue-50 border-blue-200'
+            }`}>
+              <div className="flex items-center gap-3">
+                {alert.type === 'warning' && <AlertTriangle className="w-4 h-4 text-yellow-600" />}
+                {alert.type === 'success' && <CheckCircle className="w-4 h-4 text-green-600" />}
+                {alert.type === 'info' && <Info className="w-4 h-4 text-blue-600" />}
+                
+                <div className="flex-1">
+                  <div className={`text-sm font-medium ${
+                    alert.type === 'warning' ? 'text-yellow-800' :
+                    alert.type === 'success' ? 'text-green-800' :
+                    'text-blue-800'
+                  }`}>
+                    {alert.message}
+                  </div>
+                  <div className="text-xs text-gray-500">{alert.timestamp}</div>
+                </div>
+                
+                <button className="text-gray-400 hover:text-gray-600">
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="bg-white p-6 rounded-xl border border-gray-200">
+        <h4 className="text-lg font-semibold text-gray-900 mb-4">Performance Trends</h4>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="space-y-4">
+            <h5 className="font-medium text-gray-900">Load Time Trends</h5>
+            
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-gray-600">Last 24 hours</span>
+                <div className="flex items-center gap-2">
+                  <TrendingDown className="w-4 h-4 text-green-600" />
+                  <span className="text-sm font-medium text-green-600">-12%</span>
+                </div>
+              </div>
+              
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-gray-600">Last 7 days</span>
+                <div className="flex items-center gap-2">
+                  <TrendingDown className="w-4 h-4 text-green-600" />
+                  <span className="text-sm font-medium text-green-600">-8%</span>
+                </div>
+              </div>
+              
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-gray-600">Last 30 days</span>
+                <div className="flex items-center gap-2">
+                  <TrendingUp className="w-4 h-4 text-blue-600" />
+                  <span className="text-sm font-medium text-blue-600">+3%</span>
                 </div>
               </div>
             </div>
-            <DialogFooter>
-              <Button variant="outline" onClick={() => setShowClearCacheDialog(false)}>
-                Cancel
-              </Button>
-              <Button 
-                variant="destructive" 
-                onClick={handleClearCache}
-                disabled={!Object.values(selectedCacheTypes).some(Boolean)}
+          </div>
+
+          <div className="space-y-4">
+            <h5 className="font-medium text-gray-900">User Experience</h5>
+            
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-gray-600">Bounce Rate</span>
+                <div className="flex items-center gap-2">
+                  <TrendingDown className="w-4 h-4 text-green-600" />
+                  <span className="text-sm font-medium text-green-600">18%</span>
+                </div>
+              </div>
+              
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-gray-600">Session Duration</span>
+                <div className="flex items-center gap-2">
+                  <TrendingUp className="w-4 h-4 text-green-600" />
+                  <span className="text-sm font-medium text-green-600">4.2m</span>
+                </div>
+              </div>
+              
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-gray-600">Page Views</span>
+                <div className="flex items-center gap-2">
+                  <TrendingUp className="w-4 h-4 text-green-600" />
+                  <span className="text-sm font-medium text-green-600">+15%</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  const tabs = [
+    { id: 'overview', label: 'Overview', icon: Zap },
+    { id: 'devices', label: 'Device Performance', icon: Monitor },
+    { id: 'settings', label: 'Optimization', icon: Settings },
+    { id: 'monitoring', label: 'Monitoring', icon: Activity }
+  ];
+
+  return (
+    <div className="min-h-screen bg-gray-50 p-4">
+      <div className="max-w-6xl mx-auto">
+        {/* Header */}
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <div className="p-3 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-xl">
+                <Zap className="w-8 h-8 text-white" />
+              </div>
+              <div>
+                <h1 className="text-2xl font-bold text-gray-900">Performance Optimization</h1>
+                <p className="text-gray-600">Real-time monitoring and optimization for maximum performance</p>
+              </div>
+            </div>
+            
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2 px-3 py-2 bg-green-100 rounded-lg">
+                <CheckCircle className="w-4 h-4 text-green-600" />
+                <span className="text-sm font-medium text-green-700">Score: {getPerformanceScore()}</span>
+              </div>
+              
+              <button className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                <Activity className="w-4 h-4" />
+                Optimize
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Navigation Tabs */}
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 mb-6">
+          <div className="flex items-center gap-1 p-1">
+            {tabs.map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`flex items-center gap-2 px-4 py-3 rounded-lg font-medium transition-colors ${
+                  activeTab === tab.id
+                    ? 'bg-blue-100 text-blue-700'
+                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                }`}
               >
-                <Trash2 className="h-4 w-4 mr-2" />
-                Clear Selected
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
-      </motion.div>
+                <tab.icon className="w-4 h-4" />
+                {tab.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Content */}
+        <div className="space-y-6">
+          {activeTab === 'overview' && <PerformanceOverview />}
+          {activeTab === 'devices' && <DevicePerformance />}
+          {activeTab === 'settings' && <OptimizationSettings />}
+          {activeTab === 'monitoring' && <MonitoringPanel />}
+        </div>
+
+        {/* Footer */}
+        <div className="mt-6 bg-white rounded-xl shadow-sm border border-gray-200 p-4">
+          <div className="flex items-center justify-between text-sm">
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2">
+                <Zap className="w-4 h-4 text-blue-600" />
+                <span className="text-gray-600">Performance Score: {getPerformanceScore()}/100</span>
+              </div>
+              
+              <div className="flex items-center gap-2">
+                <Timer className="w-4 h-4 text-green-600" />
+                <span className="text-gray-600">Load Time: {performanceData.pageLoadTime}s</span>
+              </div>
+              
+              <div className="flex items-center gap-2">
+                <Activity className="w-4 h-4 text-purple-600" />
+                <span className="text-gray-600">Monitoring: {isMonitoring ? 'Active' : 'Inactive'}</span>
+              </div>
+            </div>
+            
+            <div className="text-gray-500">
+              Last updated: {new Date().toLocaleTimeString()}
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
