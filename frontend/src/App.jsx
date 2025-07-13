@@ -1,35 +1,35 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, Suspense } from 'react'
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import './App.css'
 
-// Layout Components
+// Layout Components (keep these as regular imports since they're used immediately)
 import Navbar from './components/layout/Navbar'
 import Sidebar from './components/layout/Sidebar'
 import MobileNav from './components/layout/MobileNav'
 
-// Authentication Pages
-import LandingPage from './pages/auth/LandingPage'
-import LoginPage from './pages/auth/LoginPage'
-import RegisterPage from './pages/auth/RegisterPage'
-import OnboardingFlow from './pages/auth/OnboardingFlow'
+// Lazy load all page components for code splitting
+const LandingPage = React.lazy(() => import('./pages/auth/LandingPage'))
+const LoginPage = React.lazy(() => import('./pages/auth/LoginPage'))
+const RegisterPage = React.lazy(() => import('./pages/auth/RegisterPage'))
+const OnboardingFlow = React.lazy(() => import('./pages/auth/OnboardingFlow'))
 
 // Main App Pages
-import Dashboard from './pages/dashboard/Dashboard'
-import DiscoverPage from './pages/discover/DiscoverPage'
-import MatchesPage from './pages/matches/MatchesPage'
-import MessagesPage from './pages/messages/MessagesPage'
-import CoachingPage from './pages/coaching/CoachingPage'
-import ProfilePage from './pages/profile/ProfilePage'
-import ResourcesPage from './pages/resources/ResourcesPage'
-import SettingsPage from './pages/settings/SettingsPage'
-import AIDemoPage from './pages/ai/AIDemoPage'
+const Dashboard = React.lazy(() => import('./pages/dashboard/Dashboard'))
+const DiscoverPage = React.lazy(() => import('./pages/discover/DiscoverPage'))
+const MatchesPage = React.lazy(() => import('./pages/matches/MatchesPage'))
+const MessagesPage = React.lazy(() => import('./pages/messages/MessagesPage'))
+const CoachingPage = React.lazy(() => import('./pages/coaching/CoachingPage'))
+const ProfilePage = React.lazy(() => import('./pages/profile/ProfilePage'))
+const ResourcesPage = React.lazy(() => import('./pages/resources/ResourcesPage'))
+const SettingsPage = React.lazy(() => import('./pages/settings/SettingsPage'))
+const AIDemoPage = React.lazy(() => import('./pages/ai/AIDemoPage'))
 
 // Premium Pages
-import PremiumPage from './pages/premium/PremiumPage'
-import SubscriptionPage from './pages/premium/SubscriptionPage'
+const PremiumPage = React.lazy(() => import('./pages/premium/PremiumPage'))
+const SubscriptionPage = React.lazy(() => import('./pages/premium/SubscriptionPage'))
 
 // Admin Pages
-import AdminDashboard from './pages/admin/AdminDashboard'
+const AdminDashboard = React.lazy(() => import('./pages/admin/AdminDashboard'))
 
 // Context Providers
 import { AuthProvider, useAuth } from './contexts/AuthContext'
@@ -38,6 +38,20 @@ import { NotificationProvider } from './contexts/NotificationContext'
 
 // Hooks
 import { useLocalStorage } from './hooks/useLocalStorage'
+
+// Loading component for Suspense fallback
+const LoadingSpinner = () => (
+  <div className="min-h-screen bg-background flex items-center justify-center">
+    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+  </div>
+)
+
+// Enhanced loading component for pages
+const PageLoader = () => (
+  <div className="flex items-center justify-center min-h-[50vh]">
+    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+  </div>
+)
 
 function AppContent() {
   const { user, isAuthenticated, isLoading } = useAuth()
@@ -57,24 +71,22 @@ function AppContent() {
 
   // Show loading spinner while checking authentication
   if (isLoading) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-      </div>
-    )
+    return <LoadingSpinner />
   }
 
   // Public routes (not authenticated)
   if (!isAuthenticated) {
     return (
       <div className="min-h-screen bg-background">
-        <Routes>
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/onboarding" element={<OnboardingFlow />} />
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
+        <Suspense fallback={<LoadingSpinner />}>
+          <Routes>
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+            <Route path="/onboarding" element={<OnboardingFlow />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </Suspense>
       </div>
     )
   }
@@ -111,46 +123,48 @@ function AppContent() {
 
         {/* Page Content */}
         <main className="p-4 md:p-6 lg:p-8">
-          <Routes>
-            {/* Dashboard */}
-            <Route path="/dashboard" element={<Dashboard />} />
-            
-            {/* Core Features */}
-            <Route path="/discover" element={<DiscoverPage />} />
-            <Route path="/matches" element={<MatchesPage />} />
-            <Route path="/messages" element={<MessagesPage />} />
-            <Route path="/messages/:conversationId" element={<MessagesPage />} />
-            
-            {/* AI Coaching */}
-            <Route path="/coaching" element={<CoachingPage />} />
-            <Route path="/coaching/session/:sessionId" element={<CoachingPage />} />
-            
-            {/* AI Demo */}
-            <Route path="/ai-demo" element={<AIDemoPage />} />
-            
-            {/* Profile & Settings */}
-            <Route path="/profile" element={<ProfilePage />} />
-            <Route path="/profile/edit" element={<ProfilePage />} />
-            <Route path="/settings" element={<SettingsPage />} />
-            
-            {/* Resources Hub */}
-            <Route path="/resources" element={<ResourcesPage />} />
-            <Route path="/resources/:category" element={<ResourcesPage />} />
-            <Route path="/resources/:category/:id" element={<ResourcesPage />} />
-            
-            {/* Premium Features */}
-            <Route path="/premium" element={<PremiumPage />} />
-            <Route path="/subscription" element={<SubscriptionPage />} />
-            
-            {/* Admin (if user has admin role) */}
-            {user?.role === 'admin' && (
-              <Route path="/admin/*" element={<AdminDashboard />} />
-            )}
-            
-            {/* Default redirect */}
-            <Route path="/" element={<Navigate to="/dashboard" replace />} />
-            <Route path="*" element={<Navigate to="/dashboard" replace />} />
-          </Routes>
+          <Suspense fallback={<PageLoader />}>
+            <Routes>
+              {/* Dashboard */}
+              <Route path="/dashboard" element={<Dashboard />} />
+              
+              {/* Core Features */}
+              <Route path="/discover" element={<DiscoverPage />} />
+              <Route path="/matches" element={<MatchesPage />} />
+              <Route path="/messages" element={<MessagesPage />} />
+              <Route path="/messages/:conversationId" element={<MessagesPage />} />
+              
+              {/* AI Coaching */}
+              <Route path="/coaching" element={<CoachingPage />} />
+              <Route path="/coaching/session/:sessionId" element={<CoachingPage />} />
+              
+              {/* AI Demo */}
+              <Route path="/ai-demo" element={<AIDemoPage />} />
+              
+              {/* Profile & Settings */}
+              <Route path="/profile" element={<ProfilePage />} />
+              <Route path="/profile/edit" element={<ProfilePage />} />
+              <Route path="/settings" element={<SettingsPage />} />
+              
+              {/* Resources Hub */}
+              <Route path="/resources" element={<ResourcesPage />} />
+              <Route path="/resources/:category" element={<ResourcesPage />} />
+              <Route path="/resources/:category/:id" element={<ResourcesPage />} />
+              
+              {/* Premium Features */}
+              <Route path="/premium" element={<PremiumPage />} />
+              <Route path="/subscription" element={<SubscriptionPage />} />
+              
+              {/* Admin (if user has admin role) */}
+              {user?.role === 'admin' && (
+                <Route path="/admin/*" element={<AdminDashboard />} />
+              )}
+              
+              {/* Default redirect */}
+              <Route path="/" element={<Navigate to="/dashboard" replace />} />
+              <Route path="*" element={<Navigate to="/dashboard" replace />} />
+            </Routes>
+          </Suspense>
         </main>
       </div>
     </div>
