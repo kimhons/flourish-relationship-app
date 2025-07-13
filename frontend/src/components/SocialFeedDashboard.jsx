@@ -19,10 +19,15 @@ import {
   Sparkles,
   TrendingUp,
   MapPin,
-  Clock
+  Clock,
+  Camera,
+  Video
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { realStories, realPosts, formatNumber } from '../data/realData'
+import HybridNavigationController from './HybridNavigationController'
+import HybridContentCreator from './HybridContentCreator'
+import StoryDuetCreator from './StoryDuetCreator'
 
 const SocialFeedDashboard = ({ user, darkMode, setDarkMode }) => {
   const [stories, setStories] = useState(realStories)
@@ -31,6 +36,10 @@ const SocialFeedDashboard = ({ user, darkMode, setDarkMode }) => {
   const [isPlaying, setIsPlaying] = useState(true)
   const [isMuted, setIsMuted] = useState(false)
   const [showComments, setShowComments] = useState(null)
+  const [showHybridNavigation, setShowHybridNavigation] = useState(true)
+  const [showContentCreator, setShowContentCreator] = useState(false)
+  const [showStoryDuet, setShowStoryDuet] = useState(false)
+  const [selectedStory, setSelectedStory] = useState(null)
   const videoRefs = useRef([])
 
   useEffect(() => {
@@ -116,6 +125,117 @@ const SocialFeedDashboard = ({ user, darkMode, setDarkMode }) => {
     })
   }
 
+  // Hybrid feature handlers
+  const handleCreateContent = () => {
+    setShowContentCreator(true)
+    setShowHybridNavigation(false)
+  }
+
+  const handleContentCreated = (content) => {
+    console.log('Content created:', content)
+    // Add new content to posts
+    const newPost = {
+      id: Date.now(),
+      userId: user.id,
+      user: user,
+      content: {
+        type: content.creationMode,
+        text: content.text,
+        media: content.original,
+        music: content.music?.title
+      },
+      engagement: {
+        likes: 0,
+        comments: 0,
+        shares: 0,
+        bookmarks: 0
+      },
+      timestamp: 'now',
+      isLiked: false,
+      isBookmarked: false,
+      location: content.location
+    }
+    setPosts([newPost, ...posts])
+    setShowContentCreator(false)
+    setShowHybridNavigation(true)
+  }
+
+  const handleStoryDuet = (story) => {
+    setSelectedStory(story)
+    setShowStoryDuet(true)
+    setShowHybridNavigation(false)
+  }
+
+  const handleDuetCreated = (duetData) => {
+    console.log('Duet created:', duetData)
+    // Add duet to stories or posts
+    const newStory = {
+      id: Date.now(),
+      userId: user.id,
+      user: user,
+      content: {
+        type: 'video',
+        media: duetData.userVideo,
+        text: `Duet with ${duetData.originalStory.user.name}`,
+        duetWith: duetData.originalStory
+      },
+      timestamp: 'now',
+      viewed: false
+    }
+    setStories([newStory, ...stories])
+    setShowStoryDuet(false)
+    setShowHybridNavigation(true)
+    setSelectedStory(null)
+  }
+
+  const handleCancelCreation = () => {
+    setShowContentCreator(false)
+    setShowStoryDuet(false)
+    setShowHybridNavigation(true)
+    setSelectedStory(null)
+  }
+
+  // Conditional rendering based on current view
+  if (showContentCreator) {
+    return (
+      <HybridContentCreator
+        user={user}
+        darkMode={darkMode}
+        onComplete={handleContentCreated}
+        onCancel={handleCancelCreation}
+      />
+    )
+  }
+
+  if (showStoryDuet && selectedStory) {
+    return (
+      <StoryDuetCreator
+        originalStory={selectedStory}
+        onComplete={handleDuetCreated}
+        onCancel={handleCancelCreation}
+        user={user}
+        darkMode={darkMode}
+      />
+    )
+  }
+
+  if (showHybridNavigation) {
+    return (
+      <HybridNavigationController
+        user={user}
+        darkMode={darkMode}
+        onCreateContent={handleCreateContent}
+        onStoryDuet={handleStoryDuet}
+        stories={stories}
+        posts={posts}
+        onLike={handleLike}
+        onComment={handleComment}
+        onShare={handleShare}
+        onBookmark={handleBookmark}
+      />
+    )
+  }
+
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
@@ -134,6 +254,22 @@ const SocialFeedDashboard = ({ user, darkMode, setDarkMode }) => {
             <Button variant="ghost" size="sm" className="relative">
               <Bell className="w-5 h-5" />
               <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full"></div>
+            </Button>
+            <Button 
+              variant="ghost" 
+              size="sm"
+              onClick={handleCreateContent}
+              className="bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:from-purple-600 hover:to-pink-600"
+            >
+              <Plus className="w-5 h-5" />
+            </Button>
+            <Button 
+              variant="ghost" 
+              size="sm"
+              onClick={() => setShowHybridNavigation(true)}
+              className="text-purple-600 hover:text-purple-700"
+            >
+              <Video className="w-5 h-5" />
             </Button>
             <Button 
               variant="ghost" 
