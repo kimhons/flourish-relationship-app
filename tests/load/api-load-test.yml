@@ -1,0 +1,296 @@
+config:
+  target: https://api.flourish-app.com
+  phases:
+    - duration: 60
+      arrivalRate: 1
+      name: "Warm up"
+    - duration: 120
+      arrivalRate: 5
+      rampTo: 50
+      name: "Ramp up load"
+    - duration: 300
+      arrivalRate: 50
+      name: "Sustained load"
+    - duration: 120
+      arrivalRate: 50
+      rampTo: 100
+      name: "Peak load"
+    - duration: 60
+      arrivalRate: 100
+      rampTo: 1
+      name: "Cool down"
+  
+  defaults:
+    headers:
+      Content-Type: "application/json"
+      User-Agent: "Artillery Load Test"
+  
+  # Environment variables for test data
+  variables:
+    testEmail: "loadtest-{{ $randomString() }}@example.com"
+    testPassword: "LoadTest123!"
+
+  # Plugins for enhanced testing
+  plugins:
+    expect: {}
+    metrics-by-endpoint:
+      useOnlyRequestNames: true
+
+scenarios:
+  # Health Check Scenario
+  - name: "Health Check"
+    weight: 10
+    flow:
+      - get:
+          url: "/health"
+          name: "Health Check"
+          expect:
+            - statusCode: 200
+            - contentType: json
+            - hasProperty: status
+  
+  # Authentication Flow
+  - name: "User Authentication"
+    weight: 20
+    flow:
+      # Register new user
+      - post:
+          url: "/api/v1/auth/register"
+          name: "User Registration"
+          json:
+            email: "{{ testEmail }}"
+            password: "{{ testPassword }}"
+            firstName: "Load"
+            lastName: "Test"
+            age: 25
+            gender: "other"
+          capture:
+            - json: "$.token"
+              as: "authToken"
+            - json: "$.user.id"
+              as: "userId"
+          expect:
+            - statusCode: 201
+            - contentType: json
+            - hasProperty: token
+      
+      # Login existing user
+      - post:
+          url: "/api/v1/auth/login"
+          name: "User Login"
+          json:
+            email: "{{ testEmail }}"
+            password: "{{ testPassword }}"
+          expect:
+            - statusCode: 200
+            - contentType: json
+            - hasProperty: token
+
+  # Profile Management
+  - name: "Profile Operations"
+    weight: 15
+    flow:
+      # Get user profile
+      - get:
+          url: "/api/v1/users/profile"
+          name: "Get Profile"
+          headers:
+            Authorization: "Bearer {{ authToken }}"
+          expect:
+            - statusCode: 200
+            - contentType: json
+      
+      # Update profile
+      - put:
+          url: "/api/v1/users/profile"
+          name: "Update Profile"
+          headers:
+            Authorization: "Bearer {{ authToken }}"
+          json:
+            bio: "Updated bio for load testing"
+            interests: ["technology", "music", "travel"]
+          expect:
+            - statusCode: 200
+
+  # Matching System
+  - name: "Matching System"
+    weight: 25
+    flow:
+      # Get potential matches
+      - get:
+          url: "/api/v1/matches/discover"
+          name: "Discover Matches"
+          headers:
+            Authorization: "Bearer {{ authToken }}"
+          qs:
+            limit: 10
+            radius: 50
+          expect:
+            - statusCode: 200
+            - contentType: json
+      
+      # Like a profile
+      - post:
+          url: "/api/v1/matches/like"
+          name: "Like Profile"
+          headers:
+            Authorization: "Bearer {{ authToken }}"
+          json:
+            targetUserId: "{{ $randomString() }}"
+            action: "like"
+          expect:
+            - statusCode: [200, 404]  # 404 is acceptable if user doesn't exist
+      
+      # Get match history
+      - get:
+          url: "/api/v1/matches/history"
+          name: "Match History"
+          headers:
+            Authorization: "Bearer {{ authToken }}"
+          expect:
+            - statusCode: 200
+
+  # AI Coaching System
+  - name: "AI Coaching"
+    weight: 20
+    flow:
+      # Get AI coaching advice
+      - post:
+          url: "/api/v1/ai/coach"
+          name: "AI Coaching Request"
+          headers:
+            Authorization: "Bearer {{ authToken }}"
+          json:
+            message: "I need advice on improving my dating profile"
+            context: "profile_optimization"
+          expect:
+            - statusCode: 200
+            - contentType: json
+            - hasProperty: response
+      
+      # Get conversation analysis
+      - post:
+          url: "/api/v1/ai/analyze-conversation"
+          name: "Conversation Analysis"
+          headers:
+            Authorization: "Bearer {{ authToken }}"
+          json:
+            conversationId: "{{ $randomString() }}"
+            messages: [
+              {
+                "sender": "user",
+                "content": "Hey, how are you?",
+                "timestamp": "2024-01-15T10:00:00Z"
+              },
+              {
+                "sender": "match",
+                "content": "I'm good, thanks! How about you?",
+                "timestamp": "2024-01-15T10:01:00Z"
+              }
+            ]
+          expect:
+            - statusCode: [200, 400]  # 400 might be expected for invalid conversation
+
+  # Messaging System
+  - name: "Messaging"
+    weight: 15
+    flow:
+      # Get conversations
+      - get:
+          url: "/api/v1/messages/conversations"
+          name: "Get Conversations"
+          headers:
+            Authorization: "Bearer {{ authToken }}"
+          expect:
+            - statusCode: 200
+            - contentType: json
+      
+      # Send message
+      - post:
+          url: "/api/v1/messages/send"
+          name: "Send Message"
+          headers:
+            Authorization: "Bearer {{ authToken }}"
+          json:
+            recipientId: "{{ $randomString() }}"
+            content: "Hello! How are you doing today?"
+            type: "text"
+          expect:
+            - statusCode: [200, 400, 404]  # Various responses expected
+
+  # Search and Discovery
+  - name: "Search Operations"
+    weight: 10
+    flow:
+      # Search users
+      - get:
+          url: "/api/v1/search/users"
+          name: "Search Users"
+          headers:
+            Authorization: "Bearer {{ authToken }}"
+          qs:
+            query: "music lover"
+            ageMin: 22
+            ageMax: 35
+            distance: 25
+          expect:
+            - statusCode: 200
+      
+      # Advanced search
+      - post:
+          url: "/api/v1/search/advanced"
+          name: "Advanced Search"
+          headers:
+            Authorization: "Bearer {{ authToken }}"
+          json:
+            filters:
+              age: { min: 25, max: 35 }
+              location: { radius: 50, lat: 40.7128, lng: -74.0060 }
+              interests: ["technology", "music"]
+              relationshipType: "serious"
+          expect:
+            - statusCode: 200
+
+  # Premium Features
+  - name: "Premium Features"
+    weight: 5
+    flow:
+      # Get premium features
+      - get:
+          url: "/api/v1/premium/features"
+          name: "Premium Features"
+          headers:
+            Authorization: "Bearer {{ authToken }}"
+          expect:
+            - statusCode: 200
+      
+      # Get analytics
+      - get:
+          url: "/api/v1/premium/analytics"
+          name: "User Analytics"
+          headers:
+            Authorization: "Bearer {{ authToken }}"
+          expect:
+            - statusCode: [200, 403]  # 403 if not premium user
+
+# Performance benchmarks
+expectations:
+  # Response time expectations
+  - http.response_time.p95: 2000  # 95% of requests should complete within 2 seconds
+  - http.response_time.p99: 5000  # 99% of requests should complete within 5 seconds
+  - http.response_time.median: 500  # Median response time should be under 500ms
+  
+  # Error rate expectations
+  - http.codes.200: 80  # At least 80% success rate
+  - http.codes.201: 5   # 5% created responses
+  - http.codes.4xx: 10  # Max 10% client errors
+  - http.codes.5xx: 1   # Max 1% server errors
+
+# Custom metrics
+metrics:
+  - name: "Authentication Success Rate"
+    unit: "percent"
+  - name: "AI Response Time"
+    unit: "milliseconds"
+  - name: "Match Discovery Rate"
+    unit: "matches_per_second"

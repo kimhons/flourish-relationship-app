@@ -28,13 +28,23 @@ const AIDemoPage = React.lazy(() => import('./pages/ai/AIDemoPage'))
 const PremiumPage = React.lazy(() => import('./pages/premium/PremiumPage'))
 const SubscriptionPage = React.lazy(() => import('./pages/premium/SubscriptionPage'))
 
+// Website Pages
+const BlogPage = React.lazy(() => import('./pages/blog/BlogPage'))
+const AboutPage = React.lazy(() => import('./pages/website/AboutPage'))
+const FeaturesPage = React.lazy(() => import('./pages/website/FeaturesPage'))
+const ContactPage = React.lazy(() => import('./pages/website/ContactPage'))
+const PrivacyPage = React.lazy(() => import('./pages/website/PrivacyPage'))
+const TermsPage = React.lazy(() => import('./pages/website/TermsPage'))
+const HelpPage = React.lazy(() => import('./pages/website/HelpPage'))
+const SecurityPage = React.lazy(() => import('./pages/website/SecurityPage'))
+
 // Admin Pages
 const AdminDashboard = React.lazy(() => import('./pages/admin/AdminDashboard'))
 
 // Context Providers
 import { AuthProvider, useAuth } from './contexts/AuthContext'
 import { ThemeProvider } from './contexts/ThemeContext'
-import { NotificationProvider } from './contexts/NotificationContext'
+import { NotificationProvider } from './contexts/NotificationProvider'
 
 // Hooks
 import { useLocalStorage } from './hooks/useLocalStorage'
@@ -84,6 +94,18 @@ function AppContent() {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/onboarding" element={<OnboardingFlow />} />
+            
+            {/* Website Pages */}
+            <Route path="/blog" element={<BlogPage />} />
+            <Route path="/blog/:id" element={<BlogPage />} />
+            <Route path="/about" element={<AboutPage />} />
+            <Route path="/features" element={<FeaturesPage />} />
+            <Route path="/contact" element={<ContactPage />} />
+            <Route path="/privacy" element={<PrivacyPage />} />
+            <Route path="/terms" element={<TermsPage />} />
+            <Route path="/help" element={<HelpPage />} />
+            <Route path="/security" element={<SecurityPage />} />
+            
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </Suspense>
@@ -154,6 +176,17 @@ function AppContent() {
               {/* Premium Features */}
               <Route path="/premium" element={<PremiumPage />} />
               <Route path="/subscription" element={<SubscriptionPage />} />
+              
+              {/* Website Pages (accessible when authenticated) */}
+              <Route path="/blog" element={<BlogPage />} />
+              <Route path="/blog/:id" element={<BlogPage />} />
+              <Route path="/about" element={<AboutPage />} />
+              <Route path="/features" element={<FeaturesPage />} />
+              <Route path="/contact" element={<ContactPage />} />
+              <Route path="/privacy" element={<PrivacyPage />} />
+              <Route path="/terms" element={<TermsPage />} />
+              <Route path="/help" element={<HelpPage />} />
+              <Route path="/security" element={<SecurityPage />} />
               
               {/* Admin (if user has admin role) */}
               {user?.role === 'admin' && (
