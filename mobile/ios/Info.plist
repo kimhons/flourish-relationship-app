@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>en</string>
+	<key>CFBundleDisplayName</key>
+	<string>Flourish</string>
+	<key>CFBundleExecutable</key>
+	<string>$(EXECUTABLE_NAME)</string>
+	<key>CFBundleIdentifier</key>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>$(PRODUCT_NAME)</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>1.0.0</string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>1</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>com.flourish.relationshipapp</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>flourish</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>com.flourish.relationshipapp.deeplink</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>flourish-app</string>
+			</array>
+		</dict>
+	</array>
+	<key>LSApplicationCategoryType</key>
+	<string>public.app-category.lifestyle</string>
+	<key>LSRequiresIPhoneOS</key>
+	<true/>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSExceptionDomains</key>
+		<dict>
+			<key>localhost</key>
+			<dict>
+				<key>NSExceptionAllowsInsecureHTTPLoads</key>
+				<true/>
+			</dict>
+		</dict>
+	</dict>
+	<key>NSCameraUsageDescription</key>
+	<string>Flourish needs access to your camera to take profile photos, share moments, and enable video calling with your matches.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Flourish needs access to your microphone for voice messages, video calls, and audio coaching sessions.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Flourish needs access to your photo library to select and share photos for your profile and with matches.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Flourish uses your location to find nearby matches and suggest local date ideas. Your location is never shared without your permission.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Flourish uses your location to find nearby matches and suggest local date ideas. Your location is never shared without your permission.</string>
+	<key>NSFaceIDUsageDescription</key>
+	<string>Flourish uses Face ID to securely authenticate you and protect your privacy.</string>
+	<key>NSTouchIDUsageDescription</key>
+	<string>Flourish uses Touch ID to securely authenticate you and protect your privacy.</string>
+	<key>NSContactsUsageDescription</key>
+	<string>Flourish can access your contacts to help you find friends who are also using the app (with your permission).</string>
+	<key>NSCalendarsUsageDescription</key>
+	<string>Flourish can access your calendar to help schedule dates and coaching sessions.</string>
+	<key>NSRemindersUsageDescription</key>
+	<string>Flourish can create reminders for your relationship goals and coaching sessions.</string>
+	<key>NSHealthUpdateUsageDescription</key>
+	<string>Flourish can integrate with Health to track your wellness progress in relation to your relationship goals.</string>
+	<key>NSHealthShareUsageDescription</key>
+	<string>Flourish can access your health data to provide personalized relationship coaching insights.</string>
+	<key>NSUserNotificationUsageDescription</key>
+	<string>Flourish sends you notifications about new matches, messages, and coaching reminders.</string>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>Flourish can access your music preferences to find matches with similar tastes.</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>Flourish uses speech recognition to provide voice-based coaching interactions.</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>audio</string>
+		<string>background-fetch</string>
+		<string>background-processing</string>
+		<string>remote-notification</string>
+		<string>voip</string>
+	</array>
+	<key>UILaunchStoryboardName</key>
+	<string>LaunchScreen</string>
+	<key>UIRequiredDeviceCapabilities</key>
+	<array>
+		<string>armv7</string>
+	</array>
+	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
+	</array>
+	<key>UISupportedInterfaceOrientations~ipad</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationPortraitUpsideDown</string>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
+	</array>
+	<key>UIViewControllerBasedStatusBarAppearance</key>
+	<false/>
+	<key>UIStatusBarStyle</key>
+	<string>UIStatusBarStyleDefault</string>
+	<key>UIUserInterfaceStyle</key>
+	<string>Light</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
+	<key>NSAllowsArbitraryLoads</key>
+	<true/>
+	<key>CFBundleLocalizations</key>
+	<array>
+		<string>en</string>
+		<string>es</string>
+		<string>fr</string>
+		<string>de</string>
+		<string>it</string>
+		<string>pt</string>
+		<string>ja</string>
+		<string>ko</string>
+		<string>zh-Hans</string>
+		<string>zh-Hant</string>
+	</array>
+	<key>UISupportsDocumentBrowser</key>
+	<false/>
+	<key>LSSupportsOpeningDocumentsInPlace</key>
+	<false/>
+	<key>UIFileSharingEnabled</key>
+	<false/>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>Flourish uses Bluetooth to connect with nearby devices for enhanced matching experiences.</string>
+	<key>NSBluetoothPeripheralUsageDescription</key>
+	<string>Flourish uses Bluetooth to connect with nearby devices for enhanced matching experiences.</string>
+	<key>NSMotionUsageDescription</key>
+	<string>Flourish can access motion data to provide activity-based matching suggestions.</string>
+	<key>UISupportsMultipleScenes</key>
+	<false/>
+	<key>UIApplicationSupportsMultipleScenes</key>
+	<false/>
+	<key>UISceneStoryboardFile</key>
+	<string>Main</string>
+	<key>UIMainStoryboardFile</key>
+	<string>Main</string>
+	<key>UIApplicationSceneManifest</key>
+	<dict>
+		<key>UIApplicationSupportsMultipleScenes</key>
+		<false/>
+		<key>UISceneConfigurations</key>
+		<dict>
+			<key>UIWindowSceneSessionRoleApplication</key>
+			<array>
+				<dict>
+					<key>UISceneConfigurationName</key>
+					<string>Default Configuration</string>
+					<key>UISceneDelegateClassName</key>
+					<string>SceneDelegate</string>
+					<key>UISceneStoryboardFile</key>
+					<string>Main</string>
+				</dict>
+			</array>
+		</dict>
+	</dict>
+	<key>NSCameraUsageDescription</key>
+	<string>Flourish needs camera access to take profile photos and enable video features</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Flourish needs microphone access for voice messages and video calls</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Flourish needs photo library access to select profile photos</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Flourish uses location to find nearby matches</string>
+	<key>NSFaceIDUsageDescription</key>
+	<string>Flourish uses Face ID for secure authentication</string>
+	<key>UIRequiresFullScreen</key>
+	<true/>
+	<key>UIStatusBarHidden</key>
+	<false/>
+	<key>UIInterfaceOrientation</key>
+	<string>UIInterfaceOrientationPortrait</string>
+	<key>UIPrerenderedIcon</key>
+	<false/>
+	<key>UIApplicationExitsOnSuspend</key>
+	<false/>
+	<key>UIApplicationSupportsIndirectInputEvents</key>
+	<true/>
+	<key>CFBundleSpokenName</key>
+	<string>Flourish</string>
+	<key>NSHumanReadableCopyright</key>
+	<string>© 2024 Flourish Technologies, Inc. All rights reserved.</string>
+	<key>ITSEncryptionExportComplianceCode</key>
+	<string>NO</string>
+	<key>UIViewControllerBasedStatusBarAppearance</key>
+	<false/>
+	<key>UISupportedExternalAccessoryProtocols</key>
+	<array/>
+	<key>NSSupportsAutomaticTermination</key>
+	<false/>
+	<key>NSSupportsSuddenTermination</key>
+	<false/>
+</dict>
+</plist>

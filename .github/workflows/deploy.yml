@@ -1,0 +1,381 @@
+name: Deploy Flourish App
+
+on:
+  push:
+    branches: [ main ]
+    tags: [ 'v*' ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+  NODE_VERSION: '18'
+  PYTHON_VERSION: '3.11'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        component: [frontend, backend, mobile]
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+        cache-dependency-path: |
+          frontend/package-lock.json
+          mobile/package-lock.json
+          shared/package-lock.json
+    
+    - name: Setup Python
+      if: matrix.component == 'backend'
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+        cache: 'pip'
+    
+    - name: Install dependencies - Frontend
+      if: matrix.component == 'frontend'
+      run: |
+        cd frontend
+        npm ci
+        cd ../shared
+        npm ci
+    
+    - name: Install dependencies - Backend
+      if: matrix.component == 'backend'
+      run: |
+        cd backend
+        pip install -r requirements.txt
+        pip install -r requirements-test.txt
+    
+    - name: Install dependencies - Mobile
+      if: matrix.component == 'mobile'
+      run: |
+        cd mobile
+        npm ci
+        cd ../shared
+        npm ci
+    
+    - name: Run tests - Frontend
+      if: matrix.component == 'frontend'
+      run: |
+        cd frontend
+        npm run test:coverage
+        npm run lint
+        npm run type-check
+    
+    - name: Run tests - Backend
+      if: matrix.component == 'backend'
+      run: |
+        cd backend
+        python -m pytest tests/ -v --cov=src --cov-report=xml
+        python -m flake8 src/
+        python -m mypy src/
+    
+    - name: Run tests - Mobile
+      if: matrix.component == 'mobile'
+      run: |
+        cd mobile
+        npm run test
+        npm run lint
+    
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        file: ./coverage.xml
+        flags: ${{ matrix.component }}
+        name: ${{ matrix.component }}-coverage
+
+  build-web:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v')
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+    
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+        cache: 'pip'
+    
+    - name: Install dependencies
+      run: |
+        cd frontend && npm ci
+        cd ../shared && npm ci
+        cd ../backend && pip install -r requirements.txt
+    
+    - name: Build frontend
+      run: |
+        cd frontend
+        npm run build:production
+    
+    - name: Build Docker image
+      run: |
+        docker build -t ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }} .
+        docker tag ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }} ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+    
+    - name: Log in to Container Registry
+      uses: docker/login-action@v3
+      with:
+        registry: ${{ env.REGISTRY }}
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    
+    - name: Push Docker image
+      run: |
+        docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+        docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+    
+    - name: Deploy to staging
+      if: github.ref == 'refs/heads/main'
+      run: |
+        echo "Deploying to staging environment..."
+        # Add your staging deployment commands here
+    
+    - name: Deploy to production
+      if: startsWith(github.ref, 'refs/tags/v')
+      run: |
+        echo "Deploying to production environment..."
+        # Add your production deployment commands here
+
+  build-ios:
+    needs: test
+    runs-on: macos-latest
+    if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v')
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+    
+    - name: Setup Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: 3.0
+        bundler-cache: true
+    
+    - name: Install dependencies
+      run: |
+        cd mobile
+        npm ci
+        cd ../shared
+        npm ci
+    
+    - name: Install CocoaPods
+      run: |
+        cd mobile/ios
+        pod install
+    
+    - name: Install Fastlane
+      run: |
+        cd mobile/ios
+        gem install fastlane
+    
+    - name: Setup iOS certificates
+      env:
+        MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+        FASTLANE_APPLE_ID: ${{ secrets.FASTLANE_APPLE_ID }}
+        FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
+        FASTLANE_TEAM_ID: ${{ secrets.FASTLANE_TEAM_ID }}
+      run: |
+        cd mobile/ios
+        fastlane match appstore --readonly
+    
+    - name: Build iOS app
+      env:
+        FASTLANE_APPLE_ID: ${{ secrets.FASTLANE_APPLE_ID }}
+        FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
+        FASTLANE_TEAM_ID: ${{ secrets.FASTLANE_TEAM_ID }}
+      run: |
+        cd mobile/ios
+        fastlane build_app_store
+    
+    - name: Upload to TestFlight
+      if: github.ref == 'refs/heads/main'
+      env:
+        FASTLANE_APPLE_ID: ${{ secrets.FASTLANE_APPLE_ID }}
+        FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
+        FASTLANE_TEAM_ID: ${{ secrets.FASTLANE_TEAM_ID }}
+      run: |
+        cd mobile/ios
+        fastlane upload_testflight
+    
+    - name: Submit to App Store
+      if: startsWith(github.ref, 'refs/tags/v')
+      env:
+        FASTLANE_APPLE_ID: ${{ secrets.FASTLANE_APPLE_ID }}
+        FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
+        FASTLANE_TEAM_ID: ${{ secrets.FASTLANE_TEAM_ID }}
+      run: |
+        cd mobile/ios
+        fastlane submit_app_store
+
+  build-android:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v')
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+    
+    - name: Setup Java
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: '17'
+    
+    - name: Setup Android SDK
+      uses: android-actions/setup-android@v3
+    
+    - name: Install dependencies
+      run: |
+        cd mobile
+        npm ci
+        cd ../shared
+        npm ci
+    
+    - name: Setup Android signing
+      env:
+        ANDROID_SIGNING_KEY: ${{ secrets.ANDROID_SIGNING_KEY }}
+        ANDROID_ALIAS: ${{ secrets.ANDROID_ALIAS }}
+        ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        ANDROID_STORE_PASSWORD: ${{ secrets.ANDROID_STORE_PASSWORD }}
+      run: |
+        cd mobile/android
+        echo "$ANDROID_SIGNING_KEY" | base64 -d > app/flourish-release-key.keystore
+        echo "storeFile=flourish-release-key.keystore" >> gradle.properties
+        echo "storePassword=$ANDROID_STORE_PASSWORD" >> gradle.properties
+        echo "keyAlias=$ANDROID_ALIAS" >> gradle.properties
+        echo "keyPassword=$ANDROID_KEY_PASSWORD" >> gradle.properties
+    
+    - name: Build Android AAB
+      run: |
+        cd mobile/android
+        ./gradlew bundleRelease
+    
+    - name: Build Android APK
+      run: |
+        cd mobile/android
+        ./gradlew assembleRelease
+    
+    - name: Upload to Google Play Console (Internal Testing)
+      if: github.ref == 'refs/heads/main'
+      env:
+        GOOGLE_PLAY_SERVICE_ACCOUNT_KEY: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_KEY }}
+      run: |
+        cd mobile/android
+        echo "$GOOGLE_PLAY_SERVICE_ACCOUNT_KEY" > service-account-key.json
+        fastlane supply --aab app/build/outputs/bundle/release/app-release.aab --track internal --json_key service-account-key.json
+    
+    - name: Upload to Google Play Console (Production)
+      if: startsWith(github.ref, 'refs/tags/v')
+      env:
+        GOOGLE_PLAY_SERVICE_ACCOUNT_KEY: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_KEY }}
+      run: |
+        cd mobile/android
+        echo "$GOOGLE_PLAY_SERVICE_ACCOUNT_KEY" > service-account-key.json
+        fastlane supply --aab app/build/outputs/bundle/release/app-release.aab --track production --json_key service-account-key.json
+    
+    - name: Upload APK artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: android-apk
+        path: mobile/android/app/build/outputs/apk/release/app-release.apk
+    
+    - name: Upload AAB artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: android-aab
+        path: mobile/android/app/build/outputs/bundle/release/app-release.aab
+
+  security-scan:
+    needs: [build-web, build-ios, build-android]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v')
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Run Trivy vulnerability scanner
+      uses: aquasecurity/trivy-action@master
+      with:
+        image-ref: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+        format: 'sarif'
+        output: 'trivy-results.sarif'
+    
+    - name: Upload Trivy scan results
+      uses: github/codeql-action/upload-sarif@v2
+      with:
+        sarif_file: 'trivy-results.sarif'
+    
+    - name: Run CodeQL Analysis
+      uses: github/codeql-action/analyze@v2
+      with:
+        languages: javascript, python
+
+  notify:
+    needs: [build-web, build-ios, build-android, security-scan]
+    runs-on: ubuntu-latest
+    if: always()
+    
+    steps:
+    - name: Notify Slack on success
+      if: success()
+      uses: 8398a7/action-slack@v3
+      with:
+        status: success
+        channel: '#deployments'
+        message: '✅ Flourish app deployment successful!'
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+    
+    - name: Notify Slack on failure
+      if: failure()
+      uses: 8398a7/action-slack@v3
+      with:
+        status: failure
+        channel: '#deployments'
+        message: '❌ Flourish app deployment failed!'
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+    
+    - name: Create GitHub Release
+      if: startsWith(github.ref, 'refs/tags/v') && success()
+      uses: softprops/action-gh-release@v1
+      with:
+        generate_release_notes: true
+        files: |
+          mobile/android/app/build/outputs/apk/release/app-release.apk
+          mobile/android/app/build/outputs/bundle/release/app-release.aab
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
