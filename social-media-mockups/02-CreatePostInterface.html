@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flourish - Create Post</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #ec4899, #8b5cf6);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans">
+    <!-- Mobile Container -->
+    <div class="max-w-md mx-auto bg-white min-h-screen">
+        <!-- Header -->
+        <div class="bg-white border-b sticky top-0 z-50">
+            <div class="px-4 py-3">
+                <div class="flex items-center justify-between">
+                    <button class="p-2 hover:bg-gray-100 rounded-full">
+                        <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                    <h1 class="text-lg font-semibold text-gray-900">Create Post</h1>
+                    <button class="gradient-bg text-white px-4 py-2 rounded-lg font-medium hover:opacity-90 transition-all">
+                        Share
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab Navigation -->
+        <div class="bg-white border-b">
+            <div class="flex">
+                <button class="flex-1 py-3 text-center font-medium border-b-2 border-pink-500 text-pink-600" onclick="showTab('compose')">
+                    Compose
+                </button>
+                <button class="flex-1 py-3 text-center font-medium border-b-2 border-transparent text-gray-500 hover:text-gray-700" onclick="showTab('settings')">
+                    Settings
+                </button>
+            </div>
+        </div>
+
+        <!-- Compose Tab Content -->
+        <div id="compose-tab" class="p-6 space-y-4">
+            <!-- Template Selection -->
+            <div>
+                <h3 class="text-sm font-medium text-gray-700 mb-3">Choose a Template</h3>
+                <div class="grid grid-cols-3 gap-2">
+                    <button class="bg-gradient-to-br from-pink-400 to-red-500 p-4 rounded-lg text-white text-center transition-all hover:scale-105">
+                        <div class="text-2xl mb-1">💕</div>
+                        <div class="text-xs font-medium">Date Night</div>
+                    </button>
+                    <button class="bg-gradient-to-br from-green-400 to-blue-500 p-4 rounded-lg text-white text-center transition-all hover:scale-105">
+                        <div class="text-2xl mb-1">🏔️</div>
+                        <div class="text-xs font-medium">Adventure</div>
+                    </button>
+                    <button class="bg-gradient-to-br from-yellow-400 to-orange-500 p-4 rounded-lg text-white text-center transition-all hover:scale-105 ring-2 ring-blue-500 scale-105">
+                        <div class="text-2xl mb-1">☕</div>
+                        <div class="text-xs font-medium">Coffee Date</div>
+                    </button>
+                    <button class="bg-gradient-to-br from-purple-400 to-pink-500 p-4 rounded-lg text-white text-center transition-all hover:scale-105">
+                        <div class="text-2xl mb-1">💪</div>
+                        <div class="text-xs font-medium">Workout</div>
+                    </button>
+                    <button class="bg-gradient-to-br from-red-400 to-pink-500 p-4 rounded-lg text-white text-center transition-all hover:scale-105">
+                        <div class="text-2xl mb-1">🍕</div>
+                        <div class="text-xs font-medium">Food Love</div>
+                    </button>
+                    <button class="bg-gradient-to-br from-blue-400 to-purple-500 p-4 rounded-lg text-white text-center transition-all hover:scale-105">
+                        <div class="text-2xl mb-1">✈️</div>
+                        <div class="text-xs font-medium">Travel</div>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Text Input -->
+            <div class="relative">
+                <textarea
+                    placeholder="What's on your mind? Share something that shows your personality..."
+                    class="w-full p-4 border border-gray-300 rounded-lg resize-none focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+                    rows="4"
+                    maxlength="500"
+                    oninput="updateCharCount(this)"
+                >Perfect Sunday morning! ☕️ Nothing beats a good cup of coffee and watching the sunrise. Who else is an early bird? Looking for someone to share these peaceful moments with 🌅</textarea>
+                <div class="absolute bottom-2 right-2 flex items-center space-x-2">
+                    <span class="text-xs text-gray-500" id="char-count">147/500</span>
+                    <button class="p-1 hover:bg-gray-100 rounded" onclick="toggleEmojiPicker()">
+                        <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <path d="M8 14s1.5 2 4 2 4-2 4-2"></path>
+                            <line x1="9" y1="9" x2="9.01" y2="9"></line>
+                            <line x1="15" y1="9" x2="15.01" y2="9"></line>
+                        </svg>
+                    </button>
+                </div>
+                
+                <!-- Emoji Picker -->
+                <div id="emoji-picker" class="absolute bottom-12 right-0 bg-white border rounded-lg shadow-lg p-3 z-10 hidden">
+                    <div class="grid grid-cols-8 gap-1">
+                        <button class="p-1 hover:bg-gray-100 rounded text-lg" onclick="addEmoji('😊')">😊</button>
+                        <button class="p-1 hover:bg-gray-100 rounded text-lg" onclick="addEmoji('😍')">😍</button>
+                        <button class="p-1 hover:bg-gray-100 rounded text-lg" onclick="addEmoji('🥰')">🥰</button>
+                        <button class="p-1 hover:bg-gray-100 rounded text-lg" onclick="addEmoji('😘')">😘</button>
+                        <button class="p-1 hover:bg-gray-100 rounded text-lg" onclick="addEmoji('💕')">💕</button>
+                        <button class="p-1 hover:bg-gray-100 rounded text-lg" onclick="addEmoji('❤️')">❤️</button>
+                        <button class="p-1 hover:bg-gray-100 rounded text-lg" onclick="addEmoji('🔥')">🔥</button>
+                        <button class="p-1 hover:bg-gray-100 rounded text-lg" onclick="addEmoji('✨')">✨</button>
+                        <button class="p-1 hover:bg-gray-100 rounded text-lg" onclick="addEmoji('🌟')">🌟</button>
+                        <button class="p-1 hover:bg-gray-100 rounded text-lg" onclick="addEmoji('💫')">💫</button>
+                        <button class="p-1 hover:bg-gray-100 rounded text-lg" onclick="addEmoji('🎉')">🎉</button>
+                        <button class="p-1 hover:bg-gray-100 rounded text-lg" onclick="addEmoji('🎊')">🎊</button>
+                        <button class="p-1 hover:bg-gray-100 rounded text-lg" onclick="addEmoji('🌈')">🌈</button>
+                        <button class="p-1 hover:bg-gray-100 rounded text-lg" onclick="addEmoji('🦋')">🦋</button>
+                        <button class="p-1 hover:bg-gray-100 rounded text-lg" onclick="addEmoji('🌸')">🌸</button>
+                        <button class="p-1 hover:bg-gray-100 rounded text-lg" onclick="addEmoji('🌺')">🌺</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Image Upload -->
+            <div>
+                <input type="file" multiple accept="image/*" class="hidden" id="image-upload">
+                
+                <div id="image-grid" class="grid grid-cols-2 gap-2">
+                    <!-- Sample uploaded images -->
+                    <div class="relative">
+                        <div class="w-full h-32 bg-gradient-to-br from-orange-400 to-pink-500 rounded-lg flex items-center justify-center text-white">
+                            <span class="text-sm">Coffee Cup</span>
+                        </div>
+                        <button class="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600" onclick="removeImage(this)">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="relative">
+                        <div class="w-full h-32 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-lg flex items-center justify-center text-white">
+                            <span class="text-sm">Sunrise View</span>
+                        </div>
+                        <button class="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600" onclick="removeImage(this)">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    <button class="h-32 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center hover:border-pink-500 hover:bg-pink-50 transition-colors" onclick="document.getElementById('image-upload').click()">
+                        <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="grid grid-cols-2 gap-3">
+                <button class="flex items-center justify-center space-x-2 p-3 border border-gray-300 rounded-lg hover:bg-gray-50" onclick="toggleLocationPicker()">
+                    <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                    </svg>
+                    <span class="text-gray-700">Add Location</span>
+                </button>
+                <button class="flex items-center justify-center space-x-2 p-3 border border-gray-300 rounded-lg hover:bg-gray-50">
+                    <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                    </svg>
+                    <span class="text-gray-700">Tag People</span>
+                </button>
+            </div>
+
+            <!-- Location Picker -->
+            <div id="location-picker" class="border border-gray-300 rounded-lg p-3 hidden">
+                <input type="text" placeholder="Search for a location..." class="w-full p-2 border border-gray-200 rounded mb-2 focus:ring-2 focus:ring-pink-500 focus:border-transparent" value="Central Park, New York">
+                <div class="space-y-1">
+                    <button class="w-full text-left p-2 hover:bg-gray-100 rounded text-sm" onclick="selectLocation('Central Park, New York')">Central Park, New York</button>
+                    <button class="w-full text-left p-2 hover:bg-gray-100 rounded text-sm" onclick="selectLocation('Golden Gate Park, San Francisco')">Golden Gate Park, San Francisco</button>
+                    <button class="w-full text-left p-2 hover:bg-gray-100 rounded text-sm" onclick="selectLocation('Venice Beach, Los Angeles')">Venice Beach, Los Angeles</button>
+                    <button class="w-full text-left p-2 hover:bg-gray-100 rounded text-sm" onclick="selectLocation('Lincoln Park, Chicago')">Lincoln Park, Chicago</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings Tab Content -->
+        <div id="settings-tab" class="p-6 space-y-6 hidden">
+            <!-- Privacy Settings -->
+            <div>
+                <h3 class="text-sm font-medium text-gray-700 mb-3">Who can see this post?</h3>
+                <div class="space-y-2">
+                    <button class="w-full flex items-center space-x-3 p-3 border border-pink-500 bg-pink-50 rounded-lg">
+                        <svg class="w-4 h-4 text-pink-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <path d="M2 12h20"></path>
+                        </svg>
+                        <div class="flex-1 text-left">
+                            <div class="font-medium text-pink-900">Public</div>
+                            <div class="text-sm text-gray-500">Anyone can see this post</div>
+                        </div>
+                        <div class="w-5 h-5 bg-pink-500 rounded-full flex items-center justify-center">
+                            <div class="w-2 h-2 bg-white rounded-full"></div>
+                        </div>
+                    </button>
+                    <button class="w-full flex items-center space-x-3 p-3 border border-gray-300 hover:bg-gray-50 rounded-lg">
+                        <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                        </svg>
+                        <div class="flex-1 text-left">
+                            <div class="font-medium text-gray-900">Matches Only</div>
+                            <div class="text-sm text-gray-500">Only your matches can see</div>
+                        </div>
+                    </button>
+                    <button class="w-full flex items-center space-x-3 p-3 border border-gray-300 hover:bg-gray-50 rounded-lg">
+                        <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                        </svg>
+                        <div class="flex-1 text-left">
+                            <div class="font-medium text-gray-900">Private</div>
+                            <div class="text-sm text-gray-500">Only you can see this post</div>
+                        </div>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Schedule Post -->
+            <div>
+                <h3 class="text-sm font-medium text-gray-700 mb-3">Schedule Post</h3>
+                <div class="flex items-center space-x-3">
+                    <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <polyline points="12,6 12,12 16,14"></polyline>
+                    </svg>
+                    <input type="datetime-local" class="flex-1 p-2 border border-gray-300 rounded focus:ring-2 focus:ring-pink-500 focus:border-transparent">
+                </div>
+                <p class="text-xs text-gray-500 mt-1">Leave empty to post immediately</p>
+            </div>
+
+            <!-- Post Boost -->
+            <div class="border border-gray-300 rounded-lg p-4">
+                <div class="flex items-center justify-between mb-2">
+                    <h3 class="text-sm font-medium text-gray-700">Boost this post</h3>
+                    <svg class="w-5 h-5 text-yellow-500" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    </svg>
+                </div>
+                <p class="text-xs text-gray-500 mb-3">Increase visibility and reach more potential matches</p>
+                <button class="w-full bg-gradient-to-r from-yellow-400 to-orange-500 text-white py-2 rounded-lg font-medium hover:from-yellow-500 hover:to-orange-600 transition-all">
+                    Boost for $2.99
+                </button>
+            </div>
+
+            <!-- Hashtag Suggestions -->
+            <div>
+                <h3 class="text-sm font-medium text-gray-700 mb-3">Suggested Hashtags</h3>
+                <div class="flex flex-wrap gap-2">
+                    <button class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm hover:bg-blue-200 transition-colors" onclick="addHashtag('#DateNight')">#DateNight</button>
+                    <button class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm hover:bg-blue-200 transition-colors" onclick="addHashtag('#Adventure')">#Adventure</button>
+                    <button class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm hover:bg-blue-200 transition-colors" onclick="addHashtag('#Foodie')">#Foodie</button>
+                    <button class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm hover:bg-blue-200 transition-colors" onclick="addHashtag('#Travel')">#Travel</button>
+                    <button class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm hover:bg-blue-200 transition-colors" onclick="addHashtag('#Fitness')">#Fitness</button>
+                    <button class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm hover:bg-blue-200 transition-colors" onclick="addHashtag('#Music')">#Music</button>
+                    <button class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm hover:bg-blue-200 transition-colors" onclick="addHashtag('#Art')">#Art</button>
+                    <button class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm hover:bg-blue-200 transition-colors" onclick="addHashtag('#Nature')">#Nature</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Preview Section -->
+        <div class="fixed bottom-0 left-0 right-0 bg-white border-t p-4">
+            <div class="max-w-md mx-auto">
+                <h3 class="text-sm font-medium text-gray-700 mb-2">Preview</h3>
+                <div class="bg-gray-50 rounded-lg p-3">
+                    <div class="flex items-center space-x-2 mb-2">
+                        <div class="w-8 h-8 bg-blue-400 rounded-full"></div>
+                        <div>
+                            <div class="font-medium text-sm">You</div>
+                            <div class="text-xs text-gray-500">Just now</div>
+                        </div>
+                    </div>
+                    <p class="text-sm text-gray-900 mb-2">Perfect Sunday morning! ☕️ Nothing beats a good cup of coffee and watching the sunrise. Who else is an early bird? Looking for someone to share these peaceful moments with 🌅</p>
+                    <div class="grid grid-cols-2 gap-1">
+                        <div class="w-full h-16 bg-gradient-to-br from-orange-400 to-pink-500 rounded flex items-center justify-center text-white text-xs">Coffee Cup</div>
+                        <div class="w-full h-16 bg-gradient-to-br from-yellow-400 to-orange-500 rounded flex items-center justify-center text-white text-xs">Sunrise View</div>
+                    </div>
+                    <div class="flex items-center space-x-1 mt-2 text-xs text-gray-500">
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        </svg>
+                        <span>Central Park, New York</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showTab(tabName) {
+            // Hide all tabs
+            document.getElementById('compose-tab').classList.add('hidden');
+            document.getElementById('settings-tab').classList.add('hidden');
+            
+            // Show selected tab
+            document.getElementById(tabName + '-tab').classList.remove('hidden');
+            
+            // Update tab buttons
+            const buttons = document.querySelectorAll('button[onclick^="showTab"]');
+            buttons.forEach(btn => {
+                btn.className = 'flex-1 py-3 text-center font-medium border-b-2 border-transparent text-gray-500 hover:text-gray-700';
+            });
+            event.target.className = 'flex-1 py-3 text-center font-medium border-b-2 border-pink-500 text-pink-600';
+        }
+
+        function updateCharCount(textarea) {
+            const count = textarea.value.length;
+            document.getElementById('char-count').textContent = count + '/500';
+        }
+
+        function toggleEmojiPicker() {
+            const picker = document.getElementById('emoji-picker');
+            picker.classList.toggle('hidden');
+        }
+
+        function addEmoji(emoji) {
+            const textarea = document.querySelector('textarea');
+            textarea.value += emoji;
+            updateCharCount(textarea);
+            toggleEmojiPicker();
+        }
+
+        function toggleLocationPicker() {
+            const picker = document.getElementById('location-picker');
+            picker.classList.toggle('hidden');
+        }
+
+        function selectLocation(location) {
+            document.querySelector('#location-picker input').value = location;
+            toggleLocationPicker();
+        }
+
+        function removeImage(button) {
+            button.parentElement.remove();
+        }
+
+        function addHashtag(hashtag) {
+            const textarea = document.querySelector('textarea');
+            textarea.value += ' ' + hashtag;
+            updateCharCount(textarea);
+        }
+
+        // Close emoji picker when clicking outside
+        document.addEventListener('click', function(event) {
+            const picker = document.getElementById('emoji-picker');
+            const button = event.target.closest('button[onclick="toggleEmojiPicker()"]');
+            if (!picker.contains(event.target) && !button) {
+                picker.classList.add('hidden');
+            }
+        });
+    </script>
+</body>
+</html>
+

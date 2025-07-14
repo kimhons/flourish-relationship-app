@@ -1,0 +1,54 @@
+# Testing Dependencies for Flourish Backend
+# Comprehensive testing framework for AI-powered relationship platform
+
+# Core Testing Framework
+pytest==7.4.3                 # Primary testing framework
+pytest-asyncio==0.21.1       # Async test support
+pytest-cov==4.1.0            # Code coverage reporting
+pytest-mock==3.12.0          # Advanced mocking capabilities
+pytest-xdist==3.3.1          # Parallel test execution
+pytest-benchmark==4.0.0      # Performance benchmarking
+
+# Test Utilities
+factory-boy==3.3.0           # Test data generation
+faker==19.12.0               # Fake data generation
+freezegun==1.2.2             # Time mocking for tests
+responses==0.23.3            # HTTP request mocking
+httpx==0.25.2                # Async HTTP client for testing
+
+# AI/ML Testing
+numpy==1.24.3                # Numerical computing for AI tests
+scikit-learn==1.3.0          # ML utilities for testing
+transformers==4.35.2         # For testing AI model integrations
+
+# Database Testing
+pytest-postgresql==5.0.0     # PostgreSQL test database
+alembic==1.12.1              # Database migration testing
+
+# Load Testing
+locust==2.17.0               # Load testing framework
+websockets==11.0.3           # WebSocket testing support
+
+# Security Testing
+bandit==1.7.5                # Security linting
+safety==2.3.5                # Dependency vulnerability scanning
+
+# Code Quality
+black==23.9.1                # Code formatting
+isort==5.12.0                # Import sorting
+flake8==6.1.0                # Linting
+mypy==1.6.1                  # Type checking
+pylint==3.0.2                # Advanced linting
+
+# Test Reporting
+pytest-html==4.1.1           # HTML test reports
+pytest-json-report==1.5.0    # JSON test reports
+allure-pytest==2.13.2        # Advanced test reporting
+
+# Performance Monitoring
+memory-profiler==0.61.0      # Memory usage profiling
+psutil==5.9.6                # System resource monitoring
+
+# API Testing
+tavern==2.4.1                # API integration testing
+jsonschema==4.19.1           # JSON schema validation

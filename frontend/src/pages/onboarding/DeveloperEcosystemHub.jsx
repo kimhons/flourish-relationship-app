@@ -2,303 +2,313 @@ import React, { useState, useEffect } from 'react';
 import { 
   Code, 
   Users, 
-  BookOpen, 
-  MessageSquare, 
   Star, 
   Download, 
   GitBranch, 
+  Package, 
   Zap, 
-  Trophy, 
-  Calendar,
-  Search,
-  Filter,
-  Plus,
-  ExternalLink,
-  Heart,
-  Share2,
   Award,
-  Target,
-  Lightbulb,
+  TrendingUp,
+  MessageSquare,
+  BookOpen,
   Rocket,
   Shield,
-  Globe
+  DollarSign,
+  Globe,
+  Heart,
+  Coffee,
+  Target,
+  Lightbulb,
+  Settings,
+  Play,
+  CheckCircle,
+  Clock,
+  ArrowRight,
+  ExternalLink,
+  Github,
+  Slack,
+  Twitter
 } from 'lucide-react';
 
 const DeveloperEcosystemHub = () => {
   const [activeTab, setActiveTab] = useState('overview');
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('all');
-  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [selectedProject, setSelectedProject] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filterCategory, setFilterCategory] = useState('all');
 
-  // Simulated real-time data
-  const [ecosystemStats, setEcosystemStats] = useState({
-    totalDevelopers: 12847,
-    activeProjects: 2156,
-    totalDownloads: 847293,
-    communityScore: 94.7,
-    monthlyGrowth: 23.4,
-    satisfaction: 96.2
+  // Sample developer projects data
+  const developerProjects = [
+    {
+      id: 1,
+      name: "Smart Match Algorithm",
+      author: "Alex Chen",
+      category: "AI/ML",
+      description: "Advanced machine learning algorithm for improved compatibility matching",
+      downloads: 15420,
+      rating: 4.9,
+      stars: 892,
+      price: "Free",
+      status: "Active",
+      lastUpdated: "2 days ago",
+      tags: ["AI", "Matching", "Algorithm"],
+      revenue: "$12,500"
+    },
+    {
+      id: 2,
+      name: "Video Chat Enhancement",
+      author: "Sarah Johnson",
+      category: "Communication",
+      description: "Real-time video filters and effects for enhanced video calling experience",
+      downloads: 8750,
+      rating: 4.7,
+      stars: 543,
+      price: "$29.99",
+      status: "Active",
+      lastUpdated: "1 week ago",
+      tags: ["Video", "Filters", "Communication"],
+      revenue: "$8,900"
+    },
+    {
+      id: 3,
+      name: "Cultural Bridge",
+      author: "Maria Rodriguez",
+      category: "Localization",
+      description: "Cross-cultural communication tools and cultural insight widgets",
+      downloads: 6230,
+      rating: 4.8,
+      stars: 321,
+      price: "$19.99",
+      status: "Beta",
+      lastUpdated: "3 days ago",
+      tags: ["Culture", "Translation", "Insights"],
+      revenue: "$5,600"
+    },
+    {
+      id: 4,
+      name: "Date Planner Pro",
+      author: "David Kim",
+      category: "Utilities",
+      description: "AI-powered date planning with location recommendations and booking",
+      downloads: 12100,
+      rating: 4.6,
+      stars: 678,
+      price: "$15.99",
+      status: "Active",
+      lastUpdated: "5 days ago",
+      tags: ["Planning", "AI", "Booking"],
+      revenue: "$7,800"
+    },
+    {
+      id: 5,
+      name: "Safety Shield",
+      author: "Emma Wilson",
+      category: "Security",
+      description: "Enhanced safety features including background verification and emergency alerts",
+      downloads: 9870,
+      rating: 4.9,
+      stars: 756,
+      price: "$24.99",
+      status: "Active",
+      lastUpdated: "1 day ago",
+      tags: ["Safety", "Verification", "Security"],
+      revenue: "$11,200"
+    }
+  ];
+
+  const ecosystemStats = {
+    totalDevelopers: 2847,
+    activeProjects: 156,
+    totalDownloads: 847230,
+    monthlyRevenue: 125600,
+    averageRating: 4.7,
+    communityMembers: 8940
+  };
+
+  const developmentTools = [
+    {
+      name: "Flourish SDK",
+      description: "Complete software development kit for building Flourish integrations",
+      icon: <Code className="w-6 h-6" />,
+      status: "Stable",
+      version: "v2.1.4"
+    },
+    {
+      name: "API Documentation",
+      description: "Comprehensive API documentation with interactive examples",
+      icon: <BookOpen className="w-6 h-6" />,
+      status: "Updated",
+      version: "Latest"
+    },
+    {
+      name: "Testing Framework",
+      description: "Automated testing tools for quality assurance and validation",
+      icon: <Shield className="w-6 h-6" />,
+      status: "Beta",
+      version: "v1.8.2"
+    },
+    {
+      name: "Deployment Pipeline",
+      description: "CI/CD pipeline for seamless deployment and updates",
+      icon: <Rocket className="w-6 h-6" />,
+      status: "Stable",
+      version: "v3.0.1"
+    }
+  ];
+
+  const communityEvents = [
+    {
+      title: "Flourish Developer Conference 2024",
+      date: "March 15-17, 2024",
+      type: "Conference",
+      attendees: 1200,
+      status: "Upcoming"
+    },
+    {
+      title: "AI Matching Algorithm Workshop",
+      date: "February 28, 2024",
+      type: "Workshop",
+      attendees: 85,
+      status: "Registration Open"
+    },
+    {
+      title: "Security Best Practices Webinar",
+      date: "February 20, 2024",
+      type: "Webinar",
+      attendees: 340,
+      status: "Completed"
+    }
+  ];
+
+  const filteredProjects = developerProjects.filter(project => {
+    const matchesSearch = project.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         project.description.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCategory = filterCategory === 'all' || project.category === filterCategory;
+    return matchesSearch && matchesCategory;
   });
 
-  const [featuredProjects, setFeaturedProjects] = useState([
-    {
-      id: 1,
-      name: "Smart Matching SDK",
-      author: "FlourischCore",
-      description: "Advanced AI-powered matching algorithms with 97.3% accuracy",
-      category: "AI/ML",
-      downloads: 45672,
-      stars: 1247,
-      language: "JavaScript",
-      lastUpdated: "2 days ago",
-      featured: true,
-      tags: ["matching", "ai", "sdk"]
-    },
-    {
-      id: 2,
-      name: "Video Chat Widget",
-      author: "CommunityDev",
-      description: "Embeddable video chat component with advanced features",
-      category: "Communication",
-      downloads: 32145,
-      stars: 892,
-      language: "React",
-      lastUpdated: "1 week ago",
-      featured: true,
-      tags: ["video", "chat", "widget"]
-    },
-    {
-      id: 3,
-      name: "Cultural Insights API",
-      author: "GlobalTeam",
-      description: "Cross-cultural compatibility and insights for international dating",
-      category: "Analytics",
-      downloads: 28934,
-      stars: 756,
-      language: "Python",
-      lastUpdated: "3 days ago",
-      featured: true,
-      tags: ["culture", "analytics", "api"]
-    }
-  ]);
-
-  const [communityEvents, setCommunityEvents] = useState([
-    {
-      id: 1,
-      title: "Flourish Developer Conference 2025",
-      date: "March 15-17, 2025",
-      type: "Conference",
-      attendees: 2847,
-      location: "Virtual + San Francisco",
-      status: "upcoming"
-    },
-    {
-      id: 2,
-      title: "AI Matching Hackathon",
-      date: "February 28 - March 2, 2025",
-      type: "Hackathon",
-      attendees: 1256,
-      location: "Global Virtual Event",
-      status: "registration_open"
-    },
-    {
-      id: 3,
-      title: "Monthly Developer Meetup",
-      date: "January 25, 2025",
-      type: "Meetup",
-      attendees: 456,
-      location: "Online",
-      status: "upcoming"
-    }
-  ]);
-
-  const [topContributors, setTopContributors] = useState([
-    {
-      id: 1,
-      name: "Alex Chen",
-      avatar: "AC",
-      contributions: 247,
-      reputation: 9847,
-      specialties: ["AI/ML", "Backend"],
-      badge: "Core Contributor"
-    },
-    {
-      id: 2,
-      name: "Sarah Johnson",
-      avatar: "SJ",
-      contributions: 189,
-      reputation: 8234,
-      specialties: ["Frontend", "UX"],
-      badge: "Design Expert"
-    },
-    {
-      id: 3,
-      name: "Miguel Rodriguez",
-      avatar: "MR",
-      contributions: 156,
-      reputation: 7456,
-      specialties: ["Security", "DevOps"],
-      badge: "Security Specialist"
-    }
-  ]);
-
-  const categories = [
-    { id: 'all', name: 'All Categories', count: 2156 },
-    { id: 'ai-ml', name: 'AI/ML', count: 456 },
-    { id: 'communication', name: 'Communication', count: 342 },
-    { id: 'analytics', name: 'Analytics', count: 289 },
-    { id: 'security', name: 'Security', count: 234 },
-    { id: 'ui-ux', name: 'UI/UX', count: 198 },
-    { id: 'integration', name: 'Integration', count: 167 }
-  ];
-
-  const resources = [
-    {
-      id: 1,
-      title: "Getting Started Guide",
-      description: "Complete guide to building your first Flourish integration",
-      type: "Documentation",
-      difficulty: "Beginner",
-      readTime: "15 min",
-      rating: 4.9
-    },
-    {
-      id: 2,
-      title: "Advanced API Reference",
-      description: "Comprehensive API documentation with examples",
-      type: "API Docs",
-      difficulty: "Advanced",
-      readTime: "45 min",
-      rating: 4.8
-    },
-    {
-      id: 3,
-      title: "Best Practices Guide",
-      description: "Industry best practices for dating app development",
-      type: "Guide",
-      difficulty: "Intermediate",
-      readTime: "30 min",
-      rating: 4.9
-    }
-  ];
-
-  // Simulate real-time updates
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setEcosystemStats(prev => ({
-        ...prev,
-        totalDevelopers: prev.totalDevelopers + Math.floor(Math.random() * 3),
-        totalDownloads: prev.totalDownloads + Math.floor(Math.random() * 50)
-      }));
-    }, 5000);
-
-    return () => clearInterval(interval);
-  }, []);
+  const categories = ['all', 'AI/ML', 'Communication', 'Localization', 'Utilities', 'Security'];
 
   const renderOverview = () => (
-    <div className="space-y-8">
-      {/* Hero Section */}
-      <div className="bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl p-8 text-white">
-        <div className="flex items-center justify-between">
-          <div>
-            <h2 className="text-3xl font-bold mb-4">Welcome to Flourish Developer Ecosystem</h2>
-            <p className="text-lg opacity-90 mb-6">
-              Build, share, and monetize amazing dating experiences with our comprehensive developer platform
-            </p>
-            <div className="flex space-x-4">
-              <button className="bg-white text-purple-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
-                Start Building
-              </button>
-              <button className="border border-white text-white px-6 py-3 rounded-lg font-semibold hover:bg-white hover:text-purple-600 transition-colors">
-                View Documentation
-              </button>
+    <div className="space-y-6">
+      {/* Ecosystem Stats */}
+      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4">
+        <div className="bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg p-4 text-white">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-blue-100 text-sm">Total Developers</p>
+              <p className="text-2xl font-bold">{ecosystemStats.totalDevelopers.toLocaleString()}</p>
             </div>
-          </div>
-          <div className="text-right">
-            <div className="text-4xl font-bold">{ecosystemStats.totalDevelopers.toLocaleString()}</div>
-            <div className="text-lg opacity-90">Active Developers</div>
+            <Users className="w-8 h-8 text-blue-200" />
           </div>
         </div>
-      </div>
-
-      {/* Key Metrics */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div className="bg-white rounded-xl p-6 shadow-sm border">
-          <div className="flex items-center justify-between mb-4">
-            <div className="p-3 bg-blue-100 rounded-lg">
-              <Code className="h-6 w-6 text-blue-600" />
+        <div className="bg-gradient-to-r from-green-500 to-green-600 rounded-lg p-4 text-white">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-green-100 text-sm">Active Projects</p>
+              <p className="text-2xl font-bold">{ecosystemStats.activeProjects}</p>
             </div>
-            <span className="text-green-600 text-sm font-medium">+{ecosystemStats.monthlyGrowth}%</span>
+            <Package className="w-8 h-8 text-green-200" />
           </div>
-          <div className="text-2xl font-bold text-gray-900">{ecosystemStats.activeProjects.toLocaleString()}</div>
-          <div className="text-gray-600">Active Projects</div>
         </div>
-
-        <div className="bg-white rounded-xl p-6 shadow-sm border">
-          <div className="flex items-center justify-between mb-4">
-            <div className="p-3 bg-green-100 rounded-lg">
-              <Download className="h-6 w-6 text-green-600" />
+        <div className="bg-gradient-to-r from-purple-500 to-purple-600 rounded-lg p-4 text-white">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-purple-100 text-sm">Total Downloads</p>
+              <p className="text-2xl font-bold">{(ecosystemStats.totalDownloads / 1000).toFixed(0)}K</p>
             </div>
-            <span className="text-green-600 text-sm font-medium">+15.7%</span>
+            <Download className="w-8 h-8 text-purple-200" />
           </div>
-          <div className="text-2xl font-bold text-gray-900">{ecosystemStats.totalDownloads.toLocaleString()}</div>
-          <div className="text-gray-600">Total Downloads</div>
         </div>
-
-        <div className="bg-white rounded-xl p-6 shadow-sm border">
-          <div className="flex items-center justify-between mb-4">
-            <div className="p-3 bg-purple-100 rounded-lg">
-              <Trophy className="h-6 w-6 text-purple-600" />
+        <div className="bg-gradient-to-r from-orange-500 to-orange-600 rounded-lg p-4 text-white">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-orange-100 text-sm">Monthly Revenue</p>
+              <p className="text-2xl font-bold">${(ecosystemStats.monthlyRevenue / 1000).toFixed(0)}K</p>
             </div>
-            <span className="text-green-600 text-sm font-medium">+2.1%</span>
+            <DollarSign className="w-8 h-8 text-orange-200" />
           </div>
-          <div className="text-2xl font-bold text-gray-900">{ecosystemStats.communityScore}%</div>
-          <div className="text-gray-600">Community Score</div>
         </div>
-
-        <div className="bg-white rounded-xl p-6 shadow-sm border">
-          <div className="flex items-center justify-between mb-4">
-            <div className="p-3 bg-orange-100 rounded-lg">
-              <Heart className="h-6 w-6 text-orange-600" />
+        <div className="bg-gradient-to-r from-yellow-500 to-yellow-600 rounded-lg p-4 text-white">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-yellow-100 text-sm">Average Rating</p>
+              <p className="text-2xl font-bold">{ecosystemStats.averageRating}</p>
             </div>
-            <span className="text-green-600 text-sm font-medium">+1.8%</span>
+            <Star className="w-8 h-8 text-yellow-200" />
           </div>
-          <div className="text-2xl font-bold text-gray-900">{ecosystemStats.satisfaction}%</div>
-          <div className="text-gray-600">Satisfaction Rate</div>
+        </div>
+        <div className="bg-gradient-to-r from-pink-500 to-pink-600 rounded-lg p-4 text-white">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-pink-100 text-sm">Community</p>
+              <p className="text-2xl font-bold">{(ecosystemStats.communityMembers / 1000).toFixed(1)}K</p>
+            </div>
+            <Heart className="w-8 h-8 text-pink-200" />
+          </div>
         </div>
       </div>
 
       {/* Featured Projects */}
-      <div className="bg-white rounded-xl p-6 shadow-sm border">
-        <div className="flex items-center justify-between mb-6">
-          <h3 className="text-xl font-bold text-gray-900">Featured Projects</h3>
-          <button className="text-purple-600 hover:text-purple-700 font-medium">View All</button>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {featuredProjects.map((project) => (
+      <div className="bg-white rounded-lg shadow-sm border p-6">
+        <h3 className="text-xl font-semibold mb-4 flex items-center">
+          <Award className="w-5 h-5 mr-2 text-yellow-500" />
+          Featured Projects
+        </h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {developerProjects.slice(0, 3).map(project => (
             <div key={project.id} className="border rounded-lg p-4 hover:shadow-md transition-shadow">
               <div className="flex items-start justify-between mb-3">
                 <div>
                   <h4 className="font-semibold text-gray-900">{project.name}</h4>
                   <p className="text-sm text-gray-600">by {project.author}</p>
                 </div>
-                <span className="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded-full">
-                  {project.category}
+                <span className={`px-2 py-1 rounded-full text-xs ${
+                  project.status === 'Active' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
+                }`}>
+                  {project.status}
                 </span>
               </div>
-              <p className="text-sm text-gray-600 mb-4">{project.description}</p>
-              <div className="flex items-center justify-between text-sm text-gray-500">
-                <div className="flex items-center space-x-4">
+              <p className="text-sm text-gray-700 mb-3">{project.description}</p>
+              <div className="flex items-center justify-between text-sm text-gray-600">
+                <div className="flex items-center space-x-3">
                   <span className="flex items-center">
-                    <Star className="h-4 w-4 mr-1" />
-                    {project.stars}
-                  </span>
-                  <span className="flex items-center">
-                    <Download className="h-4 w-4 mr-1" />
+                    <Download className="w-4 h-4 mr-1" />
                     {project.downloads.toLocaleString()}
                   </span>
+                  <span className="flex items-center">
+                    <Star className="w-4 h-4 mr-1 text-yellow-500" />
+                    {project.rating}
+                  </span>
                 </div>
-                <span>{project.lastUpdated}</span>
+                <span className="font-semibold text-gray-900">{project.price}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Development Tools */}
+      <div className="bg-white rounded-lg shadow-sm border p-6">
+        <h3 className="text-xl font-semibold mb-4 flex items-center">
+          <Zap className="w-5 h-5 mr-2 text-blue-500" />
+          Development Tools
+        </h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {developmentTools.map((tool, index) => (
+            <div key={index} className="flex items-start space-x-4 p-4 border rounded-lg hover:bg-gray-50">
+              <div className="text-blue-500">{tool.icon}</div>
+              <div className="flex-1">
+                <div className="flex items-center justify-between mb-1">
+                  <h4 className="font-semibold text-gray-900">{tool.name}</h4>
+                  <span className={`px-2 py-1 rounded-full text-xs ${
+                    tool.status === 'Stable' ? 'bg-green-100 text-green-800' : 
+                    tool.status === 'Beta' ? 'bg-yellow-100 text-yellow-800' : 'bg-blue-100 text-blue-800'
+                  }`}>
+                    {tool.status}
+                  </span>
+                </div>
+                <p className="text-sm text-gray-600 mb-2">{tool.description}</p>
+                <p className="text-xs text-gray-500">{tool.version}</p>
               </div>
             </div>
           ))}
@@ -309,85 +319,99 @@ const DeveloperEcosystemHub = () => {
 
   const renderProjects = () => (
     <div className="space-y-6">
-      {/* Search and Filters */}
-      <div className="bg-white rounded-xl p-6 shadow-sm border">
-        <div className="flex flex-col md:flex-row gap-4">
-          <div className="flex-1 relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+      {/* Search and Filter */}
+      <div className="bg-white rounded-lg shadow-sm border p-6">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
+          <div className="flex-1 max-w-md">
             <input
               type="text"
-              placeholder="Search projects, SDKs, and tools..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              placeholder="Search projects..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
           </div>
-          <select
-            value={selectedCategory}
-            onChange={(e) => setSelectedCategory(e.target.value)}
-            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-          >
-            {categories.map((category) => (
-              <option key={category.id} value={category.id}>
-                {category.name} ({category.count})
-              </option>
-            ))}
-          </select>
-          <button
-            onClick={() => setShowCreateModal(true)}
-            className="bg-purple-600 text-white px-6 py-2 rounded-lg hover:bg-purple-700 transition-colors flex items-center"
-          >
-            <Plus className="h-5 w-5 mr-2" />
-            Create Project
-          </button>
+          <div className="flex items-center space-x-4">
+            <select
+              value={filterCategory}
+              onChange={(e) => setFilterCategory(e.target.value)}
+              className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            >
+              {categories.map(category => (
+                <option key={category} value={category}>
+                  {category === 'all' ? 'All Categories' : category}
+                </option>
+              ))}
+            </select>
+            <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+              Submit Project
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* Project Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {featuredProjects.map((project) => (
-          <div key={project.id} className="bg-white rounded-xl p-6 shadow-sm border hover:shadow-md transition-shadow">
+      {/* Projects Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {filteredProjects.map(project => (
+          <div key={project.id} className="bg-white rounded-lg shadow-sm border p-6 hover:shadow-md transition-shadow">
             <div className="flex items-start justify-between mb-4">
               <div>
-                <h3 className="font-bold text-gray-900 mb-1">{project.name}</h3>
+                <h3 className="text-lg font-semibold text-gray-900">{project.name}</h3>
                 <p className="text-sm text-gray-600">by {project.author}</p>
               </div>
-              {project.featured && (
-                <span className="bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded-full">
-                  Featured
+              <div className="flex items-center space-x-2">
+                <span className={`px-2 py-1 rounded-full text-xs ${
+                  project.status === 'Active' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
+                }`}>
+                  {project.status}
                 </span>
-              )}
+                <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs">
+                  {project.category}
+                </span>
+              </div>
             </div>
             
-            <p className="text-gray-600 mb-4">{project.description}</p>
+            <p className="text-gray-700 mb-4">{project.description}</p>
             
             <div className="flex flex-wrap gap-2 mb-4">
-              {project.tags.map((tag) => (
-                <span key={tag} className="bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded">
+              {project.tags.map(tag => (
+                <span key={tag} className="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs">
                   {tag}
                 </span>
               ))}
             </div>
             
-            <div className="flex items-center justify-between text-sm text-gray-500 mb-4">
-              <span className="flex items-center">
-                <Star className="h-4 w-4 mr-1 text-yellow-500" />
-                {project.stars}
-              </span>
-              <span className="flex items-center">
-                <Download className="h-4 w-4 mr-1" />
-                {project.downloads.toLocaleString()}
-              </span>
-              <span>{project.language}</span>
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center space-x-4 text-sm text-gray-600">
+                <span className="flex items-center">
+                  <Download className="w-4 h-4 mr-1" />
+                  {project.downloads.toLocaleString()}
+                </span>
+                <span className="flex items-center">
+                  <Star className="w-4 h-4 mr-1 text-yellow-500" />
+                  {project.rating}
+                </span>
+                <span className="flex items-center">
+                  <GitBranch className="w-4 h-4 mr-1" />
+                  {project.stars}
+                </span>
+              </div>
+              <div className="text-right">
+                <p className="font-semibold text-gray-900">{project.price}</p>
+                <p className="text-xs text-gray-500">Revenue: {project.revenue}</p>
+              </div>
             </div>
             
-            <div className="flex space-x-2">
-              <button className="flex-1 bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 transition-colors text-sm">
-                View Details
-              </button>
-              <button className="p-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
-                <Share2 className="h-4 w-4" />
-              </button>
+            <div className="flex items-center justify-between">
+              <p className="text-xs text-gray-500">Updated {project.lastUpdated}</p>
+              <div className="flex space-x-2">
+                <button className="px-3 py-1 text-blue-600 border border-blue-600 rounded hover:bg-blue-50 transition-colors text-sm">
+                  View Details
+                </button>
+                <button className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors text-sm">
+                  Install
+                </button>
+              </div>
             </div>
           </div>
         ))}
@@ -396,121 +420,87 @@ const DeveloperEcosystemHub = () => {
   );
 
   const renderCommunity = () => (
-    <div className="space-y-8">
+    <div className="space-y-6">
       {/* Community Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-white rounded-xl p-6 shadow-sm border">
-          <div className="flex items-center mb-4">
-            <div className="p-3 bg-blue-100 rounded-lg mr-4">
-              <Users className="h-6 w-6 text-blue-600" />
-            </div>
-            <div>
-              <div className="text-2xl font-bold text-gray-900">{ecosystemStats.totalDevelopers.toLocaleString()}</div>
-              <div className="text-gray-600">Active Developers</div>
-            </div>
-          </div>
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div className="bg-white rounded-lg shadow-sm border p-6 text-center">
+          <MessageSquare className="w-8 h-8 text-blue-500 mx-auto mb-2" />
+          <p className="text-2xl font-bold text-gray-900">1,247</p>
+          <p className="text-sm text-gray-600">Forum Posts</p>
         </div>
-
-        <div className="bg-white rounded-xl p-6 shadow-sm border">
-          <div className="flex items-center mb-4">
-            <div className="p-3 bg-green-100 rounded-lg mr-4">
-              <MessageSquare className="h-6 w-6 text-green-600" />
-            </div>
-            <div>
-              <div className="text-2xl font-bold text-gray-900">24,567</div>
-              <div className="text-gray-600">Forum Posts</div>
-            </div>
-          </div>
+        <div className="bg-white rounded-lg shadow-sm border p-6 text-center">
+          <Users className="w-8 h-8 text-green-500 mx-auto mb-2" />
+          <p className="text-2xl font-bold text-gray-900">8,940</p>
+          <p className="text-sm text-gray-600">Active Members</p>
         </div>
-
-        <div className="bg-white rounded-xl p-6 shadow-sm border">
-          <div className="flex items-center mb-4">
-            <div className="p-3 bg-purple-100 rounded-lg mr-4">
-              <Calendar className="h-6 w-6 text-purple-600" />
-            </div>
-            <div>
-              <div className="text-2xl font-bold text-gray-900">156</div>
-              <div className="text-gray-600">Events This Year</div>
-            </div>
-          </div>
+        <div className="bg-white rounded-lg shadow-sm border p-6 text-center">
+          <Coffee className="w-8 h-8 text-orange-500 mx-auto mb-2" />
+          <p className="text-2xl font-bold text-gray-900">156</p>
+          <p className="text-sm text-gray-600">Meetups</p>
         </div>
-      </div>
-
-      {/* Top Contributors */}
-      <div className="bg-white rounded-xl p-6 shadow-sm border">
-        <h3 className="text-xl font-bold text-gray-900 mb-6">Top Contributors</h3>
-        <div className="space-y-4">
-          {topContributors.map((contributor, index) => (
-            <div key={contributor.id} className="flex items-center justify-between p-4 border rounded-lg">
-              <div className="flex items-center">
-                <div className="flex items-center justify-center w-12 h-12 bg-purple-100 rounded-full mr-4">
-                  <span className="text-purple-600 font-bold">{contributor.avatar}</span>
-                </div>
-                <div>
-                  <div className="flex items-center">
-                    <h4 className="font-semibold text-gray-900 mr-2">{contributor.name}</h4>
-                    <span className="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded-full">
-                      {contributor.badge}
-                    </span>
-                  </div>
-                  <div className="flex items-center text-sm text-gray-600">
-                    <span className="mr-4">{contributor.contributions} contributions</span>
-                    <span className="mr-4">{contributor.reputation.toLocaleString()} reputation</span>
-                  </div>
-                  <div className="flex space-x-2 mt-1">
-                    {contributor.specialties.map((specialty) => (
-                      <span key={specialty} className="bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded">
-                        {specialty}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </div>
-              <div className="text-right">
-                <div className="text-2xl font-bold text-purple-600">#{index + 1}</div>
-              </div>
-            </div>
-          ))}
+        <div className="bg-white rounded-lg shadow-sm border p-6 text-center">
+          <Lightbulb className="w-8 h-8 text-yellow-500 mx-auto mb-2" />
+          <p className="text-2xl font-bold text-gray-900">89</p>
+          <p className="text-sm text-gray-600">Ideas Shared</p>
         </div>
       </div>
 
       {/* Upcoming Events */}
-      <div className="bg-white rounded-xl p-6 shadow-sm border">
-        <div className="flex items-center justify-between mb-6">
-          <h3 className="text-xl font-bold text-gray-900">Upcoming Events</h3>
-          <button className="text-purple-600 hover:text-purple-700 font-medium">View All Events</button>
-        </div>
+      <div className="bg-white rounded-lg shadow-sm border p-6">
+        <h3 className="text-xl font-semibold mb-4 flex items-center">
+          <Target className="w-5 h-5 mr-2 text-purple-500" />
+          Upcoming Events
+        </h3>
         <div className="space-y-4">
-          {communityEvents.map((event) => (
-            <div key={event.id} className="border rounded-lg p-4">
-              <div className="flex items-start justify-between">
-                <div>
-                  <h4 className="font-semibold text-gray-900 mb-1">{event.title}</h4>
-                  <div className="flex items-center text-sm text-gray-600 mb-2">
-                    <Calendar className="h-4 w-4 mr-1" />
-                    <span className="mr-4">{event.date}</span>
-                    <span className="mr-4">{event.location}</span>
-                  </div>
-                  <div className="flex items-center text-sm text-gray-600">
-                    <Users className="h-4 w-4 mr-1" />
-                    <span>{event.attendees.toLocaleString()} attendees</span>
-                  </div>
-                </div>
-                <div className="flex flex-col items-end">
-                  <span className={`text-xs px-2 py-1 rounded-full mb-2 ${
-                    event.status === 'upcoming' ? 'bg-blue-100 text-blue-800' :
-                    event.status === 'registration_open' ? 'bg-green-100 text-green-800' :
-                    'bg-gray-100 text-gray-800'
-                  }`}>
-                    {event.status.replace('_', ' ').toUpperCase()}
-                  </span>
-                  <button className="bg-purple-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-purple-700 transition-colors">
-                    Register
-                  </button>
-                </div>
+          {communityEvents.map((event, index) => (
+            <div key={index} className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50">
+              <div>
+                <h4 className="font-semibold text-gray-900">{event.title}</h4>
+                <p className="text-sm text-gray-600">{event.date} • {event.type}</p>
+                <p className="text-xs text-gray-500">{event.attendees} attendees</p>
+              </div>
+              <div className="flex items-center space-x-2">
+                <span className={`px-2 py-1 rounded-full text-xs ${
+                  event.status === 'Upcoming' ? 'bg-blue-100 text-blue-800' :
+                  event.status === 'Registration Open' ? 'bg-green-100 text-green-800' :
+                  'bg-gray-100 text-gray-800'
+                }`}>
+                  {event.status}
+                </span>
+                <button className="px-3 py-1 text-blue-600 border border-blue-600 rounded hover:bg-blue-50 transition-colors text-sm">
+                  Learn More
+                </button>
               </div>
             </div>
           ))}
+        </div>
+      </div>
+
+      {/* Community Links */}
+      <div className="bg-white rounded-lg shadow-sm border p-6">
+        <h3 className="text-xl font-semibold mb-4">Connect with the Community</h3>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <a href="#" className="flex items-center space-x-3 p-4 border rounded-lg hover:bg-gray-50 transition-colors">
+            <Github className="w-6 h-6 text-gray-700" />
+            <div>
+              <p className="font-semibold text-gray-900">GitHub</p>
+              <p className="text-sm text-gray-600">Open source projects</p>
+            </div>
+          </a>
+          <a href="#" className="flex items-center space-x-3 p-4 border rounded-lg hover:bg-gray-50 transition-colors">
+            <Slack className="w-6 h-6 text-purple-600" />
+            <div>
+              <p className="font-semibold text-gray-900">Slack</p>
+              <p className="text-sm text-gray-600">Developer discussions</p>
+            </div>
+          </a>
+          <a href="#" className="flex items-center space-x-3 p-4 border rounded-lg hover:bg-gray-50 transition-colors">
+            <Twitter className="w-6 h-6 text-blue-500" />
+            <div>
+              <p className="font-semibold text-gray-900">Twitter</p>
+              <p className="text-sm text-gray-600">Latest updates</p>
+            </div>
+          </a>
         </div>
       </div>
     </div>
@@ -518,204 +508,184 @@ const DeveloperEcosystemHub = () => {
 
   const renderResources = () => (
     <div className="space-y-6">
-      {/* Resource Categories */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div className="bg-white rounded-xl p-6 shadow-sm border text-center">
-          <div className="p-3 bg-blue-100 rounded-lg mx-auto mb-4 w-fit">
-            <BookOpen className="h-8 w-8 text-blue-600" />
+      {/* Documentation */}
+      <div className="bg-white rounded-lg shadow-sm border p-6">
+        <h3 className="text-xl font-semibold mb-4 flex items-center">
+          <BookOpen className="w-5 h-5 mr-2 text-blue-500" />
+          Documentation & Guides
+        </h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="border rounded-lg p-4 hover:shadow-md transition-shadow">
+            <h4 className="font-semibold text-gray-900 mb-2">Getting Started Guide</h4>
+            <p className="text-sm text-gray-600 mb-3">Complete guide to building your first Flourish integration</p>
+            <div className="flex items-center justify-between">
+              <span className="text-xs text-gray-500">Updated 2 days ago</span>
+              <button className="text-blue-600 hover:text-blue-700 text-sm flex items-center">
+                Read More <ArrowRight className="w-4 h-4 ml-1" />
+              </button>
+            </div>
           </div>
-          <h3 className="font-bold text-gray-900 mb-2">Documentation</h3>
-          <p className="text-gray-600 text-sm mb-4">Comprehensive guides and API references</p>
-          <button className="text-blue-600 hover:text-blue-700 font-medium">Browse Docs</button>
-        </div>
-
-        <div className="bg-white rounded-xl p-6 shadow-sm border text-center">
-          <div className="p-3 bg-green-100 rounded-lg mx-auto mb-4 w-fit">
-            <Lightbulb className="h-8 w-8 text-green-600" />
+          <div className="border rounded-lg p-4 hover:shadow-md transition-shadow">
+            <h4 className="font-semibold text-gray-900 mb-2">API Reference</h4>
+            <p className="text-sm text-gray-600 mb-3">Comprehensive API documentation with examples</p>
+            <div className="flex items-center justify-between">
+              <span className="text-xs text-gray-500">Updated 1 day ago</span>
+              <button className="text-blue-600 hover:text-blue-700 text-sm flex items-center">
+                Read More <ArrowRight className="w-4 h-4 ml-1" />
+              </button>
+            </div>
           </div>
-          <h3 className="font-bold text-gray-900 mb-2">Tutorials</h3>
-          <p className="text-gray-600 text-sm mb-4">Step-by-step learning resources</p>
-          <button className="text-green-600 hover:text-green-700 font-medium">Start Learning</button>
-        </div>
-
-        <div className="bg-white rounded-xl p-6 shadow-sm border text-center">
-          <div className="p-3 bg-purple-100 rounded-lg mx-auto mb-4 w-fit">
-            <Code className="h-8 w-8 text-purple-600" />
+          <div className="border rounded-lg p-4 hover:shadow-md transition-shadow">
+            <h4 className="font-semibold text-gray-900 mb-2">Best Practices</h4>
+            <p className="text-sm text-gray-600 mb-3">Security, performance, and design best practices</p>
+            <div className="flex items-center justify-between">
+              <span className="text-xs text-gray-500">Updated 1 week ago</span>
+              <button className="text-blue-600 hover:text-blue-700 text-sm flex items-center">
+                Read More <ArrowRight className="w-4 h-4 ml-1" />
+              </button>
+            </div>
           </div>
-          <h3 className="font-bold text-gray-900 mb-2">Code Samples</h3>
-          <p className="text-gray-600 text-sm mb-4">Ready-to-use code examples</p>
-          <button className="text-purple-600 hover:text-purple-700 font-medium">View Samples</button>
-        </div>
-
-        <div className="bg-white rounded-xl p-6 shadow-sm border text-center">
-          <div className="p-3 bg-orange-100 rounded-lg mx-auto mb-4 w-fit">
-            <Rocket className="h-8 w-8 text-orange-600" />
+          <div className="border rounded-lg p-4 hover:shadow-md transition-shadow">
+            <h4 className="font-semibold text-gray-900 mb-2">Troubleshooting</h4>
+            <p className="text-sm text-gray-600 mb-3">Common issues and solutions for developers</p>
+            <div className="flex items-center justify-between">
+              <span className="text-xs text-gray-500">Updated 3 days ago</span>
+              <button className="text-blue-600 hover:text-blue-700 text-sm flex items-center">
+                Read More <ArrowRight className="w-4 h-4 ml-1" />
+              </button>
+            </div>
           </div>
-          <h3 className="font-bold text-gray-900 mb-2">Quick Start</h3>
-          <p className="text-gray-600 text-sm mb-4">Get up and running in minutes</p>
-          <button className="text-orange-600 hover:text-orange-700 font-medium">Quick Start</button>
         </div>
       </div>
 
-      {/* Featured Resources */}
-      <div className="bg-white rounded-xl p-6 shadow-sm border">
-        <h3 className="text-xl font-bold text-gray-900 mb-6">Featured Resources</h3>
+      {/* Code Examples */}
+      <div className="bg-white rounded-lg shadow-sm border p-6">
+        <h3 className="text-xl font-semibold mb-4 flex items-center">
+          <Code className="w-5 h-5 mr-2 text-green-500" />
+          Code Examples & Templates
+        </h3>
         <div className="space-y-4">
-          {resources.map((resource) => (
-            <div key={resource.id} className="border rounded-lg p-4 hover:shadow-md transition-shadow">
-              <div className="flex items-start justify-between">
-                <div className="flex-1">
-                  <div className="flex items-center mb-2">
-                    <h4 className="font-semibold text-gray-900 mr-3">{resource.title}</h4>
-                    <span className={`text-xs px-2 py-1 rounded-full ${
-                      resource.difficulty === 'Beginner' ? 'bg-green-100 text-green-800' :
-                      resource.difficulty === 'Intermediate' ? 'bg-yellow-100 text-yellow-800' :
-                      'bg-red-100 text-red-800'
-                    }`}>
-                      {resource.difficulty}
-                    </span>
-                  </div>
-                  <p className="text-gray-600 mb-3">{resource.description}</p>
-                  <div className="flex items-center text-sm text-gray-500">
-                    <span className="mr-4">{resource.type}</span>
-                    <span className="mr-4">{resource.readTime}</span>
-                    <div className="flex items-center">
-                      <Star className="h-4 w-4 text-yellow-500 mr-1" />
-                      <span>{resource.rating}</span>
-                    </div>
-                  </div>
-                </div>
-                <button className="ml-4 bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors flex items-center">
-                  <ExternalLink className="h-4 w-4 mr-2" />
-                  View
-                </button>
-              </div>
+          <div className="border rounded-lg p-4">
+            <div className="flex items-center justify-between mb-2">
+              <h4 className="font-semibold text-gray-900">React Integration Template</h4>
+              <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs">React</span>
             </div>
-          ))}
+            <p className="text-sm text-gray-600 mb-3">Complete React component template for Flourish integration</p>
+            <div className="flex items-center space-x-2">
+              <button className="px-3 py-1 bg-gray-100 text-gray-700 rounded hover:bg-gray-200 transition-colors text-sm">
+                <Github className="w-4 h-4 inline mr-1" />
+                View on GitHub
+              </button>
+              <button className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors text-sm">
+                <Download className="w-4 h-4 inline mr-1" />
+                Download
+              </button>
+            </div>
+          </div>
+          <div className="border rounded-lg p-4">
+            <div className="flex items-center justify-between mb-2">
+              <h4 className="font-semibold text-gray-900">Node.js Backend Example</h4>
+              <span className="px-2 py-1 bg-green-100 text-green-800 rounded text-xs">Node.js</span>
+            </div>
+            <p className="text-sm text-gray-600 mb-3">Backend integration example with authentication and API calls</p>
+            <div className="flex items-center space-x-2">
+              <button className="px-3 py-1 bg-gray-100 text-gray-700 rounded hover:bg-gray-200 transition-colors text-sm">
+                <Github className="w-4 h-4 inline mr-1" />
+                View on GitHub
+              </button>
+              <button className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors text-sm">
+                <Download className="w-4 h-4 inline mr-1" />
+                Download
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Support */}
+      <div className="bg-white rounded-lg shadow-sm border p-6">
+        <h3 className="text-xl font-semibold mb-4 flex items-center">
+          <MessageSquare className="w-5 h-5 mr-2 text-purple-500" />
+          Developer Support
+        </h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="text-center p-6 border rounded-lg">
+            <Clock className="w-8 h-8 text-blue-500 mx-auto mb-3" />
+            <h4 className="font-semibold text-gray-900 mb-2">24/7 Support</h4>
+            <p className="text-sm text-gray-600 mb-4">Get help anytime with our dedicated developer support team</p>
+            <button className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors">
+              Contact Support
+            </button>
+          </div>
+          <div className="text-center p-6 border rounded-lg">
+            <Users className="w-8 h-8 text-green-500 mx-auto mb-3" />
+            <h4 className="font-semibold text-gray-900 mb-2">Community Forum</h4>
+            <p className="text-sm text-gray-600 mb-4">Connect with other developers and share knowledge</p>
+            <button className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors">
+              Join Forum
+            </button>
+          </div>
         </div>
       </div>
     </div>
   );
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <div className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <div className="flex items-center">
-              <div className="flex items-center">
-                <div className="p-2 bg-purple-100 rounded-lg mr-3">
-                  <Code className="h-6 w-6 text-purple-600" />
-                </div>
-                <div>
-                  <h1 className="text-xl font-bold text-gray-900">Developer Ecosystem Hub</h1>
-                  <p className="text-sm text-gray-600">Build the future of dating technology</p>
-                </div>
-              </div>
+    <div className="min-h-screen bg-gray-50 p-6">
+      <div className="max-w-7xl mx-auto">
+        {/* Header */}
+        <div className="mb-8">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900 mb-2">Developer Ecosystem Hub</h1>
+              <p className="text-gray-600">Build, share, and monetize your Flourish integrations</p>
             </div>
             <div className="flex items-center space-x-4">
-              <button className="p-2 text-gray-600 hover:text-gray-900 rounded-lg hover:bg-gray-100">
-                <MessageSquare className="h-5 w-5" />
+              <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center">
+                <Rocket className="w-4 h-4 mr-2" />
+                Start Building
               </button>
-              <button className="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors">
-                Join Community
+              <button className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors flex items-center">
+                <BookOpen className="w-4 h-4 mr-2" />
+                Documentation
               </button>
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Navigation Tabs */}
-      <div className="bg-white border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Navigation Tabs */}
+        <div className="mb-6">
           <nav className="flex space-x-8">
             {[
-              { id: 'overview', name: 'Overview', icon: Target },
-              { id: 'projects', name: 'Projects', icon: GitBranch },
-              { id: 'community', name: 'Community', icon: Users },
-              { id: 'resources', name: 'Resources', icon: BookOpen }
-            ].map((tab) => (
+              { id: 'overview', label: 'Overview', icon: <TrendingUp className="w-4 h-4" /> },
+              { id: 'projects', label: 'Projects', icon: <Package className="w-4 h-4" /> },
+              { id: 'community', label: 'Community', icon: <Users className="w-4 h-4" /> },
+              { id: 'resources', label: 'Resources', icon: <BookOpen className="w-4 h-4" /> }
+            ].map(tab => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center py-4 px-1 border-b-2 font-medium text-sm ${
+                className={`flex items-center space-x-2 px-3 py-2 border-b-2 font-medium text-sm transition-colors ${
                   activeTab === tab.id
-                    ? 'border-purple-500 text-purple-600'
+                    ? 'border-blue-500 text-blue-600'
                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                 }`}
               >
-                <tab.icon className="h-5 w-5 mr-2" />
-                {tab.name}
+                {tab.icon}
+                <span>{tab.label}</span>
               </button>
             ))}
           </nav>
         </div>
-      </div>
 
-      {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {activeTab === 'overview' && renderOverview()}
-        {activeTab === 'projects' && renderProjects()}
-        {activeTab === 'community' && renderCommunity()}
-        {activeTab === 'resources' && renderResources()}
-      </div>
-
-      {/* Create Project Modal */}
-      {showCreateModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl p-6 w-full max-w-md">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-bold text-gray-900">Create New Project</h3>
-              <button
-                onClick={() => setShowCreateModal(false)}
-                className="text-gray-400 hover:text-gray-600"
-              >
-                ×
-              </button>
-            </div>
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Project Name</label>
-                <input
-                  type="text"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                  placeholder="Enter project name"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
-                <select className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
-                  <option>Select category</option>
-                  <option>AI/ML</option>
-                  <option>Communication</option>
-                  <option>Analytics</option>
-                  <option>Security</option>
-                </select>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
-                <textarea
-                  rows={3}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                  placeholder="Describe your project"
-                />
-              </div>
-              <div className="flex space-x-3">
-                <button
-                  onClick={() => setShowCreateModal(false)}
-                  className="flex-1 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
-                >
-                  Cancel
-                </button>
-                <button className="flex-1 bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors">
-                  Create Project
-                </button>
-              </div>
-            </div>
-          </div>
+        {/* Tab Content */}
+        <div>
+          {activeTab === 'overview' && renderOverview()}
+          {activeTab === 'projects' && renderProjects()}
+          {activeTab === 'community' && renderCommunity()}
+          {activeTab === 'resources' && renderResources()}
         </div>
-      )}
+      </div>
     </div>
   );
 };

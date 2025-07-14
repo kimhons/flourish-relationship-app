@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flourish - Explore Feed</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans">
+    <!-- Mobile Container -->
+    <div class="max-w-md mx-auto bg-white min-h-screen">
+        <!-- Header -->
+        <div class="bg-white border-b sticky top-0 z-50">
+            <div class="px-4 py-3">
+                <div class="flex items-center space-x-3">
+                    <div class="flex-1 relative">
+                        <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                        <input type="text" placeholder="Search posts, people, hashtags..." class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent">
+                    </div>
+                    <button class="p-2 border border-gray-300 rounded-lg hover:bg-gray-50" onclick="toggleFilters()">
+                        <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.414A1 1 0 013 6.707V4z"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filters Panel -->
+        <div id="filters-panel" class="bg-white border-b hidden">
+            <div class="px-4 py-3">
+                <div class="grid grid-cols-3 gap-3">
+                    <select class="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-pink-500">
+                        <option>All Content</option>
+                        <option>Posts Only</option>
+                        <option>Reels Only</option>
+                    </select>
+                    <select class="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-pink-500">
+                        <option>All Locations</option>
+                        <option>Nearby</option>
+                        <option>Same City</option>
+                    </select>
+                    <select class="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-pink-500">
+                        <option>This Week</option>
+                        <option>Today</option>
+                        <option>This Month</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Category Navigation -->
+        <div class="bg-white border-b">
+            <div class="px-4 py-3">
+                <div class="flex space-x-1 overflow-x-auto scrollbar-hide">
+                    <button class="flex items-center space-x-2 px-4 py-2 rounded-full whitespace-nowrap bg-pink-100 text-pink-600" onclick="setActiveCategory(this, 'trending')">
+                        <svg class="w-4 h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                        </svg>
+                        <span class="font-medium">Trending</span>
+                    </button>
+                    <button class="flex items-center space-x-2 px-4 py-2 rounded-full whitespace-nowrap text-gray-600 hover:bg-gray-100" onclick="setActiveCategory(this, 'nearby')">
+                        <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        </svg>
+                        <span class="font-medium">Nearby</span>
+                    </button>
+                    <button class="flex items-center space-x-2 px-4 py-2 rounded-full whitespace-nowrap text-gray-600 hover:bg-gray-100" onclick="setActiveCategory(this, 'popular')">
+                        <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.5 2c-5.621 0-10.211 4.443-10.475 10h-3.025l5 6.625 5-6.625h-2.975c.257-3.351 3.06-6 6.475-6 3.584 0 6.5 2.916 6.5 6.5s-2.916 6.5-6.5 6.5c-1.863 0-3.542-.793-4.728-2.053l-2.427 3.216c1.877 1.754 4.389 2.837 7.155 2.837 5.79 0 10.5-4.71 10.5-10.5s-4.71-10.5-10.5-10.5z"/>
+                        </svg>
+                        <span class="font-medium">Popular</span>
+                    </button>
+                    <button class="flex items-center space-x-2 px-4 py-2 rounded-full whitespace-nowrap text-gray-600 hover:bg-gray-100" onclick="setActiveCategory(this, 'recent')">
+                        <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <polyline points="12,6 12,12 16,14"></polyline>
+                        </svg>
+                        <span class="font-medium">Recent</span>
+                    </button>
+                    <button class="flex items-center space-x-2 px-4 py-2 rounded-full whitespace-nowrap text-gray-600 hover:bg-gray-100" onclick="setActiveCategory(this, 'featured')">
+                        <svg class="w-4 h-4 text-gray-500" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                        </svg>
+                        <span class="font-medium">Featured</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Content -->
+        <div class="px-4 py-4 space-y-4">
+            <!-- Trending Hashtags -->
+            <div class="bg-white rounded-lg p-4 border">
+                <h3 class="font-semibold text-gray-900 mb-3 flex items-center">
+                    <svg class="w-5 h-5 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14"></path>
+                    </svg>
+                    Trending Hashtags
+                </h3>
+                <div class="space-y-2">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <span class="font-medium text-blue-600">#DateNight</span>
+                            <span class="text-sm text-gray-500 ml-2">12.3k posts</span>
+                        </div>
+                        <span class="text-sm text-green-600 font-medium">+15%</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <span class="font-medium text-blue-600">#Adventure</span>
+                            <span class="text-sm text-gray-500 ml-2">8.7k posts</span>
+                        </div>
+                        <span class="text-sm text-green-600 font-medium">+22%</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <span class="font-medium text-blue-600">#Foodie</span>
+                            <span class="text-sm text-gray-500 ml-2">15.6k posts</span>
+                        </div>
+                        <span class="text-sm text-green-600 font-medium">+8%</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <span class="font-medium text-blue-600">#Fitness</span>
+                            <span class="text-sm text-gray-500 ml-2">9.2k posts</span>
+                        </div>
+                        <span class="text-sm text-green-600 font-medium">+18%</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <span class="font-medium text-blue-600">#Travel</span>
+                            <span class="text-sm text-gray-500 ml-2">11.4k posts</span>
+                        </div>
+                        <span class="text-sm text-green-600 font-medium">+12%</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Popular Interests -->
+            <div class="bg-white rounded-lg p-4 border">
+                <h3 class="font-semibold text-gray-900 mb-3">Popular Interests</h3>
+                <div class="grid grid-cols-2 gap-3">
+                    <button class="flex items-center space-x-3 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+                        <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                        </svg>
+                        <div class="flex-1 text-left">
+                            <div class="font-medium text-gray-900">Food</div>
+                            <div class="text-sm text-gray-500">2.3k posts</div>
+                        </div>
+                    </button>
+                    <button class="flex items-center space-x-3 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+                        <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+                        </svg>
+                        <div class="flex-1 text-left">
+                            <div class="font-medium text-gray-900">Travel</div>
+                            <div class="text-sm text-gray-500">1.8k posts</div>
+                        </div>
+                    </button>
+                    <button class="flex items-center space-x-3 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+                        <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                        </svg>
+                        <div class="flex-1 text-left">
+                            <div class="font-medium text-gray-900">Fitness</div>
+                            <div class="text-sm text-gray-500">1.5k posts</div>
+                        </div>
+                    </button>
+                    <button class="flex items-center space-x-3 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+                        <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zM21 5a2 2 0 00-2-2h-4a2 2 0 00-2 2v12a4 4 0 004 4h4a2 2 0 002-2V5z"></path>
+                        </svg>
+                        <div class="flex-1 text-left">
+                            <div class="font-medium text-gray-900">Art</div>
+                            <div class="text-sm text-gray-500">1.2k posts</div>
+                        </div>
+                    </button>
+                    <button class="flex items-center space-x-3 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+                        <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path>
+                        </svg>
+                        <div class="flex-1 text-left">
+                            <div class="font-medium text-gray-900">Music</div>
+                            <div class="text-sm text-gray-500">2.1k posts</div>
+                        </div>
+                    </button>
+                    <button class="flex items-center space-x-3 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+                        <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                        </svg>
+                        <div class="flex-1 text-left">
+                            <div class="font-medium text-gray-900">Books</div>
+                            <div class="text-sm text-gray-500">890 posts</div>
+                        </div>
+                    </button>
+                    <button class="flex items-center space-x-3 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+                        <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <div class="flex-1 text-left">
+                            <div class="font-medium text-gray-900">Gaming</div>
+                            <div class="text-sm text-gray-500">1.4k posts</div>
+                        </div>
+                    </button>
+                    <button class="flex items-center space-x-3 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+                        <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z"></path>
+                        </svg>
+                        <div class="flex-1 text-left">
+                            <div class="font-medium text-gray-900">Coffee</div>
+                            <div class="text-sm text-gray-500">967 posts</div>
+                        </div>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Content Grid -->
+            <div class="grid grid-cols-2 gap-1">
+                <!-- Content Item 1 - Reel -->
+                <div class="relative aspect-square bg-gray-200 rounded-lg overflow-hidden">
+                    <div class="w-full h-full bg-gradient-to-br from-green-400 to-blue-500 flex items-center justify-center text-white">
+                        <span class="text-sm">Morning Hike</span>
+                    </div>
+                    
+                    <!-- Content Type Indicator -->
+                    <div class="absolute top-2 right-2">
+                        <div class="bg-black bg-opacity-60 rounded-full p-1">
+                            <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M8 5v14l11-7z"/>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <!-- Trending Badge -->
+                    <div class="absolute top-2 left-2">
+                        <div class="bg-red-500 text-white text-xs px-2 py-1 rounded-full flex items-center space-x-1">
+                            <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M13.5 2c-5.621 0-10.211 4.443-10.475 10h-3.025l5 6.625 5-6.625h-2.975c.257-3.351 3.06-6 6.475-6 3.584 0 6.5 2.916 6.5 6.5s-2.916 6.5-6.5 6.5c-1.863 0-3.542-.793-4.728-2.053l-2.427 3.216c1.877 1.754 4.389 2.837 7.155 2.837 5.79 0 10.5-4.71 10.5-10.5s-4.71-10.5-10.5-10.5z"/>
+                            </svg>
+                            <span>Trending</span>
+                        </div>
+                    </div>
+
+                    <!-- Stats Overlay -->
+                    <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-3">
+                        <div class="flex items-center justify-between text-white text-sm">
+                            <div class="flex items-center space-x-3">
+                                <div class="flex items-center space-x-1">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                                    </svg>
+                                    <span>3.2k</span>
+                                </div>
+                                <div class="flex items-center space-x-1">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                                    </svg>
+                                    <span>156</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-1">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                </svg>
+                                <span>45.2k</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Duration for Reels -->
+                    <div class="absolute bottom-3 right-3 bg-black bg-opacity-60 text-white text-xs px-2 py-1 rounded">
+                        0:24
+                    </div>
+                </div>
+
+                <!-- Content Item 2 - Post -->
+                <div class="relative aspect-square bg-gray-200 rounded-lg overflow-hidden">
+                    <div class="w-full h-full bg-gradient-to-br from-red-400 to-pink-500 flex items-center justify-center text-white">
+                        <span class="text-sm">Pasta Night</span>
+                    </div>
+                    
+                    <!-- Content Type Indicator -->
+                    <div class="absolute top-2 right-2">
+                        <div class="bg-black bg-opacity-60 rounded-full p-1">
+                            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <!-- Stats Overlay -->
+                    <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-3">
+                        <div class="flex items-center justify-between text-white text-sm">
+                            <div class="flex items-center space-x-3">
+                                <div class="flex items-center space-x-1">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                                    </svg>
+                                    <span>1.9k</span>
+                                </div>
+                                <div class="flex items-center space-x-1">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                                    </svg>
+                                    <span>234</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Content Item 3 - Reel -->
+                <div class="relative aspect-square bg-gray-200 rounded-lg overflow-hidden">
+                    <div class="w-full h-full bg-gradient-to-br from-purple-400 to-pink-500 flex items-center justify-center text-white">
+                        <span class="text-sm">Workout</span>
+                    </div>
+                    
+                    <!-- Content Type Indicator -->
+                    <div class="absolute top-2 right-2">
+                        <div class="bg-black bg-opacity-60 rounded-full p-1">
+                            <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M8 5v14l11-7z"/>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <!-- Trending Badge -->
+                    <div class="absolute top-2 left-2">
+                        <div class="bg-red-500 text-white text-xs px-2 py-1 rounded-full flex items-center space-x-1">
+                            <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M13.5 2c-5.621 0-10.211 4.443-10.475 10h-3.025l5 6.625 5-6.625h-2.975c.257-3.351 3.06-6 6.475-6 3.584 0 6.5 2.916 6.5 6.5s-2.916 6.5-6.5 6.5c-1.863 0-3.542-.793-4.728-2.053l-2.427 3.216c1.877 1.754 4.389 2.837 7.155 2.837 5.79 0 10.5-4.71 10.5-10.5s-4.71-10.5-10.5-10.5z"/>
+                            </svg>
+                            <span>Trending</span>
+                        </div>
+                    </div>
+
+                    <!-- Stats Overlay -->
+                    <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-3">
+                        <div class="flex items-center justify-between text-white text-sm">
+                            <div class="flex items-center space-x-3">
+                                <div class="flex items-center space-x-1">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                                    </svg>
+                                    <span>5.6k</span>
+                                </div>
+                                <div class="flex items-center space-x-1">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                                    </svg>
+                                    <span>289</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-1">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                </svg>
+                                <span>78.9k</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Duration for Reels -->
+                    <div class="absolute bottom-3 right-3 bg-black bg-opacity-60 text-white text-xs px-2 py-1 rounded">
+                        0:45
+                    </div>
+                </div>
+
+                <!-- Content Item 4 - Post -->
+                <div class="relative aspect-square bg-gray-200 rounded-lg overflow-hidden">
+                    <div class="w-full h-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-white">
+                        <span class="text-sm">Art Work</span>
+                    </div>
+                    
+                    <!-- Content Type Indicator -->
+                    <div class="absolute top-2 right-2">
+                        <div class="bg-black bg-opacity-60 rounded-full p-1">
+                            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <!-- Stats Overlay -->
+                    <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-3">
+                        <div class="flex items-center justify-between text-white text-sm">
+                            <div class="flex items-center space-x-3">
+                                <div class="flex items-center space-x-1">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                                    </svg>
+                                    <span>967</span>
+                                </div>
+                                <div class="flex items-center space-x-1">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                                    </svg>
+                                    <span>78</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Floating Action Button -->
+        <div class="fixed bottom-20 right-6">
+            <button class="bg-gradient-to-r from-pink-500 to-purple-600 text-white p-4 rounded-full shadow-lg hover:shadow-xl transition-all">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        function toggleFilters() {
+            const panel = document.getElementById('filters-panel');
+            panel.classList.toggle('hidden');
+        }
+
+        function setActiveCategory(button, category) {
+            // Remove active class from all buttons
+            const buttons = document.querySelectorAll('button[onclick^="setActiveCategory"]');
+            buttons.forEach(btn => {
+                btn.className = 'flex items-center space-x-2 px-4 py-2 rounded-full whitespace-nowrap text-gray-600 hover:bg-gray-100';
+                const icon = btn.querySelector('svg');
+                icon.className = icon.className.replace(/text-\w+-\d+/, 'text-gray-500');
+            });
+            
+            // Add active class to clicked button
+            button.className = 'flex items-center space-x-2 px-4 py-2 rounded-full whitespace-nowrap bg-pink-100 text-pink-600';
+            
+            // Update icon color based on category
+            const icon = button.querySelector('svg');
+            switch(category) {
+                case 'trending':
+                    icon.className = icon.className.replace(/text-\w+-\d+/, 'text-red-500');
+                    break;
+                case 'nearby':
+                    icon.className = icon.className.replace(/text-\w+-\d+/, 'text-blue-500');
+                    break;
+                case 'popular':
+                    icon.className = icon.className.replace(/text-\w+-\d+/, 'text-orange-500');
+                    break;
+                case 'recent':
+                    icon.className = icon.className.replace(/text-\w+-\d+/, 'text-green-500');
+                    break;
+                case 'featured':
+                    icon.className = icon.className.replace(/text-\w+-\d+/, 'text-yellow-500');
+                    break;
+            }
+        }
+    </script>
+</body>
+</html>
+
