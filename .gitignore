@@ -326,3 +326,19 @@ cache/
 sessions/
 temp-files/
 
+
+# Python virtual environments
+venv/
+env/
+ENV/
+.venv/
+.env/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+pip-log.txt
+pip-delete-this-directory.txt
+.pytest_cache/
+

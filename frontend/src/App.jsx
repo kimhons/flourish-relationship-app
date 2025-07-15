@@ -44,7 +44,7 @@ const AdminDashboard = React.lazy(() => import('./pages/admin/AdminDashboard'))
 // Context Providers
 import { AuthProvider, useAuth } from './contexts/AuthContext'
 import { ThemeProvider } from './contexts/ThemeContext'
-import { NotificationProvider } from './contexts/NotificationProvider'
+import { NotificationProvider } from './contexts/NotificationContext'
 
 // Hooks
 import { useLocalStorage } from './hooks/useLocalStorage'
