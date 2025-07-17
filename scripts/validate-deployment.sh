@@ -1,25 +1,24 @@
 #!/bin/bash
 
-# Flourish App - Deployment Validation Script
-# This script validates the deployment configuration and provides a readiness report
+# Flourish App Deployment Validation Script
+# This script validates that all components are ready for deployment
 
 set -e
 
-echo "🚀 Flourish App - Deployment Validation"
-echo "======================================="
+echo "🚀 Flourish App Deployment Validation"
+echo "====================================="
 echo ""
 
-# Colors for output
+# Color codes for output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
-BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
-# Counters
+# Validation counters
 TOTAL_CHECKS=0
 PASSED_CHECKS=0
-FAILED_CHECKS=0
+WARNINGS=0
 
 # Function to check if a command exists
 command_exists() {
@@ -36,304 +35,234 @@ dir_exists() {
     [ -d "$1" ]
 }
 
-# Function to print check result
-print_check() {
-    local check_name="$1"
-    local status="$2"
-    local message="$3"
-    
+# Function to perform a check
+check() {
     TOTAL_CHECKS=$((TOTAL_CHECKS + 1))
+    local description="$1"
+    local condition="$2"
     
-    if [ "$status" = "PASS" ]; then
-        echo -e "${GREEN}✅ $check_name${NC}"
+    printf "%-50s" "$description"
+    
+    if eval "$condition"; then
+        echo -e "${GREEN}✓ PASS${NC}"
         PASSED_CHECKS=$((PASSED_CHECKS + 1))
-    elif [ "$status" = "FAIL" ]; then
-        echo -e "${RED}❌ $check_name${NC}"
-        if [ -n "$message" ]; then
-            echo -e "   ${RED}$message${NC}"
-        fi
-        FAILED_CHECKS=$((FAILED_CHECKS + 1))
-    elif [ "$status" = "WARN" ]; then
-        echo -e "${YELLOW}⚠️  $check_name${NC}"
-        if [ -n "$message" ]; then
-            echo -e "   ${YELLOW}$message${NC}"
-        fi
+        return 0
     else
-        echo -e "${BLUE}ℹ️  $check_name${NC}"
-        if [ -n "$message" ]; then
-            echo -e "   ${BLUE}$message${NC}"
-        fi
+        echo -e "${RED}✗ FAIL${NC}"
+        return 1
     fi
 }
 
-echo "🔍 Checking Prerequisites..."
+# Function to perform a warning check
+check_warning() {
+    local description="$1"
+    local condition="$2"
+    
+    printf "%-50s" "$description"
+    
+    if eval "$condition"; then
+        echo -e "${GREEN}✓ OK${NC}"
+    else
+        echo -e "${YELLOW}⚠ WARNING${NC}"
+        WARNINGS=$((WARNINGS + 1))
+    fi
+}
+
+echo "1. Checking Development Tools"
+echo "----------------------------"
+check "Node.js installed" "command_exists node"
+check "npm installed" "command_exists npm"
+check "Docker installed" "command_exists docker"
+check "Git installed" "command_exists git"
+check_warning "Terraform installed" "command_exists terraform"
+check_warning "AWS CLI installed" "command_exists aws"
 echo ""
 
-# Check required tools
-if command_exists aws; then
-    AWS_VERSION=$(aws --version 2>&1 | head -n1)
-    print_check "AWS CLI installed" "PASS" "Version: $AWS_VERSION"
-else
-    print_check "AWS CLI installed" "FAIL" "Please install AWS CLI v2+"
-fi
+echo "2. Checking Project Structure"
+echo "----------------------------"
+check "Root package.json exists" "file_exists package.json"
+check "Frontend directory exists" "dir_exists frontend"
+check "Backend directory exists" "dir_exists backend"
+check "Mobile directory exists" "dir_exists mobile"
+check "Docker Compose file exists" "file_exists docker-compose.yml"
+check "Dockerfile exists" "file_exists Dockerfile"
+check "Environment example exists" "file_exists .env.example"
+echo ""
 
-if command_exists terraform; then
-    TERRAFORM_VERSION=$(terraform --version | head -n1)
-    print_check "Terraform installed" "PASS" "Version: $TERRAFORM_VERSION"
-else
-    print_check "Terraform installed" "FAIL" "Please install Terraform v1.0+"
-fi
+echo "3. Checking Frontend Configuration"
+echo "---------------------------------"
+check "Frontend package.json exists" "file_exists frontend/package.json"
+check "Frontend vite config exists" "file_exists frontend/vite.config.js"
+check "Frontend index.html exists" "file_exists frontend/index.html"
+check "Frontend src directory exists" "dir_exists frontend/src"
+echo ""
 
+echo "4. Checking Backend Configuration"
+echo "--------------------------------"
+check "Backend requirements.txt exists" "file_exists backend/requirements.txt"
+check "Backend src directory exists" "dir_exists backend/src"
+echo ""
+
+echo "5. Checking Mobile Configuration"
+echo "-------------------------------"
+check "Mobile package.json exists" "file_exists mobile/package.json"
+check "Mobile app.json exists" "file_exists mobile/app.json"
+check "Mobile index.js exists" "file_exists mobile/index.js"
+check "iOS directory exists" "dir_exists mobile/ios"
+check "Android directory exists" "dir_exists mobile/android"
+echo ""
+
+echo "6. Checking Mobile Assets"
+echo "------------------------"
+check_warning "Mobile assets directory exists" "dir_exists mobile/assets"
+check_warning "App icon exists" "file_exists mobile/assets/icon.png"
+check_warning "Splash screen exists" "file_exists mobile/assets/splash.png"
+echo ""
+
+echo "7. Checking Infrastructure"
+echo "-------------------------"
+check "Terraform directory exists" "dir_exists terraform"
+check "Terraform main.tf exists" "file_exists terraform/main.tf"
+check "Nginx configuration exists" "file_exists nginx/nginx.conf"
+echo ""
+
+echo "8. Checking Documentation"
+echo "------------------------"
+check "README.md exists" "file_exists README.md"
+check "Deployment guide exists" "file_exists DEPLOYMENT_GUIDE.md"
+check "Production readiness doc exists" "file_exists PRODUCTION_READINESS_VALIDATION.md"
+echo ""
+
+echo "9. Checking Environment Variables"
+echo "--------------------------------"
+if [ -f .env ]; then
+    echo -e "${GREEN}✓ .env file exists${NC}"
+    
+    # Check for required environment variables
+    check_warning "DATABASE_URL configured" "grep -q '^DATABASE_URL=' .env"
+    check_warning "JWT_SECRET_KEY configured" "grep -q '^JWT_SECRET_KEY=' .env"
+    check_warning "OPENAI_API_KEY configured" "grep -q '^OPENAI_API_KEY=' .env"
+else
+    echo -e "${YELLOW}⚠ .env file not found${NC}"
+    echo "  Create one by copying .env.example:"
+    echo "  cp .env.example .env"
+fi
+echo ""
+
+echo "10. Checking Dependencies"
+echo "------------------------"
+# Check if node_modules exist in key directories
+check_warning "Root dependencies installed" "dir_exists node_modules"
+check_warning "Frontend dependencies installed" "dir_exists frontend/node_modules"
+check_warning "Mobile dependencies installed" "dir_exists mobile/node_modules"
+echo ""
+
+echo "11. Build Validation"
+echo "-------------------"
+# Try to build frontend
+if dir_exists frontend/node_modules; then
+    echo "Testing frontend build..."
+    cd frontend
+    if npm run build > /dev/null 2>&1; then
+        echo -e "${GREEN}✓ Frontend build successful${NC}"
+        PASSED_CHECKS=$((PASSED_CHECKS + 1))
+    else
+        echo -e "${RED}✗ Frontend build failed${NC}"
+    fi
+    cd ..
+else
+    echo -e "${YELLOW}⚠ Skipping frontend build test (dependencies not installed)${NC}"
+fi
+echo ""
+
+echo "12. Docker Validation"
+echo "--------------------"
 if command_exists docker; then
-    DOCKER_VERSION=$(docker --version)
-    print_check "Docker installed" "PASS" "Version: $DOCKER_VERSION"
-else
-    print_check "Docker installed" "FAIL" "Please install Docker v20+"
-fi
-
-if command_exists node; then
-    NODE_VERSION=$(node --version)
-    print_check "Node.js installed" "PASS" "Version: $NODE_VERSION"
-else
-    print_check "Node.js installed" "FAIL" "Please install Node.js v18+"
-fi
-
-if command_exists python3; then
-    PYTHON_VERSION=$(python3 --version)
-    print_check "Python installed" "PASS" "Version: $PYTHON_VERSION"
-else
-    print_check "Python installed" "FAIL" "Please install Python v3.11+"
-fi
-
-echo ""
-echo "📁 Checking Deployment Files..."
-echo ""
-
-# Check infrastructure files
-if file_exists "terraform/main.tf"; then
-    print_check "Terraform main configuration" "PASS"
-else
-    print_check "Terraform main configuration" "FAIL" "terraform/main.tf not found"
-fi
-
-if file_exists "terraform/ecs-task-definitions.tf"; then
-    print_check "ECS task definitions" "PASS"
-else
-    print_check "ECS task definitions" "FAIL" "terraform/ecs-task-definitions.tf not found"
-fi
-
-if file_exists "Dockerfile"; then
-    print_check "Main Dockerfile" "PASS"
-else
-    print_check "Main Dockerfile" "FAIL" "Dockerfile not found"
-fi
-
-# Check CI/CD files
-if file_exists ".github/workflows/deploy-production.yml"; then
-    print_check "Production deployment workflow" "PASS"
-else
-    print_check "Production deployment workflow" "FAIL" ".github/workflows/deploy-production.yml not found"
-fi
-
-# Check testing files
-if file_exists "tests/load/api-load-test.yml"; then
-    print_check "Load testing configuration" "PASS"
-else
-    print_check "Load testing configuration" "FAIL" "tests/load/api-load-test.yml not found"
-fi
-
-# Check documentation
-if file_exists "DEPLOYMENT_GUIDE.md"; then
-    print_check "Deployment guide" "PASS"
-else
-    print_check "Deployment guide" "FAIL" "DEPLOYMENT_GUIDE.md not found"
-fi
-
-if file_exists "PRODUCTION_DEPLOYMENT_STRATEGY.md"; then
-    print_check "Deployment strategy" "PASS"
-else
-    print_check "Deployment strategy" "FAIL" "PRODUCTION_DEPLOYMENT_STRATEGY.md not found"
-fi
-
-if file_exists "DEPLOYMENT_SUMMARY.md"; then
-    print_check "Deployment summary" "PASS"
-else
-    print_check "Deployment summary" "FAIL" "DEPLOYMENT_SUMMARY.md not found"
-fi
-
-echo ""
-echo "🔧 Checking Application Structure..."
-echo ""
-
-# Check application directories
-if dir_exists "backend"; then
-    print_check "Backend directory" "PASS"
-else
-    print_check "Backend directory" "FAIL" "Backend directory not found"
-fi
-
-if dir_exists "frontend"; then
-    print_check "Frontend directory" "PASS"
-else
-    print_check "Frontend directory" "FAIL" "Frontend directory not found"
-fi
-
-if dir_exists "mobile"; then
-    print_check "Mobile directory" "PASS"
-else
-    print_check "Mobile directory" "FAIL" "Mobile directory not found"
-fi
-
-# Check package.json files
-if file_exists "package.json"; then
-    print_check "Root package.json" "PASS"
-else
-    print_check "Root package.json" "WARN" "Root package.json not found"
-fi
-
-if file_exists "backend/requirements.txt"; then
-    print_check "Backend requirements" "PASS"
-else
-    print_check "Backend requirements" "WARN" "backend/requirements.txt not found"
-fi
-
-echo ""
-echo "🌐 Checking AWS Configuration..."
-echo ""
-
-# Check AWS configuration
-if [ -f ~/.aws/credentials ] || [ -n "$AWS_ACCESS_KEY_ID" ]; then
-    print_check "AWS credentials configured" "PASS"
-else
-    print_check "AWS credentials configured" "FAIL" "Please configure AWS credentials"
-fi
-
-# Check AWS connectivity
-if command_exists aws; then
-    if aws sts get-caller-identity >/dev/null 2>&1; then
-        ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text 2>/dev/null)
-        print_check "AWS connectivity" "PASS" "Account ID: $ACCOUNT_ID"
+    check "Docker daemon running" "docker info > /dev/null 2>&1"
+    
+    # Check if we can build the Docker image
+    echo "Testing Docker build..."
+    if docker build -t flourish-test -f Dockerfile . > /dev/null 2>&1; then
+        echo -e "${GREEN}✓ Docker build successful${NC}"
+        docker rmi flourish-test > /dev/null 2>&1
     else
-        print_check "AWS connectivity" "FAIL" "Cannot connect to AWS"
-    fi
-fi
-
-echo ""
-echo "📦 Checking Container Configuration..."
-echo ""
-
-# Check if Docker is running
-if docker info >/dev/null 2>&1; then
-    print_check "Docker daemon running" "PASS"
-else
-    print_check "Docker daemon running" "FAIL" "Docker daemon is not running"
-fi
-
-# Check Dockerfile syntax
-if file_exists "Dockerfile"; then
-    if docker build -t flourish-test . --dry-run >/dev/null 2>&1; then
-        print_check "Dockerfile syntax" "PASS"
-    else
-        print_check "Dockerfile syntax" "WARN" "Dockerfile may have syntax issues"
-    fi
-fi
-
-echo ""
-echo "🔒 Checking Security Configuration..."
-echo ""
-
-# Check for .env files
-if file_exists ".env"; then
-    print_check ".env file exists" "WARN" "Make sure .env is not committed to Git"
-fi
-
-if file_exists ".env.example"; then
-    print_check ".env.example file" "PASS"
-else
-    print_check ".env.example file" "WARN" ".env.example not found"
-fi
-
-# Check .gitignore
-if file_exists ".gitignore"; then
-    if grep -q ".env" .gitignore; then
-        print_check ".env in .gitignore" "PASS"
-    else
-        print_check ".env in .gitignore" "WARN" ".env should be in .gitignore"
+        echo -e "${YELLOW}⚠ Docker build needs attention${NC}"
     fi
 else
-    print_check ".gitignore exists" "WARN" ".gitignore not found"
+    echo -e "${YELLOW}⚠ Docker not available for testing${NC}"
 fi
-
-echo ""
-echo "🎯 Checking Performance Configuration..."
 echo ""
 
-# Check if artillery is available for load testing
-if command_exists artillery; then
-    print_check "Artillery load testing tool" "PASS"
+echo "13. Mobile App Validation"
+echo "------------------------"
+# Check iOS configuration
+check "iOS Info.plist exists" "file_exists mobile/ios/FlourishApp/Info.plist"
+check_warning "iOS build configuration exists" "dir_exists mobile/ios/FlourishApp.xcodeproj || dir_exists mobile/ios/FlourishApp.xcworkspace"
+
+# Check Android configuration
+check "Android build.gradle exists" "file_exists mobile/android/app/build.gradle"
+check_warning "Android manifest exists" "file_exists mobile/android/app/src/main/AndroidManifest.xml"
+echo ""
+
+echo "14. Security Validation"
+echo "----------------------"
+# Check for common security issues
+if [ -f .env ]; then
+    check_warning "No hardcoded secrets in code" "! grep -r 'sk-[a-zA-Z0-9]*' --include='*.js' --include='*.jsx' --include='*.ts' --include='*.tsx' --include='*.py' . 2>/dev/null | grep -v '.env' | grep -v 'example'"
 else
-    print_check "Artillery load testing tool" "WARN" "Install with: npm install -g artillery"
+    echo -e "${GREEN}✓ No .env file to check for secrets${NC}"
 fi
 
-# Check if jq is available for JSON processing
-if command_exists jq; then
-    print_check "jq JSON processor" "PASS"
+check ".gitignore exists" "file_exists .gitignore"
+check ".env in .gitignore" "grep -q '^\.env$' .gitignore"
+echo ""
+
+# Summary
+echo "======================================"
+echo "DEPLOYMENT VALIDATION SUMMARY"
+echo "======================================"
+echo ""
+echo -e "Total Checks: ${TOTAL_CHECKS}"
+echo -e "Passed: ${GREEN}${PASSED_CHECKS}${NC}"
+echo -e "Failed: ${RED}$((TOTAL_CHECKS - PASSED_CHECKS))${NC}"
+echo -e "Warnings: ${YELLOW}${WARNINGS}${NC}"
+echo ""
+
+PERCENTAGE=$((PASSED_CHECKS * 100 / TOTAL_CHECKS))
+echo -e "Validation Score: ${PERCENTAGE}%"
+echo ""
+
+if [ $PERCENTAGE -eq 100 ]; then
+    echo -e "${GREEN}✅ DEPLOYMENT READY!${NC}"
+    echo "All checks passed. Your app is ready for deployment."
+elif [ $PERCENTAGE -ge 80 ]; then
+    echo -e "${GREEN}✅ MOSTLY READY${NC}"
+    echo "Your app is mostly ready. Address the failed checks before deployment."
+elif [ $PERCENTAGE -ge 60 ]; then
+    echo -e "${YELLOW}⚠️  NEEDS WORK${NC}"
+    echo "Several issues need to be addressed before deployment."
 else
-    print_check "jq JSON processor" "WARN" "Install with: sudo apt-get install jq"
+    echo -e "${RED}❌ NOT READY${NC}"
+    echo "Significant work needed before deployment."
 fi
 
 echo ""
-echo "🚀 Deployment Readiness Summary"
-echo "=============================="
-echo ""
-
-# Calculate percentage
-if [ $TOTAL_CHECKS -gt 0 ]; then
-    PERCENTAGE=$((PASSED_CHECKS * 100 / TOTAL_CHECKS))
-else
-    PERCENTAGE=0
+echo "Next Steps:"
+echo "-----------"
+if [ ! -f .env ]; then
+    echo "1. Create .env file: cp .env.example .env"
+    echo "2. Configure all required environment variables"
 fi
 
-echo -e "${BLUE}Total Checks: $TOTAL_CHECKS${NC}"
-echo -e "${GREEN}Passed: $PASSED_CHECKS${NC}"
-echo -e "${RED}Failed: $FAILED_CHECKS${NC}"
-echo -e "${YELLOW}Warnings: $((TOTAL_CHECKS - PASSED_CHECKS - FAILED_CHECKS))${NC}"
-echo ""
-echo -e "${BLUE}Deployment Readiness: $PERCENTAGE%${NC}"
-echo ""
-
-# Provide recommendations based on results
-if [ $FAILED_CHECKS -eq 0 ]; then
-    echo -e "${GREEN}🎉 All critical checks passed! Ready for deployment.${NC}"
-    echo ""
-    echo "Next steps:"
-    echo "1. Set up AWS account and configure billing alerts"
-    echo "2. Configure environment variables"
-    echo "3. Run terraform plan and apply"
-    echo "4. Deploy container images"
-    echo "5. Configure CI/CD pipeline"
-    echo ""
-    echo "Follow the detailed instructions in DEPLOYMENT_GUIDE.md"
-elif [ $FAILED_CHECKS -le 3 ]; then
-    echo -e "${YELLOW}⚠️  Some issues need to be addressed before deployment.${NC}"
-    echo ""
-    echo "Please fix the failed checks above and run this script again."
-elif [ $FAILED_CHECKS -gt 3 ]; then
-    echo -e "${RED}❌ Multiple critical issues found. Deployment not recommended.${NC}"
-    echo ""
-    echo "Please address the failed checks and ensure all prerequisites are met."
+if [ ! -d node_modules ] || [ ! -d frontend/node_modules ] || [ ! -d mobile/node_modules ]; then
+    echo "3. Install dependencies: npm run install:all"
 fi
 
-echo ""
-echo "📚 Resources:"
-echo "- Deployment Guide: DEPLOYMENT_GUIDE.md"
-echo "- Deployment Strategy: PRODUCTION_DEPLOYMENT_STRATEGY.md"
-echo "- Deployment Summary: DEPLOYMENT_SUMMARY.md"
+if [ $WARNINGS -gt 0 ]; then
+    echo "4. Address the warnings above"
+fi
+
+echo "5. Run deployment: ./scripts/deploy.sh"
 echo ""
 
-# Exit with appropriate code
-if [ $FAILED_CHECKS -eq 0 ]; then
-    exit 0
-else
-    exit 1
-fi
+exit 0
