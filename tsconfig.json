@@ -34,7 +34,7 @@
     "paths": {
       "@shared/*": ["shared/*"],
       "@mobile/*": ["mobile/src/*"],
-      "@web/*": ["web/src/*"],
+      "@web/*": ["frontend/src/*"],
       "@backend/*": ["backend/src/*"],
       "@ai/*": ["ai-services/src/*"],
       "@content/*": ["content-management/src/*"],
@@ -44,7 +44,7 @@
   "include": [
     "shared/**/*",
     "mobile/src/**/*",
-    "web/src/**/*",
+    "frontend/src/**/*",
     "backend/src/**/*",
     "ai-services/src/**/*",
     "content-management/src/**/*",
@@ -68,7 +68,7 @@
       "path": "./mobile"
     },
     {
-      "path": "./web"
+      "path": "./frontend"
     },
     {
       "path": "./backend"

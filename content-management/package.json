@@ -1,0 +1,12 @@
+{
+  "name": "content-management",
+  "private": true,
+  "version": "0.0.1",
+  "description": "Placeholder for future content management service.",
+  "scripts": {
+    "dev": "echo \"Content management service not implemented\"",
+    "build": "echo \"Content management build placeholder\"",
+    "test": "echo \"No tests yet\"",
+    "lint": "echo \"No linting configured\""
+  }
+}
