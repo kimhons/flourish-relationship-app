@@ -29,6 +29,7 @@ from .routes.ai_routes import ai_bp
 
 # Import AI services
 from .services.ai_service_manager import initialize_ai_services, cleanup_ai_services, ai_service_manager
+from .routes.enhanced_relationship_coaching import enhanced_coaching_bp, initialize_enhanced_coaching
 from .services.dr_love_coach import initialize_dr_love_coach
 from .services.ai_matching_engine import initialize_ai_matching_engine
 
@@ -105,6 +106,9 @@ def initialize_ai_services_sync(app):
         loop.run_until_complete(initialize_ai_services())
         loop.run_until_complete(initialize_dr_love_coach(ai_service_manager))
         loop.run_until_complete(initialize_ai_matching_engine(ai_service_manager))
+        
+        # Initialize enhanced relationship coaching system
+        initialize_enhanced_coaching(ai_service_manager)
         
         app.logger.info("All AI services initialized successfully")
         
@@ -247,6 +251,9 @@ def register_blueprints(app):
     
     # AI services routes
     app.register_blueprint(ai_bp)
+    
+    # Enhanced relationship coaching routes
+    app.register_blueprint(enhanced_coaching_bp)
     
     # TODO: Register additional blueprints as they are created
     # app.register_blueprint(matching_bp)
