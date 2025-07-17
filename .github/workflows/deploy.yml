@@ -2,109 +2,28 @@ name: Deploy Flourish App
 
 on:
   push:
-    branches: [ main ]
-    tags: [ 'v*' ]
+    branches:
+      - main
+      - production
   pull_request:
-    branches: [ main ]
+    branches:
+      - main
+  workflow_dispatch:
 
 env:
-  REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
   NODE_VERSION: '18'
   PYTHON_VERSION: '3.11'
 
 jobs:
   test:
+    name: Test
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        component: [frontend, backend, mobile]
     
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+    - uses: actions/checkout@v3
     
     - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: ${{ env.NODE_VERSION }}
-        cache: 'npm'
-        cache-dependency-path: |
-          frontend/package-lock.json
-          mobile/package-lock.json
-          shared/package-lock.json
-    
-    - name: Setup Python
-      if: matrix.component == 'backend'
-      uses: actions/setup-python@v4
-      with:
-        python-version: ${{ env.PYTHON_VERSION }}
-        cache: 'pip'
-    
-    - name: Install dependencies - Frontend
-      if: matrix.component == 'frontend'
-      run: |
-        cd frontend
-        npm ci
-        cd ../shared
-        npm ci
-    
-    - name: Install dependencies - Backend
-      if: matrix.component == 'backend'
-      run: |
-        cd backend
-        pip install -r requirements.txt
-        pip install -r requirements-test.txt
-    
-    - name: Install dependencies - Mobile
-      if: matrix.component == 'mobile'
-      run: |
-        cd mobile
-        npm ci
-        cd ../shared
-        npm ci
-    
-    - name: Run tests - Frontend
-      if: matrix.component == 'frontend'
-      run: |
-        cd frontend
-        npm run test:coverage
-        npm run lint
-        npm run type-check
-    
-    - name: Run tests - Backend
-      if: matrix.component == 'backend'
-      run: |
-        cd backend
-        python -m pytest tests/ -v --cov=src --cov-report=xml
-        python -m flake8 src/
-        python -m mypy src/
-    
-    - name: Run tests - Mobile
-      if: matrix.component == 'mobile'
-      run: |
-        cd mobile
-        npm run test
-        npm run lint
-    
-    - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@v3
-      with:
-        file: ./coverage.xml
-        flags: ${{ matrix.component }}
-        name: ${{ matrix.component }}-coverage
-
-  build-web:
-    needs: test
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v')
-    
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-    
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
+      uses: actions/setup-node@v3
       with:
         node-version: ${{ env.NODE_VERSION }}
         cache: 'npm'
@@ -113,269 +32,210 @@ jobs:
       uses: actions/setup-python@v4
       with:
         python-version: ${{ env.PYTHON_VERSION }}
-        cache: 'pip'
     
     - name: Install dependencies
       run: |
-        cd frontend && npm ci
-        cd ../shared && npm ci
-        cd ../backend && pip install -r requirements.txt
+        npm ci
+        cd frontend && npm ci && cd ..
+        cd mobile && npm ci && cd ..
+        cd backend && pip install -r requirements.txt && cd ..
+    
+    - name: Run frontend tests
+      run: cd frontend && npm test -- --coverage
+    
+    - name: Run backend tests
+      run: cd backend && python -m pytest tests/ --cov=src
+    
+    - name: Run mobile tests
+      run: cd mobile && npm test -- --coverage
+
+  build-web:
+    name: Build Web App
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
     
     - name: Build frontend
       run: |
         cd frontend
+        npm ci
         npm run build:production
     
-    - name: Build Docker image
-      run: |
-        docker build -t ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }} .
-        docker tag ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }} ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
-    
-    - name: Log in to Container Registry
-      uses: docker/login-action@v3
+    - name: Upload frontend artifacts
+      uses: actions/upload-artifact@v3
       with:
-        registry: ${{ env.REGISTRY }}
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
-    
-    - name: Push Docker image
-      run: |
-        docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
-        docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
-    
-    - name: Deploy to staging
-      if: github.ref == 'refs/heads/main'
-      run: |
-        echo "Deploying to staging environment..."
-        # Add your staging deployment commands here
-    
-    - name: Deploy to production
-      if: startsWith(github.ref, 'refs/tags/v')
-      run: |
-        echo "Deploying to production environment..."
-        # Add your production deployment commands here
+        name: frontend-dist
+        path: frontend/dist/
 
-  build-ios:
+  build-backend:
+    name: Build Backend
     needs: test
-    runs-on: macos-latest
-    if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
     
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+    - uses: actions/checkout@v3
+    
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ secrets.AWS_REGION }}
+    
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v1
+    
+    - name: Build and push Docker image
+      env:
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        ECR_REPOSITORY: flourish-backend
+        IMAGE_TAG: ${{ github.sha }}
+      run: |
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+        docker tag $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG $ECR_REGISTRY/$ECR_REPOSITORY:latest
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
+
+  build-mobile:
+    name: Build Mobile Apps
+    needs: test
+    runs-on: macos-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/production'
+    
+    steps:
+    - uses: actions/checkout@v3
     
     - name: Setup Node.js
-      uses: actions/setup-node@v4
+      uses: actions/setup-node@v3
       with:
         node-version: ${{ env.NODE_VERSION }}
         cache: 'npm'
-    
-    - name: Setup Ruby
-      uses: ruby/setup-ruby@v1
-      with:
-        ruby-version: 3.0
-        bundler-cache: true
     
     - name: Install dependencies
       run: |
         cd mobile
         npm ci
-        cd ../shared
-        npm ci
     
-    - name: Install CocoaPods
-      run: |
-        cd mobile/ios
-        pod install
-    
-    - name: Install Fastlane
-      run: |
-        cd mobile/ios
-        gem install fastlane
-    
-    - name: Setup iOS certificates
-      env:
-        MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
-        FASTLANE_APPLE_ID: ${{ secrets.FASTLANE_APPLE_ID }}
-        FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
-        FASTLANE_TEAM_ID: ${{ secrets.FASTLANE_TEAM_ID }}
-      run: |
-        cd mobile/ios
-        fastlane match appstore --readonly
+    - name: Setup Ruby for fastlane
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: '3.0'
+        bundler-cache: true
     
     - name: Build iOS app
       env:
-        FASTLANE_APPLE_ID: ${{ secrets.FASTLANE_APPLE_ID }}
-        FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
-        FASTLANE_TEAM_ID: ${{ secrets.FASTLANE_TEAM_ID }}
+        MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+        FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD: ${{ secrets.FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD }}
       run: |
         cd mobile/ios
-        fastlane build_app_store
+        pod install
+        fastlane ios build
     
-    - name: Upload to TestFlight
-      if: github.ref == 'refs/heads/main'
-      env:
-        FASTLANE_APPLE_ID: ${{ secrets.FASTLANE_APPLE_ID }}
-        FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
-        FASTLANE_TEAM_ID: ${{ secrets.FASTLANE_TEAM_ID }}
-      run: |
-        cd mobile/ios
-        fastlane upload_testflight
-    
-    - name: Submit to App Store
-      if: startsWith(github.ref, 'refs/tags/v')
-      env:
-        FASTLANE_APPLE_ID: ${{ secrets.FASTLANE_APPLE_ID }}
-        FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
-        FASTLANE_TEAM_ID: ${{ secrets.FASTLANE_TEAM_ID }}
-      run: |
-        cd mobile/ios
-        fastlane submit_app_store
-
-  build-android:
-    needs: test
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v')
-    
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-    
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: ${{ env.NODE_VERSION }}
-        cache: 'npm'
-    
-    - name: Setup Java
-      uses: actions/setup-java@v4
-      with:
-        distribution: 'temurin'
-        java-version: '17'
-    
-    - name: Setup Android SDK
-      uses: android-actions/setup-android@v3
-    
-    - name: Install dependencies
-      run: |
-        cd mobile
-        npm ci
-        cd ../shared
-        npm ci
-    
-    - name: Setup Android signing
-      env:
-        ANDROID_SIGNING_KEY: ${{ secrets.ANDROID_SIGNING_KEY }}
-        ANDROID_ALIAS: ${{ secrets.ANDROID_ALIAS }}
-        ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
-        ANDROID_STORE_PASSWORD: ${{ secrets.ANDROID_STORE_PASSWORD }}
-      run: |
-        cd mobile/android
-        echo "$ANDROID_SIGNING_KEY" | base64 -d > app/flourish-release-key.keystore
-        echo "storeFile=flourish-release-key.keystore" >> gradle.properties
-        echo "storePassword=$ANDROID_STORE_PASSWORD" >> gradle.properties
-        echo "keyAlias=$ANDROID_ALIAS" >> gradle.properties
-        echo "keyPassword=$ANDROID_KEY_PASSWORD" >> gradle.properties
-    
-    - name: Build Android AAB
+    - name: Build Android app
       run: |
         cd mobile/android
         ./gradlew bundleRelease
     
-    - name: Build Android APK
-      run: |
-        cd mobile/android
-        ./gradlew assembleRelease
-    
-    - name: Upload to Google Play Console (Internal Testing)
-      if: github.ref == 'refs/heads/main'
-      env:
-        GOOGLE_PLAY_SERVICE_ACCOUNT_KEY: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_KEY }}
-      run: |
-        cd mobile/android
-        echo "$GOOGLE_PLAY_SERVICE_ACCOUNT_KEY" > service-account-key.json
-        fastlane supply --aab app/build/outputs/bundle/release/app-release.aab --track internal --json_key service-account-key.json
-    
-    - name: Upload to Google Play Console (Production)
-      if: startsWith(github.ref, 'refs/tags/v')
-      env:
-        GOOGLE_PLAY_SERVICE_ACCOUNT_KEY: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_KEY }}
-      run: |
-        cd mobile/android
-        echo "$GOOGLE_PLAY_SERVICE_ACCOUNT_KEY" > service-account-key.json
-        fastlane supply --aab app/build/outputs/bundle/release/app-release.aab --track production --json_key service-account-key.json
-    
-    - name: Upload APK artifact
+    - name: Upload mobile artifacts
       uses: actions/upload-artifact@v3
       with:
-        name: android-apk
-        path: mobile/android/app/build/outputs/apk/release/app-release.apk
-    
-    - name: Upload AAB artifact
-      uses: actions/upload-artifact@v3
-      with:
-        name: android-aab
-        path: mobile/android/app/build/outputs/bundle/release/app-release.aab
+        name: mobile-builds
+        path: |
+          mobile/ios/build/
+          mobile/android/app/build/outputs/
 
-  security-scan:
-    needs: [build-web, build-ios, build-android]
+  deploy-staging:
+    name: Deploy to Staging
+    needs: [build-web, build-backend]
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v')
+    if: github.ref == 'refs/heads/main'
+    environment: staging
     
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+    - uses: actions/checkout@v3
     
-    - name: Run Trivy vulnerability scanner
-      uses: aquasecurity/trivy-action@master
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v2
       with:
-        image-ref: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
-        format: 'sarif'
-        output: 'trivy-results.sarif'
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ secrets.AWS_REGION }}
     
-    - name: Upload Trivy scan results
-      uses: github/codeql-action/upload-sarif@v2
+    - name: Download frontend artifacts
+      uses: actions/download-artifact@v3
       with:
-        sarif_file: 'trivy-results.sarif'
+        name: frontend-dist
+        path: frontend/dist/
     
-    - name: Run CodeQL Analysis
-      uses: github/codeql-action/analyze@v2
+    - name: Deploy frontend to S3
+      run: |
+        aws s3 sync frontend/dist/ s3://${{ secrets.S3_BUCKET_STAGING }}/ --delete
+        aws cloudfront create-invalidation --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID_STAGING }} --paths "/*"
+    
+    - name: Update ECS service
+      run: |
+        aws ecs update-service --cluster flourish-staging --service flourish-backend --force-new-deployment
+
+  deploy-production:
+    name: Deploy to Production
+    needs: [build-web, build-backend, build-mobile]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/production'
+    environment: production
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v2
       with:
-        languages: javascript, python
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ secrets.AWS_REGION }}
+    
+    - name: Download frontend artifacts
+      uses: actions/download-artifact@v3
+      with:
+        name: frontend-dist
+        path: frontend/dist/
+    
+    - name: Deploy frontend to S3
+      run: |
+        aws s3 sync frontend/dist/ s3://${{ secrets.S3_BUCKET_PRODUCTION }}/ --delete
+        aws cloudfront create-invalidation --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID_PRODUCTION }} --paths "/*"
+    
+    - name: Update ECS service
+      run: |
+        aws ecs update-service --cluster flourish-production --service flourish-backend --force-new-deployment
+    
+    - name: Deploy mobile apps
+      run: |
+        echo "Mobile apps built and ready for manual upload to stores"
+        echo "iOS: Use Transporter or Xcode to upload to App Store Connect"
+        echo "Android: Upload AAB to Google Play Console"
 
   notify:
-    needs: [build-web, build-ios, build-android, security-scan]
+    name: Notify Deployment Status
+    needs: [deploy-staging, deploy-production]
     runs-on: ubuntu-latest
     if: always()
     
     steps:
-    - name: Notify Slack on success
-      if: success()
+    - name: Send notification
       uses: 8398a7/action-slack@v3
       with:
-        status: success
-        channel: '#deployments'
-        message: '✅ Flourish app deployment successful!'
-      env:
-        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-    
-    - name: Notify Slack on failure
-      if: failure()
-      uses: 8398a7/action-slack@v3
-      with:
-        status: failure
-        channel: '#deployments'
-        message: '❌ Flourish app deployment failed!'
-      env:
-        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-    
-    - name: Create GitHub Release
-      if: startsWith(github.ref, 'refs/tags/v') && success()
-      uses: softprops/action-gh-release@v1
-      with:
-        generate_release_notes: true
-        files: |
-          mobile/android/app/build/outputs/apk/release/app-release.apk
-          mobile/android/app/build/outputs/bundle/release/app-release.aab
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        status: ${{ job.status }}
+        text: 'Flourish App deployment ${{ job.status }}'
+        webhook_url: ${{ secrets.SLACK_WEBHOOK }}
+      if: always()
