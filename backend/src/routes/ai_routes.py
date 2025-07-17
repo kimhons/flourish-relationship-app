@@ -1,6 +1,6 @@
 """
 Flourish App: AI Service Routes
-API endpoints for all AI-powered features
+API endpoints for all AI-powered features with enhanced security
 """
 
 from flask import Blueprint, request, jsonify, current_app
@@ -16,6 +16,7 @@ from ..services.ai_matching_engine import get_ai_matching_engine
 from ..models.user import User
 from ..models.coaching import CoachingSession as DBCoachingSession
 from ..models.match import Match, CompatibilityScore as DBCompatibilityScore
+from ..middleware.prompt_security import validate_prompt_request, validate_ai_response
 
 logger = logging.getLogger(__name__)
 
@@ -546,6 +547,103 @@ def get_model_performance():
         return jsonify({
             "status": "error",
             "message": "Failed to get performance data",
+            "error": str(e)
+        }), 500
+
+@ai_bp.route('/chat', methods=['POST'])
+@jwt_required()
+@validate_prompt_request
+@validate_ai_response
+def ai_chat():
+    """General AI chat endpoint with security validation"""
+    try:
+        user_id = get_jwt_identity()
+        data = request.get_json()
+        
+        message = data.get('message', '')
+        service_type = data.get('service_type', 'general')
+        context = data.get('context', {})
+        
+        if not message:
+            return jsonify({
+                "status": "error",
+                "message": "Message is required"
+            }), 400
+        
+        # Create AI request
+        ai_request = AIRequest(
+            task_type="chat",
+            content=message,
+            user_id=str(user_id),
+            context=context,
+            priority="normal"
+        )
+        
+        # Process request
+        response = run_async(ai_service_manager.process_request(ai_request))
+        
+        return jsonify({
+            "status": "success",
+            "data": {
+                "response": response.content,
+                "metadata": {
+                    "model_used": response.model_used,
+                    "confidence_score": response.confidence_score,
+                    "processing_time": response.processing_time
+                }
+            }
+        }), 200
+        
+    except Exception as e:
+        logger.error(f"AI chat error: {e}")
+        return jsonify({
+            "status": "error",
+            "message": "Failed to process chat message",
+            "error": str(e)
+        }), 500
+
+@ai_bp.route('/dr-love/message', methods=['POST'])
+@jwt_required()
+@validate_prompt_request
+@validate_ai_response
+def send_dr_love_message():
+    """Send message to Dr. Love with security validation"""
+    try:
+        user_id = get_jwt_identity()
+        data = request.get_json()
+        
+        session_id = data.get('session_id')
+        message = data.get('message', '')
+        
+        if not session_id or not message:
+            return jsonify({
+                "status": "error",
+                "message": "Session ID and message are required"
+            }), 400
+        
+        # Get Dr. Love coach
+        dr_love = get_dr_love_coach()
+        
+        # Process message
+        response = run_async(dr_love.process_message(session_id, message))
+        
+        # Store in database
+        db_session = DBCoachingSession.query.filter_by(session_id=session_id).first()
+        if db_session:
+            db_session.last_message_at = datetime.utcnow()
+            db_session.message_count += 1
+            current_app.extensions['db'].session.commit()
+        
+        return jsonify({
+            "status": "success",
+            "data": response
+        }), 200
+        
+    except Exception as e:
+        logger.error(f"Dr. Love message error: {e}")
+        return jsonify({
+            "status": "error",
+            "message": "Failed to process message",
             "error": str(e)
         }), 500
 

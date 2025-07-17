@@ -149,224 +149,368 @@ class AdvancedPromptEngine:
         """Initialize advanced prompt templates"""
         return {
             PromptTemplate.CHAIN_OF_THOUGHT: """
-You are an expert {expert_type} with deep knowledge in relationship psychology and counseling.
+Let's work through this step-by-step to provide the most helpful response:
 
-Let me think through this step by step:
+1. First, I'll identify the core issue or question
+2. Then, I'll consider relevant context and emotions
+3. Next, I'll explore potential perspectives and solutions
+4. Finally, I'll provide a thoughtful, actionable response
 
-1. **Situation Analysis**: First, let me understand the current situation
-2. **Emotional Assessment**: Next, I'll assess the emotional state and needs
-3. **Context Consideration**: Then, I'll consider the broader context and history
-4. **Expert Reasoning**: Now I'll apply my specialized knowledge and experience
-5. **Solution Formulation**: Finally, I'll develop actionable recommendations
+{content}
 
-User's situation: {user_input}
-Context: {context}
-
-Let me work through this systematically:
-
-**Step 1 - Situation Analysis:**
-{analysis_prompt}
-
-**Step 2 - Emotional Assessment:**
-{emotion_prompt}
-
-**Step 3 - Context Consideration:**
-{context_prompt}
-
-**Step 4 - Expert Reasoning:**
-{reasoning_prompt}
-
-**Step 5 - Solution Formulation:**
-{solution_prompt}
-
-Based on this analysis, here is my expert recommendation:
+Let me think through this carefully...
 """,
             
             PromptTemplate.FEW_SHOT_LEARNING: """
-You are an expert {expert_type}. Here are examples of how I handle similar situations:
+I'll draw from similar situations to provide helpful guidance:
 
-{few_shot_examples}
+Example 1: When someone felt {similar_emotion1}, we found that {solution1} was helpful.
+Example 2: In a case where {similar_situation2}, the approach of {solution2} worked well.
 
-Now, applying the same expertise to this new situation:
+Now, for your specific situation:
+{content}
 
-User's situation: {user_input}
-Context: {context}
-
-My response:
+Based on these examples and your unique circumstances...
 """,
             
             PromptTemplate.STRUCTURED_OUTPUT: """
-You are an expert {expert_type}. Please provide a comprehensive response in the following JSON structure:
+Please provide a response in the following structure:
 
-{{
-    "assessment": {{
-        "situation_summary": "Brief summary of the situation",
-        "emotional_state": "Current emotional state assessment",
-        "urgency_level": "low/medium/high/critical",
-        "confidence_score": 0.0-1.0
-    }},
-    "analysis": {{
-        "key_insights": ["insight1", "insight2", "insight3"],
-        "underlying_patterns": ["pattern1", "pattern2"],
-        "potential_risks": ["risk1", "risk2"],
-        "opportunities": ["opportunity1", "opportunity2"]
-    }},
-    "recommendations": {{
-        "immediate_actions": ["action1", "action2"],
-        "long_term_strategies": ["strategy1", "strategy2"],
-        "resources": ["resource1", "resource2"],
-        "follow_up_questions": ["question1", "question2"]
-    }},
-    "expert_reasoning": "Detailed explanation of your reasoning process"
-}}
+{
+    "response": "Main response text addressing the user's concern",
+    "insights": ["Key insight 1", "Key insight 2", "Key insight 3"],
+    "action_items": ["Specific action 1", "Specific action 2"],
+    "follow_up_questions": ["Clarifying question 1", "Clarifying question 2"],
+    "emotional_validation": "Acknowledgment of user's feelings",
+    "resources": ["Relevant resource 1", "Relevant resource 2"]
+}
 
-User's situation: {user_input}
-Context: {context}
-
-Response:
+User input: {content}
 """,
             
             PromptTemplate.ROLE_PLAYING: """
-You are Dr. {expert_name}, a world-renowned {expert_type} with 20+ years of experience. You are known for your {personality_traits} approach and have helped thousands of people with {specializations}.
+As an experienced relationship counselor specializing in {expertise_area}, I understand how challenging {situation_type} can be.
 
-Your therapeutic style combines {therapeutic_approaches} with a warm, empathetic, and practical approach. You speak with confidence, compassion, and deep understanding.
+{content}
 
-Current session context:
-- Client background: {client_background}
-- Session history: {session_history}
-- Current emotional state: {emotional_state}
-- Therapeutic goals: {therapeutic_goals}
-
-Client says: "{user_input}"
-
-Respond as Dr. {expert_name} would, maintaining your professional expertise while being deeply empathetic and providing actionable guidance:
+From my professional experience, I'd like to share some thoughts that might help...
 """,
             
             PromptTemplate.SOCRATIC_QUESTIONING: """
-You are an expert {expert_type} using the Socratic method to help the user discover insights through guided questioning.
+I'd like to explore this with you through some reflective questions:
 
-Your approach:
-1. Ask thought-provoking questions that lead to self-discovery
-2. Build on the user's responses to deepen understanding
-3. Help them connect dots between their thoughts, feelings, and behaviors
-4. Guide them toward their own solutions and insights
+{content}
 
-User's situation: {user_input}
-Context: {context}
+Let me start by asking: What do you think is at the heart of this situation?
 
-Begin with a thoughtful question that helps them explore their situation more deeply:
+As we explore together, consider:
+- What would success look like for you?
+- What obstacles do you see?
+- What strengths can you draw upon?
 """,
             
             PromptTemplate.EMOTIONAL_INTELLIGENCE: """
-You are an expert in emotional intelligence and relationship psychology. Your response should demonstrate and teach emotional intelligence principles.
+I can sense the {detected_emotions} in what you're sharing. Your feelings are completely valid.
 
-Focus on:
-1. **Self-Awareness**: Help them understand their emotions and triggers
-2. **Self-Regulation**: Provide strategies for managing emotions effectively
-3. **Empathy**: Help them understand others' perspectives and feelings
-4. **Social Skills**: Offer guidance on healthy communication and relationships
+{content}
 
-User's situation: {user_input}
-Context: {context}
-Emotional indicators: {emotional_indicators}
-
-Provide an emotionally intelligent response:
+Let's explore both the emotional and practical aspects of this situation...
 """,
             
             PromptTemplate.CRISIS_INTERVENTION: """
-⚠️ **CRISIS INTERVENTION PROTOCOL ACTIVATED** ⚠️
+I hear that you're going through an extremely difficult time, and I want you to know that you're not alone.
 
-You are a crisis intervention specialist. This situation requires immediate, professional attention.
+IMMEDIATE SAFETY CHECK: {safety_assessment}
 
-Crisis Assessment:
-- Risk level: {risk_level}
-- Crisis type: {crisis_type}
-- Immediate safety concerns: {safety_concerns}
+{content}
 
-Your response must:
-1. Prioritize immediate safety and wellbeing
-2. Provide calm, reassuring support
-3. Offer concrete, actionable steps
-4. Connect them with appropriate resources
-5. Encourage professional help when needed
+Your safety and well-being are the top priority. Let's focus on immediate support and coping strategies...
 
-User's situation: {user_input}
-Context: {context}
-
-Immediate crisis response:
+Crisis Resources:
+- National Crisis Line: 988 (US)
+- Crisis Text Line: Text HOME to 741741
+- Emergency Services: 911
 """,
             
             PromptTemplate.MULTI_PERSPECTIVE: """
-You are a team of relationship experts providing multiple perspectives on this situation.
+Let's look at this situation from multiple angles to gain deeper understanding:
 
-**Perspective 1 - Clinical Psychologist**: {clinical_perspective}
-**Perspective 2 - Relationship Coach**: {coaching_perspective}
-**Perspective 3 - Communication Expert**: {communication_perspective}
+From your perspective: {user_perspective}
+From your partner's possible perspective: {partner_perspective}
+From a neutral observer's view: {neutral_perspective}
 
-User's situation: {user_input}
-Context: {context}
+{content}
 
-**Integrated Expert Analysis:**
-Drawing from all three perspectives, here's our comprehensive assessment and recommendations:
+Considering all these viewpoints...
 """
         }
     
-    def _initialize_few_shot_examples(self) -> Dict[ExpertType, List[Dict[str, str]]]:
-        """Initialize few-shot learning examples for different experts"""
+    def _initialize_few_shot_examples(self) -> Dict[str, List[Dict[str, str]]]:
+        """Initialize few-shot examples for different scenarios"""
         return {
-            ExpertType.RELATIONSHIP_COUNSELOR: [
+            "conflict_resolution": [
                 {
-                    "user_input": "My partner and I keep arguing about the same things over and over. It's exhausting.",
-                    "expert_response": "It sounds like you're caught in a cycle of unresolved conflict. These recurring arguments often signal deeper underlying needs that aren't being addressed. Let's explore what's really driving these disagreements and develop strategies to break the cycle. What specific topics tend to trigger these repeated conflicts?"
+                    "situation": "My partner and I keep arguing about household chores",
+                    "response": "It sounds like you're both feeling frustrated about the division of labor. Often, these conflicts are less about the chores themselves and more about feeling valued and respected. Consider having a calm conversation where you both share what 'fair' looks like to you, and create a specific plan together that you both feel good about."
                 },
                 {
-                    "user_input": "I feel disconnected from my partner lately. We're more like roommates than lovers.",
-                    "expert_response": "The feeling of disconnection you're describing is actually quite common in long-term relationships, and it's a sign that your relationship needs some intentional nurturing. This often happens when couples get caught up in daily routines and forget to prioritize their emotional and romantic connection. Let's work on rebuilding that intimacy step by step."
+                    "situation": "We fight every time we discuss money",
+                    "response": "Money discussions can trigger deep emotions because they often connect to our values, security, and past experiences. Try setting a specific time for financial talks when you're both calm, start by understanding each other's money stories from childhood, and focus on shared goals rather than individual spending habits."
                 }
             ],
-            ExpertType.DATING_COACH: [
+            "trust_building": [
                 {
-                    "user_input": "I'm nervous about my first date after my divorce. I don't know how to act or what to expect.",
-                    "expert_response": "It's completely natural to feel nervous about dating again after a major life change like divorce. This nervousness actually shows you're taking this step seriously. Remember, you're not the same person you were before your marriage - you've grown and learned. Let's focus on rediscovering who you are now and what you want in a partner."
+                    "situation": "I found out my partner lied about something small",
+                    "response": "Even small lies can shake our foundation of trust. It's important to address this directly but calmly. Share how the lie made you feel without attacking, ask open-ended questions to understand why they felt the need to lie, and together establish what honesty means in your relationship going forward."
                 },
                 {
-                    "user_input": "I keep getting ghosted after what I thought were great first dates. What am I doing wrong?",
-                    "expert_response": "Being ghosted is unfortunately common in modern dating, and it's rarely a reflection of your worth or what you did 'wrong.' It often says more about the other person's communication style or emotional availability. That said, let's examine your dating approach and see if there are any patterns we can optimize while maintaining your authentic self."
+                    "situation": "How do we rebuild trust after infidelity?",
+                    "response": "Rebuilding trust after betrayal is a long journey that requires commitment from both partners. The unfaithful partner must take full responsibility, be completely transparent, and show consistent trustworthy behavior over time. The hurt partner needs space to grieve and express their pain. Professional counseling is often essential for navigating this process."
                 }
             ],
-            ExpertType.CRISIS_INTERVENTIONIST: [
+            "communication_improvement": [
                 {
-                    "user_input": "I can't stop thinking about ending everything. I feel so hopeless.",
-                    "expert_response": "I hear you saying you're in tremendous pain right now, and I want you to know that reaching out takes courage. These feelings of hopelessness are symptoms of what you're going through, not facts about your future. You don't have to face this alone. Let's talk about getting you some immediate support. Have you been able to talk to anyone else about how you're feeling?"
+                    "situation": "My partner shuts down when I try to talk about feelings",
+                    "response": "Some people find emotional conversations overwhelming and need a different approach. Try starting with smaller, less intense topics, give advance notice before deep talks, use 'I' statements to reduce defensiveness, and respect their need for processing time. Sometimes writing feelings first can help."
+                },
+                {
+                    "situation": "We talk past each other and never resolve anything",
+                    "response": "This often happens when we're focused on being heard rather than understanding. Try the 'mirror and validate' technique: One person speaks for 2 minutes while the other listens, then the listener reflects back what they heard and validates the feelings expressed before sharing their own perspective."
+                }
+            ],
+            "intimacy_building": [
+                {
+                    "situation": "We feel like roommates rather than romantic partners",
+                    "response": "It's common for long-term relationships to lose their spark, but it can be rekindled. Start with small daily connections - a 6-second kiss, a 20-second hug, asking about each other's day. Schedule regular date nights, try new experiences together, and be intentional about physical touch throughout the day."
+                },
+                {
+                    "situation": "I want more emotional intimacy but don't know how to create it",
+                    "response": "Emotional intimacy grows through vulnerability and presence. Try sharing something you've never told your partner, ask deeper questions about their dreams and fears, create phone-free time together, and practice active listening without trying to fix or judge. Start small and build gradually."
                 }
             ]
         }
     
-    def _initialize_cot_patterns(self) -> Dict[ExpertType, List[str]]:
-        """Initialize Chain of Thought patterns for different experts"""
+    def _initialize_cot_patterns(self) -> Dict[str, List[str]]:
+        """Initialize chain-of-thought reasoning patterns"""
         return {
-            ExpertType.RELATIONSHIP_COUNSELOR: [
-                "First, I need to understand the relationship dynamics at play",
-                "Next, I'll assess the emotional needs of both partners",
-                "Then, I'll identify communication patterns and barriers",
-                "I'll consider the relationship history and context",
-                "Finally, I'll formulate evidence-based recommendations"
+            "relationship_analysis": [
+                "What is the core issue being presented?",
+                "What emotions are involved for each person?",
+                "What patterns or cycles might be at play?",
+                "What are the underlying needs not being met?",
+                "What strengths can be built upon?",
+                "What specific, actionable steps would help?"
             ],
-            ExpertType.DATING_COACH: [
-                "Let me assess their dating mindset and confidence level",
-                "I'll examine their dating patterns and past experiences",
-                "I need to understand their relationship goals and values",
-                "I'll identify any limiting beliefs or behaviors",
-                "Then I'll create a personalized dating strategy"
+            "conflict_analysis": [
+                "What triggered this specific conflict?",
+                "What is each person's position?",
+                "What are the interests behind those positions?",
+                "What common ground exists?",
+                "What compromises might work?",
+                "How can future conflicts be prevented?"
             ],
-            ExpertType.PERSONALITY_ANALYST: [
-                "I'll analyze the personality traits revealed in their message",
-                "I need to identify their attachment style and emotional patterns",
-                "I'll assess their communication style and preferences",
-                "I'll consider their values and core motivations",
-                "Then I'll provide insights about their personality dynamics"
+            "emotional_processing": [
+                "What emotions are being expressed?",
+                "What might be causing these feelings?",
+                "Are these emotions primary or secondary?",
+                "What needs are connected to these emotions?",
+                "How can these emotions be validated?",
+                "What healthy coping strategies apply?"
+            ],
+            "decision_making": [
+                "What decision needs to be made?",
+                "What are the options available?",
+                "What are the pros and cons of each?",
+                "How does this align with values?",
+                "What are the potential consequences?",
+                "What feels most authentic?"
             ]
         }
+    
+    def generate_expert_prompt(
+        self,
+        expert_type: ExpertType,
+        template: PromptTemplate,
+        content: str,
+        context: Dict[str, Any]
+    ) -> str:
+        """Generate expert-specific prompt with template"""
+        
+        # Get base template
+        base_template = self.prompt_templates.get(template, "{content}")
+        
+        # Add expert-specific system instructions
+        expert_instructions = self._get_expert_instructions(expert_type)
+        
+        # Add safety and ethical guidelines
+        safety_guidelines = """
+IMPORTANT SAFETY GUIDELINES:
+- Never provide medical, legal, or financial advice beyond general guidance
+- Always prioritize user safety and well-being
+- Encourage professional help for serious issues
+- Maintain appropriate boundaries
+- Respect diverse relationship structures and identities
+- Never judge or shame users
+- If detecting crisis, provide immediate resources
+"""
+        
+        # Build context-aware content
+        formatted_content = self._format_content_with_context(content, context, template)
+        
+        # Combine all elements
+        full_prompt = f"""
+{expert_instructions}
+
+{safety_guidelines}
+
+{base_template.format(
+    content=formatted_content,
+    expertise_area=context.get('expertise_area', 'relationships'),
+    situation_type=context.get('situation_type', 'personal challenge'),
+    detected_emotions=context.get('detected_emotions', 'various emotions'),
+    safety_assessment=context.get('safety_assessment', 'No immediate safety concerns detected'),
+    user_perspective=context.get('user_perspective', ''),
+    partner_perspective=context.get('partner_perspective', ''),
+    neutral_perspective=context.get('neutral_perspective', ''),
+    similar_emotion1=context.get('similar_emotion1', 'overwhelmed'),
+    solution1=context.get('solution1', 'taking breaks and communicating needs'),
+    similar_situation2=context.get('similar_situation2', 'communication breakdown'),
+    solution2=context.get('solution2', 'structured conversation techniques')
+)}
+"""
+        
+        return full_prompt
+    
+    def _get_expert_instructions(self, expert_type: ExpertType) -> str:
+        """Get specific instructions for each expert type"""
+        expert_instructions = {
+            ExpertType.RELATIONSHIP_COUNSELOR: """
+You are an experienced relationship counselor with expertise in:
+- Couples therapy and relationship dynamics
+- Attachment theory and emotional bonds
+- Conflict resolution and communication
+- Building and maintaining healthy relationships
+- Recognizing and addressing relationship patterns
+
+Your approach is warm, professional, and evidence-based. You help couples and individuals navigate relationship challenges with empathy and practical strategies.
+""",
+            
+            ExpertType.DATING_COACH: """
+You are a modern dating coach who understands:
+- Online and offline dating dynamics
+- Building confidence and self-worth
+- Healthy boundary setting
+- Recognizing red and green flags
+- Moving from casual to committed relationships
+- Dating anxiety and rejection resilience
+
+Your style is encouraging, practical, and empowering. You help people date authentically while protecting their emotional well-being.
+""",
+            
+            ExpertType.COMMUNICATION_EXPERT: """
+You are a communication specialist focused on:
+- Active listening techniques
+- Non-violent communication
+- Expressing needs clearly
+- Understanding different communication styles
+- Digital communication in relationships
+- Difficult conversation navigation
+
+You teach practical communication skills that strengthen relationships and prevent misunderstandings.
+""",
+            
+            ExpertType.CRISIS_INTERVENTIONIST: """
+You are a trained crisis intervention specialist with expertise in:
+- De-escalation techniques
+- Safety planning
+- Trauma-informed responses
+- Connecting to immediate resources
+- Emotional regulation in crisis
+- Risk assessment
+
+Your primary focus is ensuring immediate safety while providing compassionate support. You always prioritize getting people connected to appropriate emergency services when needed.
+""",
+            
+            ExpertType.EMOTIONAL_INTELLIGENCE: """
+You are an emotional intelligence expert specializing in:
+- Identifying and naming emotions
+- Understanding emotional triggers
+- Developing emotional regulation skills
+- Building empathy and compassion
+- Healing emotional wounds
+- Creating emotional safety in relationships
+
+You help people understand and work with their emotions to build stronger, more fulfilling relationships.
+""",
+            
+            ExpertType.CONFLICT_RESOLVER: """
+You are a conflict resolution specialist trained in:
+- Mediation techniques
+- Finding win-win solutions
+- De-escalating heated situations
+- Addressing underlying needs
+- Fair fighting rules
+- Preventing recurring conflicts
+
+You help couples and individuals transform conflicts into opportunities for deeper understanding and connection.
+""",
+            
+            ExpertType.ATTACHMENT_SPECIALIST: """
+You are an attachment theory expert who understands:
+- Different attachment styles and their impact
+- Healing attachment wounds
+- Building secure attachment
+- Breaking negative relationship patterns
+- Creating emotional safety
+- Intergenerational trauma patterns
+
+You help people understand how their early experiences shape their relationships and guide them toward more secure connections.
+"""
+        }
+        
+        return expert_instructions.get(
+            expert_type,
+            "You are a caring and knowledgeable relationship expert. Provide thoughtful, evidence-based guidance while maintaining professional boundaries."
+        )
+    
+    def _format_content_with_context(self, content: str, context: Dict[str, Any], template: PromptTemplate) -> str:
+        """Helper to format content with context variables"""
+        if template == PromptTemplate.ROLE_PLAYING:
+            return content.format(
+                expert_type=context.get("expert_type", "relationship counselor"),
+                situation_type=context.get("situation_type", "a personal challenge"),
+                expertise_area=context.get("expertise_area", "couples therapy"),
+                client_background=context.get("client_background", ""),
+                session_history=context.get("session_history", ""),
+                emotional_state=context.get("emotional_state", ""),
+                therapeutic_goals=context.get("therapeutic_goals", "")
+            )
+        elif template == PromptTemplate.EMOTIONAL_INTELLIGENCE:
+            return content.format(
+                expert_type=context.get("expert_type", "emotional intelligence expert"),
+                user_input=context.get("user_input", ""),
+                context=json.dumps(context, indent=2),
+                emotional_indicators=context.get("emotional_indicators", "")
+            )
+        elif template == PromptTemplate.CRISIS_INTERVENTION:
+            return content.format(
+                expert_type=context.get("expert_type", "crisis intervention specialist"),
+                user_input=context.get("user_input", ""),
+                context=json.dumps(context, indent=2),
+                risk_level=context.get("risk_level", ""),
+                crisis_type=context.get("crisis_type", ""),
+                safety_concerns=context.get("safety_concerns", "")
+            )
+        elif template == PromptTemplate.MULTI_PERSPECTIVE:
+            return content.format(
+                expert_type=context.get("expert_type", "multi-perspective expert"),
+                user_input=context.get("user_input", ""),
+                context=json.dumps(context, indent=2),
+                clinical_perspective=context.get("clinical_perspective", ""),
+                coaching_perspective=context.get("coaching_perspective", ""),
+                communication_perspective=context.get("communication_perspective", "")
+            )
+        return content.format(content=content)
     
     def generate_prompt(self, template: PromptTemplate, expert_type: ExpertType, 
                        user_input: str, context: Dict[str, Any] = None) -> str:
@@ -435,7 +579,7 @@ Drawing from all three perspectives, here's our comprehensive assessment and rec
         for i, example in enumerate(examples[:3]):  # Limit to 3 examples
             formatted.append(f"Example {i+1}:")
             formatted.append(f"User: {example['user_input']}")
-            formatted.append(f"Expert: {example['expert_response']}")
+            formatted.append(f"Expert: {example['response']}")
             formatted.append("")
         
         return "\n".join(formatted)
