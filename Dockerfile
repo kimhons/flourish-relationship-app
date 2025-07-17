@@ -9,7 +9,7 @@ COPY frontend/package*.json ./
 COPY shared/package*.json ./shared/
 
 # Install dependencies
-RUN npm ci --only=production --no-audit
+RUN npm install --only=production --no-audit
 
 # Copy source files
 COPY frontend/ ./
