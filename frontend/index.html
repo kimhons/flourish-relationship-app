@@ -1,153 +1,147 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/svg+xml" href="/icons/app-icon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/icons/icon-180x180.png" />
+    <link rel="manifest" href="/manifest.json" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    
-    <!-- Primary Meta Tags -->
-    <title>Flourish - AI-Powered Dating App with Relationship Coaching | Find Love & Grow Together</title>
-    <meta name="title" content="Flourish - AI-Powered Dating App with Relationship Coaching | Find Love & Grow Together">
-    <meta name="description" content="The most comprehensive relationship platform combining AI-powered dating, Dr. Love coaching, interactive games, and proven growth tools. Join 2M+ couples who found lasting love with advanced compatibility matching and expert relationship guidance.">
-    <meta name="keywords" content="dating app, AI dating, relationship coaching, Dr. Love, compatibility matching, relationship growth, dating games, relationship therapy, love coach, dating platform, relationship science, emotional intelligence, dating success, modern dating, relationship building">
+    <meta name="theme-color" content="#FF1B6B" />
+    <meta name="description" content="Flourish - AI-Powered Relationship Coach. Revolutionary platform that helps you build stronger, more meaningful connections through personalized coaching, interactive games, and community support." />
+    <meta name="keywords" content="relationship coach, AI coaching, dating app, relationship advice, love coach, relationship games, dating tips" />
+    <meta name="author" content="Flourish Development Team" />
     
     <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://flourish-app.com/">
-    <meta property="og:title" content="Flourish - AI-Powered Dating App with Relationship Coaching">
-    <meta property="og:description" content="Transform your love life with AI-powered matching, expert coaching, and interactive relationship games. Join 2M+ couples who found lasting love.">
-    <meta property="og:image" content="https://flourish-app.com/og-image.jpg">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="630">
-    <meta property="og:site_name" content="Flourish">
-    <meta property="og:locale" content="en_US">
-    
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://flourish-app.com/" />
+    <meta property="og:title" content="Flourish - AI Relationship Coach" />
+    <meta property="og:description" content="Revolutionary AI-powered relationship platform that helps you build stronger, more meaningful connections." />
+    <meta property="og:image" content="/splash/splash-1920x1080.png" />
+
     <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://flourish-app.com/">
-    <meta property="twitter:title" content="Flourish - AI-Powered Dating App with Relationship Coaching">
-    <meta property="twitter:description" content="Transform your love life with AI-powered matching, expert coaching, and interactive relationship games. Join 2M+ couples who found lasting love.">
-    <meta property="twitter:image" content="https://flourish-app.com/twitter-image.jpg">
-    <meta property="twitter:creator" content="@FlourishApp">
-    <meta property="twitter:site" content="@FlourishApp">
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://flourish-app.com/" />
+    <meta property="twitter:title" content="Flourish - AI Relationship Coach" />
+    <meta property="twitter:description" content="Revolutionary AI-powered relationship platform that helps you build stronger, more meaningful connections." />
+    <meta property="twitter:image" content="/splash/splash-1920x1080.png" />
+
+    <!-- PWA -->
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="Flourish" />
     
-    <!-- Additional Meta Tags -->
-    <meta name="robots" content="index, follow">
-    <meta name="author" content="Flourish Team">
-    <meta name="language" content="English">
-    <meta name="rating" content="General">
-    <meta name="distribution" content="global">
-    <meta name="theme-color" content="#EC4899">
+    <!-- Splash screens for iOS -->
+    <link rel="apple-touch-startup-image" href="/splash/splash-375x667.png" media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2)" />
+    <link rel="apple-touch-startup-image" href="/splash/splash-768x1024.png" media="(device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2)" />
+    <link rel="apple-touch-startup-image" href="/splash/splash-1125x2436.png" media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3)" />
     
-    <!-- Canonical URL -->
-    <link rel="canonical" href="https://flourish-app.com/">
+    <title>Flourish - AI Relationship Coach</title>
     
-    <!-- Mobile App Links -->
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="apple-mobile-web-app-title" content="Flourish">
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <!-- Preload critical resources -->
+    <link rel="preload" href="/icons/app-icon.svg" as="image" />
+    <link rel="preload" href="/splash/splash-screen.svg" as="image" />
     
-    <!-- App Store Links -->
-    <meta name="apple-itunes-app" content="app-id=123456789">
-    <meta name="google-play-app" content="app-id=com.flourish.app">
-    
-    <!-- Structured Data - Organization -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "Organization",
-      "name": "Flourish",
-      "url": "https://flourish-app.com",
-      "logo": "https://flourish-app.com/logo.png",
-      "description": "The most comprehensive relationship platform combining AI-powered dating, Dr. Love coaching, and proven growth tools.",
-      "sameAs": [
-        "https://twitter.com/FlourishApp",
-        "https://facebook.com/FlourishApp",
-        "https://instagram.com/FlourishApp",
-        "https://linkedin.com/company/flourish-app"
-      ],
-      "contactPoint": {
-        "@type": "ContactPoint",
-        "telephone": "+1-800-FLOURISH",
-        "contactType": "customer service"
-      },
-      "address": {
-        "@type": "PostalAddress",
-        "addressCountry": "US"
+    <!-- Loading styles -->
+    <style>
+      #loading-screen {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #FF1B6B 0%, #FF4D8A 50%, #45CAFF 100%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+        transition: opacity 0.5s ease-out;
       }
-    }
-    </script>
-    
-    <!-- Structured Data - Software Application -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "SoftwareApplication",
-      "name": "Flourish",
-      "operatingSystem": "iOS, Android, Web",
-      "applicationCategory": "Dating Application",
-      "offers": {
-        "@type": "Offer",
-        "price": "0",
-        "priceCurrency": "USD"
-      },
-      "aggregateRating": {
-        "@type": "AggregateRating",
-        "ratingValue": "4.9",
-        "ratingCount": "2000000"
-      },
-      "description": "AI-powered dating app with relationship coaching, interactive games, and proven growth tools for lasting love.",
-      "downloadUrl": "https://apps.apple.com/app/flourish",
-      "screenshot": "https://flourish-app.com/screenshot.jpg"
-    }
-    </script>
-    
-    <!-- Structured Data - FAQ -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "FAQPage",
-      "mainEntity": [
-        {
-          "@type": "Question",
-          "name": "What makes Flourish different from other dating apps?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Flourish combines AI-powered compatibility matching with Dr. Love coaching, interactive relationship games, and comprehensive growth tools. Our platform focuses on building lasting relationships through evidence-based psychology and personalized guidance."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "How does Dr. Love AI coaching work?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Dr. Love uses advanced AI to analyze your relationship patterns, provide personalized coaching, and offer real-time guidance. The system learns from your interactions to deliver increasingly personalized advice for your unique relationship journey."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "Is Flourish free to use?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Flourish offers a free tier with basic features including profile creation, limited matches, and basic messaging. Premium subscriptions unlock unlimited matches, Dr. Love coaching, advanced games, and exclusive content."
-          }
-        }
-      ]
-    }
-    </script>
-    
-    <!-- Preconnect for Performance -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preconnect" href="https://api.flourish-app.com">
-    
-    <!-- DNS Prefetch -->
-    <link rel="dns-prefetch" href="//google-analytics.com">
-    <link rel="dns-prefetch" href="//googletagmanager.com">
+      
+      #loading-screen.hidden {
+        opacity: 0;
+        pointer-events: none;
+      }
+      
+      .loading-logo {
+        width: 120px;
+        height: 120px;
+        margin-bottom: 20px;
+        animation: pulse 2s infinite;
+      }
+      
+      .loading-text {
+        color: white;
+        font-family: Arial, sans-serif;
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 10px;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+      }
+      
+      .loading-subtitle {
+        color: rgba(255,255,255,0.9);
+        font-family: Arial, sans-serif;
+        font-size: 16px;
+        text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+      }
+      
+      @keyframes pulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+      }
+      
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+          'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+          sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+    </style>
   </head>
   <body>
+    <!-- Loading screen -->
+    <div id="loading-screen">
+      <img src="/icons/app-icon.svg" alt="Flourish Logo" class="loading-logo" />
+      <div class="loading-text">Flourish</div>
+      <div class="loading-subtitle">AI-Powered Relationship Coach</div>
+    </div>
+    
     <div id="root"></div>
+    
+    <script>
+      // Hide loading screen when app loads
+      window.addEventListener('load', function() {
+        setTimeout(function() {
+          const loadingScreen = document.getElementById('loading-screen');
+          loadingScreen.classList.add('hidden');
+          setTimeout(function() {
+            loadingScreen.remove();
+          }, 500);
+        }, 1000);
+      });
+      
+      // Service worker registration
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+          navigator.serviceWorker.register('/sw.js')
+            .then(function(registration) {
+              console.log('SW registered: ', registration);
+            })
+            .catch(function(registrationError) {
+              console.log('SW registration failed: ', registrationError);
+            });
+        });
+      }
+    </script>
+    
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

@@ -1,0 +1,250 @@
+/* FlourishButton Component Styles */
+
+.flourish-button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--flourish-space-sm);
+  border: none;
+  border-radius: var(--flourish-radius-lg);
+  font-family: inherit;
+  font-weight: var(--flourish-font-weight-medium);
+  text-decoration: none;
+  cursor: pointer;
+  transition: var(--flourish-transition-fast);
+  outline: none;
+  user-select: none;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
+.flourish-button:focus-visible {
+  outline: 2px solid var(--flourish-primary);
+  outline-offset: 2px;
+}
+
+/* Button Variants */
+.flourish-button--primary {
+  background: var(--flourish-gradient-primary);
+  color: var(--flourish-text-inverse);
+  box-shadow: var(--flourish-shadow-sm);
+}
+
+.flourish-button--primary:hover:not(:disabled) {
+  box-shadow: var(--flourish-shadow-md);
+  transform: translateY(-1px);
+}
+
+.flourish-button--primary:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: var(--flourish-shadow-sm);
+}
+
+.flourish-button--secondary {
+  background: var(--flourish-button-secondary);
+  color: var(--flourish-primary);
+  border: 1px solid var(--flourish-border);
+}
+
+.flourish-button--secondary:hover:not(:disabled) {
+  background: var(--flourish-primary-light);
+  border-color: var(--flourish-primary-hover);
+  color: var(--flourish-primary-hover);
+}
+
+.flourish-button--secondary:active:not(:disabled) {
+  background: var(--flourish-primary-lighter);
+}
+
+.flourish-button--tertiary {
+  background: transparent;
+  color: var(--flourish-primary);
+  border: none;
+}
+
+.flourish-button--tertiary:hover:not(:disabled) {
+  background: var(--flourish-primary-lighter);
+  color: var(--flourish-primary-hover);
+}
+
+.flourish-button--tertiary:active:not(:disabled) {
+  background: var(--flourish-primary-light);
+}
+
+.flourish-button--danger {
+  background: var(--flourish-error);
+  color: var(--flourish-text-inverse);
+  box-shadow: var(--flourish-shadow-sm);
+}
+
+.flourish-button--danger:hover:not(:disabled) {
+  background: #DC2626;
+  box-shadow: var(--flourish-shadow-md);
+  transform: translateY(-1px);
+}
+
+.flourish-button--danger:active:not(:disabled) {
+  background: #B91C1C;
+  transform: translateY(0);
+}
+
+.flourish-button--success {
+  background: var(--flourish-success);
+  color: var(--flourish-text-inverse);
+  box-shadow: var(--flourish-shadow-sm);
+}
+
+.flourish-button--success:hover:not(:disabled) {
+  background: #059669;
+  box-shadow: var(--flourish-shadow-md);
+  transform: translateY(-1px);
+}
+
+.flourish-button--success:active:not(:disabled) {
+  background: #047857;
+  transform: translateY(0);
+}
+
+/* Button Sizes */
+.flourish-button--small {
+  padding: var(--flourish-space-xs) var(--flourish-space-md);
+  font-size: var(--flourish-font-size-sm);
+  min-height: 32px;
+}
+
+.flourish-button--medium {
+  padding: var(--flourish-space-sm) var(--flourish-space-lg);
+  font-size: var(--flourish-font-size-base);
+  min-height: 40px;
+}
+
+.flourish-button--large {
+  padding: var(--flourish-space-md) var(--flourish-space-xl);
+  font-size: var(--flourish-font-size-lg);
+  min-height: 48px;
+}
+
+/* Button States */
+.flourish-button--disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.flourish-button--loading {
+  cursor: wait;
+  pointer-events: none;
+}
+
+.flourish-button--loading .flourish-button__text {
+  opacity: 0.7;
+}
+
+.flourish-button--full-width {
+  width: 100%;
+}
+
+/* Button Elements */
+.flourish-button__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.flourish-button__icon svg {
+  width: 1em;
+  height: 1em;
+  fill: currentColor;
+}
+
+.flourish-button__text {
+  display: flex;
+  align-items: center;
+}
+
+.flourish-button__spinner {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: flourish-spin 1s linear infinite;
+}
+
+/* Icon-only buttons */
+.flourish-button:not(:has(.flourish-button__text)) {
+  padding: var(--flourish-space-sm);
+  aspect-ratio: 1;
+  min-width: auto;
+}
+
+.flourish-button--small:not(:has(.flourish-button__text)) {
+  padding: var(--flourish-space-xs);
+  min-height: 32px;
+  width: 32px;
+}
+
+.flourish-button--medium:not(:has(.flourish-button__text)) {
+  padding: var(--flourish-space-sm);
+  min-height: 40px;
+  width: 40px;
+}
+
+.flourish-button--large:not(:has(.flourish-button__text)) {
+  padding: var(--flourish-space-md);
+  min-height: 48px;
+  width: 48px;
+}
+
+/* Responsive Design */
+@media (max-width: 640px) {
+  .flourish-button--large {
+    padding: var(--flourish-space-sm) var(--flourish-space-lg);
+    font-size: var(--flourish-font-size-base);
+    min-height: 44px;
+  }
+  
+  .flourish-button--medium {
+    padding: var(--flourish-space-xs) var(--flourish-space-md);
+    font-size: var(--flourish-font-size-sm);
+    min-height: 36px;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .flourish-button--primary {
+    border: 2px solid var(--flourish-primary);
+  }
+  
+  .flourish-button--secondary {
+    border: 2px solid var(--flourish-primary);
+  }
+  
+  .flourish-button--tertiary {
+    border: 2px solid transparent;
+  }
+  
+  .flourish-button--tertiary:hover:not(:disabled),
+  .flourish-button--tertiary:focus-visible {
+    border-color: var(--flourish-primary);
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .flourish-button {
+    transition: none;
+  }
+  
+  .flourish-button:hover:not(:disabled) {
+    transform: none;
+  }
+  
+  .flourish-button__spinner {
+    animation: none;
+  }
+}

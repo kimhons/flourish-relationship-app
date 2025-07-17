@@ -1,0 +1,59 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="backgroundGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FF1B6B;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#FF4D8A;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#45CAFF;stop-opacity:1" />
+    </linearGradient>
+    <radialGradient id="centerGradient" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#FFD700;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#FFB000;stop-opacity:1" />
+    </radialGradient>
+    <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="2" dy="2" stdDeviation="3" flood-color="rgba(0,0,0,0.3)"/>
+    </filter>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="512" height="512" fill="url(#backgroundGradient)" />
+  
+  <!-- Flourish petals -->
+  <g transform="translate(256,256)" filter="url(#shadow)">
+    <ellipse cx="6.270191611634449e-15" cy="-102.4" rx="61.44" ry="36.864" 
+                transform="rotate(-90 6.270191611634449e-15 -102.4)" fill="#FFFFFF" opacity="0.9"/><ellipse cx="72.40773439350248" cy="-72.40773439350247" rx="61.44" ry="36.864" 
+                transform="rotate(-45 72.40773439350248 -72.40773439350247)" fill="#FFFFFF" opacity="0.9"/><ellipse cx="102.4" cy="0" rx="61.44" ry="36.864" 
+                transform="rotate(0 102.4 0)" fill="#FFFFFF" opacity="0.9"/><ellipse cx="72.40773439350248" cy="72.40773439350247" rx="61.44" ry="36.864" 
+                transform="rotate(45 72.40773439350248 72.40773439350247)" fill="#FFFFFF" opacity="0.9"/><ellipse cx="6.270191611634449e-15" cy="102.4" rx="61.44" ry="36.864" 
+                transform="rotate(90 6.270191611634449e-15 102.4)" fill="#FFFFFF" opacity="0.9"/><ellipse cx="-72.40773439350247" cy="72.40773439350248" rx="61.44" ry="36.864" 
+                transform="rotate(135 -72.40773439350247 72.40773439350248)" fill="#FFFFFF" opacity="0.9"/><ellipse cx="-102.4" cy="1.2540383223268897e-14" rx="61.44" ry="36.864" 
+                transform="rotate(180 -102.4 1.2540383223268897e-14)" fill="#FFFFFF" opacity="0.9"/><ellipse cx="-72.40773439350248" cy="-72.40773439350247" rx="61.44" ry="36.864" 
+                transform="rotate(225 -72.40773439350248 -72.40773439350247)" fill="#FFFFFF" opacity="0.9"/>
+    
+    <!-- Center circle -->
+    <circle cx="0" cy="0" r="61.44" fill="url(#centerGradient)" />
+  </g>
+  
+  <!-- Heart element -->
+  <g transform="translate(256,384)" filter="url(#shadow)">
+    <path d="M 0,-51.2 
+             C -25.6,-76.80000000000001 -76.80000000000001,-76.80000000000001 -76.80000000000001,-25.6
+             C -76.80000000000001,25.6 -25.6,76.80000000000001 0,102.4
+             C 25.6,76.80000000000001 76.80000000000001,25.6 76.80000000000001,-25.6
+             C 76.80000000000001,-76.80000000000001 25.6,-76.80000000000001 0,-51.2
+             Z" 
+          fill="#FFFFFF" opacity="0.9"/>
+  </g>
+  
+  <!-- AI Circuit pattern -->
+  <g transform="translate(256,128)" opacity="0.4">
+    <path d="M -76.8,-25.6 L 25.6,-25.6 L 25.6,-76.8 
+             L 76.8,-76.8 L 76.8,76.8 L 128,76.8" 
+          stroke="#FFFFFF" stroke-width="5.12" fill="none" stroke-linecap="round"/>
+    <circle cx="25.6" cy="-25.6" r="7.68" fill="#FFFFFF"/>
+    <circle cx="76.8" cy="-76.8" r="7.68" fill="#FFFFFF"/>
+  </g>
+  
+  <!-- Border -->
+  <rect x="1" y="1" width="510" height="510" fill="none" 
+        stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+</svg>

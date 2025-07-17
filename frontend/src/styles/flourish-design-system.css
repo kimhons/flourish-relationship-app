@@ -1,0 +1,668 @@
+/* 
+ * Flourish Design System
+ * Comprehensive design tokens and base styles
+ * Version: 1.0.0
+ */
+
+/* ==========================================================================
+   Design Tokens
+   ========================================================================== */
+
+:root {
+  /* Primary Brand Colors */
+  --flourish-primary: #FF1B6B;
+  --flourish-primary-hover: #E6185F;
+  --flourish-primary-active: #CC1553;
+  --flourish-primary-light: rgba(255, 27, 107, 0.1);
+  --flourish-primary-lighter: rgba(255, 27, 107, 0.05);
+  
+  --flourish-secondary: #45CAFF;
+  --flourish-secondary-hover: #3EB5E6;
+  --flourish-secondary-active: #369FCC;
+  --flourish-secondary-light: rgba(69, 202, 255, 0.1);
+  --flourish-secondary-lighter: rgba(69, 202, 255, 0.05);
+  
+  --flourish-accent: #FFD700;
+  --flourish-accent-hover: #E6C200;
+  --flourish-accent-active: #CCAD00;
+  --flourish-accent-light: rgba(255, 215, 0, 0.1);
+  --flourish-accent-lighter: rgba(255, 215, 0, 0.05);
+
+  /* Gradient Definitions */
+  --flourish-gradient-primary: linear-gradient(135deg, #FF1B6B 0%, #FF4D8A 50%, #45CAFF 100%);
+  --flourish-gradient-subtle: linear-gradient(135deg, rgba(255,27,107,0.1) 0%, rgba(69,202,255,0.1) 100%);
+  --flourish-gradient-reverse: linear-gradient(135deg, #45CAFF 0%, #FF4D8A 50%, #FF1B6B 100%);
+  --flourish-gradient-vertical: linear-gradient(180deg, #FF1B6B 0%, #45CAFF 100%);
+  --flourish-gradient-radial: radial-gradient(circle, #FF1B6B 0%, #45CAFF 100%);
+
+  /* Semantic Colors */
+  --flourish-background: #FFFFFF;
+  --flourish-background-secondary: #FAFAFA;
+  --flourish-background-tertiary: #F5F5F5;
+  
+  --flourish-text-primary: #1A1A1A;
+  --flourish-text-secondary: #6B7280;
+  --flourish-text-tertiary: #9CA3AF;
+  --flourish-text-inverse: #FFFFFF;
+  
+  --flourish-border: rgba(255, 27, 107, 0.2);
+  --flourish-border-light: rgba(255, 27, 107, 0.1);
+  --flourish-border-dark: rgba(255, 27, 107, 0.3);
+  
+  /* Status Colors */
+  --flourish-success: #10B981;
+  --flourish-success-light: rgba(16, 185, 129, 0.1);
+  --flourish-warning: #F59E0B;
+  --flourish-warning-light: rgba(245, 158, 11, 0.1);
+  --flourish-error: #EF4444;
+  --flourish-error-light: rgba(239, 68, 68, 0.1);
+  --flourish-info: #3B82F6;
+  --flourish-info-light: rgba(59, 130, 246, 0.1);
+
+  /* Component Colors */
+  --flourish-card-bg: #FFFFFF;
+  --flourish-card-shadow: rgba(255, 27, 107, 0.1);
+  --flourish-card-border: rgba(255, 27, 107, 0.1);
+  
+  --flourish-button-primary: var(--flourish-gradient-primary);
+  --flourish-button-secondary: rgba(255, 27, 107, 0.1);
+  --flourish-button-tertiary: transparent;
+  
+  --flourish-input-bg: #FFFFFF;
+  --flourish-input-border: rgba(255, 27, 107, 0.2);
+  --flourish-input-border-focus: var(--flourish-primary);
+  --flourish-input-placeholder: var(--flourish-text-tertiary);
+
+  /* Spacing Scale */
+  --flourish-space-xs: 0.25rem;   /* 4px */
+  --flourish-space-sm: 0.5rem;    /* 8px */
+  --flourish-space-md: 1rem;      /* 16px */
+  --flourish-space-lg: 1.5rem;    /* 24px */
+  --flourish-space-xl: 2rem;      /* 32px */
+  --flourish-space-2xl: 3rem;     /* 48px */
+  --flourish-space-3xl: 4rem;     /* 64px */
+  --flourish-space-4xl: 6rem;     /* 96px */
+
+  /* Typography Scale */
+  --flourish-font-size-xs: 0.75rem;    /* 12px */
+  --flourish-font-size-sm: 0.875rem;   /* 14px */
+  --flourish-font-size-base: 1rem;     /* 16px */
+  --flourish-font-size-lg: 1.125rem;   /* 18px */
+  --flourish-font-size-xl: 1.25rem;    /* 20px */
+  --flourish-font-size-2xl: 1.5rem;    /* 24px */
+  --flourish-font-size-3xl: 1.875rem;  /* 30px */
+  --flourish-font-size-4xl: 2.25rem;   /* 36px */
+  --flourish-font-size-5xl: 3rem;      /* 48px */
+  --flourish-font-size-6xl: 3.75rem;   /* 60px */
+
+  /* Font Weights */
+  --flourish-font-weight-light: 300;
+  --flourish-font-weight-normal: 400;
+  --flourish-font-weight-medium: 500;
+  --flourish-font-weight-semibold: 600;
+  --flourish-font-weight-bold: 700;
+  --flourish-font-weight-extrabold: 800;
+
+  /* Line Heights */
+  --flourish-line-height-tight: 1.25;
+  --flourish-line-height-normal: 1.5;
+  --flourish-line-height-relaxed: 1.75;
+
+  /* Border Radius */
+  --flourish-radius-sm: 0.375rem;   /* 6px */
+  --flourish-radius-md: 0.5rem;     /* 8px */
+  --flourish-radius-lg: 0.75rem;    /* 12px */
+  --flourish-radius-xl: 1rem;       /* 16px */
+  --flourish-radius-2xl: 1.5rem;    /* 24px */
+  --flourish-radius-full: 9999px;
+
+  /* Shadows */
+  --flourish-shadow-sm: 0 1px 2px 0 rgba(255, 27, 107, 0.05);
+  --flourish-shadow-md: 0 4px 6px -1px rgba(255, 27, 107, 0.1), 0 2px 4px -1px rgba(255, 27, 107, 0.06);
+  --flourish-shadow-lg: 0 10px 15px -3px rgba(255, 27, 107, 0.1), 0 4px 6px -2px rgba(255, 27, 107, 0.05);
+  --flourish-shadow-xl: 0 20px 25px -5px rgba(255, 27, 107, 0.1), 0 10px 10px -5px rgba(255, 27, 107, 0.04);
+  --flourish-shadow-2xl: 0 25px 50px -12px rgba(255, 27, 107, 0.25);
+
+  /* Z-Index Scale */
+  --flourish-z-dropdown: 1000;
+  --flourish-z-sticky: 1020;
+  --flourish-z-fixed: 1030;
+  --flourish-z-modal-backdrop: 1040;
+  --flourish-z-modal: 1050;
+  --flourish-z-popover: 1060;
+  --flourish-z-tooltip: 1070;
+  --flourish-z-toast: 1080;
+
+  /* Transitions */
+  --flourish-transition-fast: 150ms ease-in-out;
+  --flourish-transition-normal: 250ms ease-in-out;
+  --flourish-transition-slow: 350ms ease-in-out;
+
+  /* Breakpoints */
+  --flourish-breakpoint-sm: 640px;
+  --flourish-breakpoint-md: 768px;
+  --flourish-breakpoint-lg: 1024px;
+  --flourish-breakpoint-xl: 1280px;
+  --flourish-breakpoint-2xl: 1536px;
+}
+
+/* ==========================================================================
+   Typography System
+   ========================================================================== */
+
+.flourish-heading-1 {
+  font-size: var(--flourish-font-size-5xl);
+  font-weight: var(--flourish-font-weight-bold);
+  line-height: var(--flourish-line-height-tight);
+  background: var(--flourish-gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0;
+  letter-spacing: -0.025em;
+}
+
+.flourish-heading-2 {
+  font-size: var(--flourish-font-size-4xl);
+  font-weight: var(--flourish-font-weight-semibold);
+  line-height: var(--flourish-line-height-tight);
+  color: var(--flourish-text-primary);
+  margin: 0;
+  letter-spacing: -0.025em;
+}
+
+.flourish-heading-3 {
+  font-size: var(--flourish-font-size-3xl);
+  font-weight: var(--flourish-font-weight-semibold);
+  line-height: var(--flourish-line-height-tight);
+  color: var(--flourish-text-primary);
+  margin: 0;
+}
+
+.flourish-heading-4 {
+  font-size: var(--flourish-font-size-2xl);
+  font-weight: var(--flourish-font-weight-medium);
+  line-height: var(--flourish-line-height-normal);
+  color: var(--flourish-text-primary);
+  margin: 0;
+}
+
+.flourish-heading-5 {
+  font-size: var(--flourish-font-size-xl);
+  font-weight: var(--flourish-font-weight-medium);
+  line-height: var(--flourish-line-height-normal);
+  color: var(--flourish-text-primary);
+  margin: 0;
+}
+
+.flourish-heading-6 {
+  font-size: var(--flourish-font-size-lg);
+  font-weight: var(--flourish-font-weight-medium);
+  line-height: var(--flourish-line-height-normal);
+  color: var(--flourish-text-primary);
+  margin: 0;
+}
+
+.flourish-body-lg {
+  font-size: var(--flourish-font-size-lg);
+  font-weight: var(--flourish-font-weight-normal);
+  line-height: var(--flourish-line-height-relaxed);
+  color: var(--flourish-text-secondary);
+  margin: 0;
+}
+
+.flourish-body {
+  font-size: var(--flourish-font-size-base);
+  font-weight: var(--flourish-font-weight-normal);
+  line-height: var(--flourish-line-height-normal);
+  color: var(--flourish-text-secondary);
+  margin: 0;
+}
+
+.flourish-body-sm {
+  font-size: var(--flourish-font-size-sm);
+  font-weight: var(--flourish-font-weight-normal);
+  line-height: var(--flourish-line-height-normal);
+  color: var(--flourish-text-tertiary);
+  margin: 0;
+}
+
+.flourish-caption {
+  font-size: var(--flourish-font-size-xs);
+  font-weight: var(--flourish-font-weight-normal);
+  line-height: var(--flourish-line-height-normal);
+  color: var(--flourish-text-tertiary);
+  margin: 0;
+}
+
+/* Text Utilities */
+.flourish-text-gradient {
+  background: var(--flourish-gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.flourish-text-primary {
+  color: var(--flourish-text-primary);
+}
+
+.flourish-text-secondary {
+  color: var(--flourish-text-secondary);
+}
+
+.flourish-text-tertiary {
+  color: var(--flourish-text-tertiary);
+}
+
+.flourish-text-inverse {
+  color: var(--flourish-text-inverse);
+}
+
+.flourish-text-center {
+  text-align: center;
+}
+
+.flourish-text-left {
+  text-align: left;
+}
+
+.flourish-text-right {
+  text-align: right;
+}
+
+/* ==========================================================================
+   Layout System
+   ========================================================================== */
+
+.flourish-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--flourish-space-md);
+}
+
+.flourish-container-sm {
+  width: 100%;
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 0 var(--flourish-space-md);
+}
+
+.flourish-container-lg {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 var(--flourish-space-md);
+}
+
+.flourish-grid {
+  display: grid;
+  gap: var(--flourish-space-md);
+}
+
+.flourish-grid-2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.flourish-grid-3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.flourish-grid-4 {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.flourish-flex {
+  display: flex;
+}
+
+.flourish-flex-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.flourish-flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flourish-flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.flourish-flex-start {
+  display: flex;
+  align-items: flex-start;
+}
+
+.flourish-flex-end {
+  display: flex;
+  align-items: flex-end;
+}
+
+/* ==========================================================================
+   Spacing Utilities
+   ========================================================================== */
+
+.flourish-m-0 { margin: 0; }
+.flourish-m-xs { margin: var(--flourish-space-xs); }
+.flourish-m-sm { margin: var(--flourish-space-sm); }
+.flourish-m-md { margin: var(--flourish-space-md); }
+.flourish-m-lg { margin: var(--flourish-space-lg); }
+.flourish-m-xl { margin: var(--flourish-space-xl); }
+.flourish-m-2xl { margin: var(--flourish-space-2xl); }
+
+.flourish-mt-0 { margin-top: 0; }
+.flourish-mt-xs { margin-top: var(--flourish-space-xs); }
+.flourish-mt-sm { margin-top: var(--flourish-space-sm); }
+.flourish-mt-md { margin-top: var(--flourish-space-md); }
+.flourish-mt-lg { margin-top: var(--flourish-space-lg); }
+.flourish-mt-xl { margin-top: var(--flourish-space-xl); }
+.flourish-mt-2xl { margin-top: var(--flourish-space-2xl); }
+
+.flourish-mb-0 { margin-bottom: 0; }
+.flourish-mb-xs { margin-bottom: var(--flourish-space-xs); }
+.flourish-mb-sm { margin-bottom: var(--flourish-space-sm); }
+.flourish-mb-md { margin-bottom: var(--flourish-space-md); }
+.flourish-mb-lg { margin-bottom: var(--flourish-space-lg); }
+.flourish-mb-xl { margin-bottom: var(--flourish-space-xl); }
+.flourish-mb-2xl { margin-bottom: var(--flourish-space-2xl); }
+
+.flourish-p-0 { padding: 0; }
+.flourish-p-xs { padding: var(--flourish-space-xs); }
+.flourish-p-sm { padding: var(--flourish-space-sm); }
+.flourish-p-md { padding: var(--flourish-space-md); }
+.flourish-p-lg { padding: var(--flourish-space-lg); }
+.flourish-p-xl { padding: var(--flourish-space-xl); }
+.flourish-p-2xl { padding: var(--flourish-space-2xl); }
+
+/* ==========================================================================
+   Animation System
+   ========================================================================== */
+
+@keyframes flourish-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes flourish-slide-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes flourish-slide-in-left {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes flourish-scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes flourish-pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes flourish-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Animation Classes */
+.flourish-fade-in {
+  animation: flourish-fade-in var(--flourish-transition-normal);
+}
+
+.flourish-slide-in-right {
+  animation: flourish-slide-in-right var(--flourish-transition-normal);
+}
+
+.flourish-slide-in-left {
+  animation: flourish-slide-in-left var(--flourish-transition-normal);
+}
+
+.flourish-scale-in {
+  animation: flourish-scale-in var(--flourish-transition-normal);
+}
+
+.flourish-pulse {
+  animation: flourish-pulse 2s infinite;
+}
+
+.flourish-spin {
+  animation: flourish-spin 1s linear infinite;
+}
+
+/* ==========================================================================
+   Responsive Design
+   ========================================================================== */
+
+@media (max-width: 640px) {
+  .flourish-heading-1 {
+    font-size: var(--flourish-font-size-4xl);
+  }
+  
+  .flourish-heading-2 {
+    font-size: var(--flourish-font-size-3xl);
+  }
+  
+  .flourish-grid-2,
+  .flourish-grid-3,
+  .flourish-grid-4 {
+    grid-template-columns: 1fr;
+  }
+  
+  .flourish-container {
+    padding: 0 var(--flourish-space-sm);
+  }
+}
+
+@media (max-width: 768px) {
+  .flourish-grid-3,
+  .flourish-grid-4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 1024px) {
+  .flourish-grid-4 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* ==========================================================================
+   Utility Classes
+   ========================================================================== */
+
+.flourish-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.flourish-hidden {
+  display: none;
+}
+
+.flourish-visible {
+  display: block;
+}
+
+.flourish-relative {
+  position: relative;
+}
+
+.flourish-absolute {
+  position: absolute;
+}
+
+.flourish-fixed {
+  position: fixed;
+}
+
+.flourish-sticky {
+  position: sticky;
+}
+
+.flourish-w-full {
+  width: 100%;
+}
+
+.flourish-h-full {
+  height: 100%;
+}
+
+.flourish-min-h-screen {
+  min-height: 100vh;
+}
+
+.flourish-overflow-hidden {
+  overflow: hidden;
+}
+
+.flourish-overflow-auto {
+  overflow: auto;
+}
+
+.flourish-rounded-sm {
+  border-radius: var(--flourish-radius-sm);
+}
+
+.flourish-rounded-md {
+  border-radius: var(--flourish-radius-md);
+}
+
+.flourish-rounded-lg {
+  border-radius: var(--flourish-radius-lg);
+}
+
+.flourish-rounded-xl {
+  border-radius: var(--flourish-radius-xl);
+}
+
+.flourish-rounded-2xl {
+  border-radius: var(--flourish-radius-2xl);
+}
+
+.flourish-rounded-full {
+  border-radius: var(--flourish-radius-full);
+}
+
+.flourish-shadow-sm {
+  box-shadow: var(--flourish-shadow-sm);
+}
+
+.flourish-shadow-md {
+  box-shadow: var(--flourish-shadow-md);
+}
+
+.flourish-shadow-lg {
+  box-shadow: var(--flourish-shadow-lg);
+}
+
+.flourish-shadow-xl {
+  box-shadow: var(--flourish-shadow-xl);
+}
+
+.flourish-shadow-2xl {
+  box-shadow: var(--flourish-shadow-2xl);
+}
+
+.flourish-transition {
+  transition: all var(--flourish-transition-normal);
+}
+
+.flourish-transition-fast {
+  transition: all var(--flourish-transition-fast);
+}
+
+.flourish-transition-slow {
+  transition: all var(--flourish-transition-slow);
+}
+
+/* ==========================================================================
+   Dark Mode Support (Future Enhancement)
+   ========================================================================== */
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --flourish-background: #1A1A1A;
+    --flourish-background-secondary: #2D2D2D;
+    --flourish-background-tertiary: #3D3D3D;
+    
+    --flourish-text-primary: #FFFFFF;
+    --flourish-text-secondary: #E5E5E5;
+    --flourish-text-tertiary: #A3A3A3;
+    
+    --flourish-card-bg: #2D2D2D;
+    --flourish-card-shadow: rgba(0, 0, 0, 0.3);
+    
+    --flourish-input-bg: #2D2D2D;
+    --flourish-input-border: rgba(255, 27, 107, 0.3);
+  }
+}
+
+/* ==========================================================================
+   Print Styles
+   ========================================================================== */
+
+@media print {
+  .flourish-heading-1,
+  .flourish-text-gradient {
+    color: var(--flourish-text-primary) !important;
+    background: none !important;
+    -webkit-text-fill-color: initial !important;
+  }
+  
+  .flourish-shadow-sm,
+  .flourish-shadow-md,
+  .flourish-shadow-lg,
+  .flourish-shadow-xl,
+  .flourish-shadow-2xl {
+    box-shadow: none !important;
+  }
+}

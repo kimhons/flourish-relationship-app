@@ -7,10 +7,10 @@ import {
   Users, 
   Calendar,
   Star,
-  Target
+  Target,
+  Sparkles
 } from 'lucide-react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
+import { FlourishButton, FlourishCard, FlourishLogo } from '../../components/flourish'
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
 import { useAuth } from '../../contexts/AuthContext'
@@ -99,159 +99,262 @@ const Dashboard = () => {
   ]
 
   return (
-    <div className="space-y-6">
+    <div className="flourish-container" style={{ 
+      padding: 'var(--flourish-space-xl)',
+      minHeight: '100vh',
+      background: 'var(--flourish-background)'
+    }}>
       {/* Welcome Header */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between">
-        <div>
-          <h1 className="text-3xl font-bold">
-            Welcome back, {user?.firstName || 'there'}! 👋
-          </h1>
-          <p className="text-muted-foreground mt-1">
-            Here's what's happening in your relationship journey
-          </p>
+      <FlourishCard gradient={false} shadow="sm" padding="large" className="flourish-mb-xl flourish-fade-in">
+        <div className="flourish-flex-between flourish-flex-col md:flourish-flex-row">
+          <div>
+            <div className="flourish-flex" style={{ gap: 'var(--flourish-space-md)', alignItems: 'center', marginBottom: 'var(--flourish-space-sm)' }}>
+              <FlourishLogo size={40} showText={false} />
+              <div>
+                <h1 className="flourish-heading-2">
+                  Welcome back, {user?.firstName || 'there'}! 
+                  <span style={{ marginLeft: 'var(--flourish-space-sm)' }}>✨</span>
+                </h1>
+                <p className="flourish-body">
+                  Here's what's happening in your relationship journey
+                </p>
+              </div>
+            </div>
+          </div>
+          <div className="flourish-mt-md md:flourish-mt-0">
+            <FlourishButton 
+              variant="primary"
+              icon={<Target className="h-4 w-4" />}
+              iconPosition="left"
+            >
+              Set New Goal
+            </FlourishButton>
+          </div>
         </div>
-        <div className="mt-4 md:mt-0">
-          <Button className="flourish-gradient text-white">
-            <Target className="mr-2 h-4 w-4" />
-            Set New Goal
-          </Button>
-        </div>
-      </div>
+      </FlourishCard>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="flourish-grid flourish-grid-4 flourish-mb-xl">
         {stats.map((stat, index) => (
-          <Card key={index}>
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-muted-foreground">
-                    {stat.title}
-                  </p>
-                  <p className="text-2xl font-bold">{stat.value}</p>
-                  <p className="text-xs text-green-600 mt-1">
+          <FlourishCard 
+            key={index} 
+            shadow="md" 
+            padding="large" 
+            hoverable={true}
+            className="flourish-slide-in-right"
+            style={{ animationDelay: `${index * 100}ms` }}
+          >
+            <div className="flourish-flex-between">
+              <div>
+                <p className="flourish-body-sm flourish-mb-xs" style={{ color: 'var(--flourish-text-tertiary)' }}>
+                  {stat.title}
+                </p>
+                <p className="flourish-heading-3 flourish-mb-xs">{stat.value}</p>
+                <div className="flourish-flex" style={{ alignItems: 'center', gap: 'var(--flourish-space-xs)' }}>
+                  <TrendingUp className="h-3 w-3" style={{ color: 'var(--flourish-success)' }} />
+                  <p className="flourish-caption" style={{ color: 'var(--flourish-success)' }}>
                     {stat.change} from last week
                   </p>
                 </div>
-                <div className={`p-2 rounded-lg bg-muted/50`}>
-                  <stat.icon className={`h-5 w-5 ${stat.color}`} />
-                </div>
               </div>
-            </CardContent>
-          </Card>
+              <div className="flourish-p-sm flourish-rounded-lg" style={{ 
+                background: 'var(--flourish-primary-lighter)',
+                color: 'var(--flourish-primary)'
+              }}>
+                <stat.icon className="h-6 w-6" />
+              </div>
+            </div>
+          </FlourishCard>
         ))}
       </div>
 
-      <div className="grid lg:grid-cols-3 gap-6">
+      <div className="flourish-grid flourish-grid-3">
         {/* Recent Activity */}
-        <Card className="lg:col-span-2">
-          <CardHeader>
-            <CardTitle className="flex items-center">
-              <TrendingUp className="mr-2 h-5 w-5" />
-              Recent Activity
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
+        <FlourishCard shadow="lg" padding="large" className="lg:col-span-2 flourish-scale-in">
+          <div className="flourish-card__header">
+            <div className="flourish-flex" style={{ alignItems: 'center', gap: 'var(--flourish-space-sm)' }}>
+              <div className="flourish-p-sm flourish-rounded-lg" style={{ 
+                background: 'var(--flourish-secondary-lighter)',
+                color: 'var(--flourish-secondary)'
+              }}>
+                <TrendingUp className="h-5 w-5" />
+              </div>
+              <h3 className="flourish-heading-5">Recent Activity</h3>
+            </div>
+          </div>
+          <div className="flourish-card__body">
+            <div className="flourish-flex-col" style={{ gap: 'var(--flourish-space-md)' }}>
               {recentActivity.map((activity, index) => (
-                <div key={index} className="flex items-center space-x-4 p-3 rounded-lg hover:bg-muted/50 transition-colors">
-                  <div className={`p-2 rounded-full bg-muted/50`}>
-                    <activity.icon className={`h-4 w-4 ${activity.color}`} />
+                <div 
+                  key={index} 
+                  className="flourish-flex flourish-p-md flourish-rounded-lg flourish-transition" 
+                  style={{ 
+                    gap: 'var(--flourish-space-md)',
+                    alignItems: 'center',
+                    cursor: 'pointer'
+                  }}
+                  onMouseEnter={(e) => e.target.style.background = 'var(--flourish-primary-lighter)'}
+                  onMouseLeave={(e) => e.target.style.background = 'transparent'}
+                >
+                  <div className="flourish-p-sm flourish-rounded-full" style={{ 
+                    background: 'var(--flourish-primary-lighter)',
+                    color: 'var(--flourish-primary)'
+                  }}>
+                    <activity.icon className="h-4 w-4" />
                   </div>
-                  <div className="flex-1">
-                    <p className="font-medium">{activity.title}</p>
-                    <p className="text-sm text-muted-foreground">{activity.time}</p>
+                  <div className="flourish-flex-1">
+                    <p className="flourish-body flourish-mb-xs">{activity.title}</p>
+                    <p className="flourish-caption">{activity.time}</p>
                   </div>
                 </div>
               ))}
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </FlourishCard>
 
         {/* Relationship Goals */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center">
-              <Target className="mr-2 h-5 w-5" />
-              Relationship Goals
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-6">
+        <FlourishCard shadow="lg" padding="large" className="flourish-scale-in">
+          <div className="flourish-card__header">
+            <div className="flourish-flex" style={{ alignItems: 'center', gap: 'var(--flourish-space-sm)' }}>
+              <div className="flourish-p-sm flourish-rounded-lg" style={{ 
+                background: 'var(--flourish-accent-lighter)',
+                color: 'var(--flourish-accent)'
+              }}>
+                <Target className="h-5 w-5" />
+              </div>
+              <h3 className="flourish-heading-5">Relationship Goals</h3>
+            </div>
+          </div>
+          <div className="flourish-card__body">
+            <div className="flourish-flex-col" style={{ gap: 'var(--flourish-space-lg)' }}>
               {relationshipGoals.map((goal, index) => (
                 <div key={index}>
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="font-medium text-sm">{goal.title}</span>
-                    <span className="text-sm text-muted-foreground">{goal.progress}%</span>
+                  <div className="flourish-flex-between flourish-mb-sm">
+                    <span className="flourish-body-sm">{goal.title}</span>
+                    <span className="flourish-caption flourish-text-gradient">{goal.progress}%</span>
                   </div>
-                  <Progress value={goal.progress} className="h-2 mb-2" />
-                  <p className="text-xs text-muted-foreground">{goal.target}</p>
+                  <div className="flourish-mb-sm" style={{ 
+                    height: '8px',
+                    background: 'var(--flourish-primary-lighter)',
+                    borderRadius: 'var(--flourish-radius-full)',
+                    overflow: 'hidden'
+                  }}>
+                    <div 
+                      style={{ 
+                        height: '100%',
+                        width: `${goal.progress}%`,
+                        background: 'var(--flourish-gradient-primary)',
+                        borderRadius: 'var(--flourish-radius-full)',
+                        transition: 'var(--flourish-transition-slow)'
+                      }}
+                    />
+                  </div>
+                  <p className="flourish-caption">{goal.target}</p>
                 </div>
               ))}
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </FlourishCard>
       </div>
 
       {/* Quick Actions */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Quick Actions</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <Button variant="outline" className="h-20 flex-col">
-              <Heart className="h-6 w-6 mb-2" />
-              <span>Find Matches</span>
-            </Button>
-            <Button variant="outline" className="h-20 flex-col">
-              <MessageCircle className="h-6 w-6 mb-2" />
-              <span>Send Message</span>
-            </Button>
-            <Button variant="outline" className="h-20 flex-col">
-              <Brain className="h-6 w-6 mb-2" />
-              <span>Start Coaching</span>
-            </Button>
-            <Button variant="outline" className="h-20 flex-col">
-              <Calendar className="h-6 w-6 mb-2" />
-              <span>Schedule Date</span>
-            </Button>
+      <FlourishCard shadow="lg" padding="large" className="flourish-mt-xl flourish-fade-in">
+        <div className="flourish-card__header">
+          <div className="flourish-flex" style={{ alignItems: 'center', gap: 'var(--flourish-space-sm)' }}>
+            <div className="flourish-p-sm flourish-rounded-lg" style={{ 
+              background: 'var(--flourish-primary-lighter)',
+              color: 'var(--flourish-primary)'
+            }}>
+              <Sparkles className="h-5 w-5" />
+            </div>
+            <h3 className="flourish-heading-5">Quick Actions</h3>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+        <div className="flourish-card__body">
+          <div className="flourish-grid flourish-grid-4">
+            <FlourishButton 
+              variant="secondary" 
+              className="flourish-flex-col flourish-p-lg"
+              style={{ height: '80px', gap: 'var(--flourish-space-sm)' }}
+            >
+              <Heart className="h-6 w-6" />
+              <span>Find Matches</span>
+            </FlourishButton>
+            <FlourishButton 
+              variant="secondary" 
+              className="flourish-flex-col flourish-p-lg"
+              style={{ height: '80px', gap: 'var(--flourish-space-sm)' }}
+            >
+              <MessageCircle className="h-6 w-6" />
+              <span>Send Message</span>
+            </FlourishButton>
+            <FlourishButton 
+              variant="secondary" 
+              className="flourish-flex-col flourish-p-lg"
+              style={{ height: '80px', gap: 'var(--flourish-space-sm)' }}
+            >
+              <Brain className="h-6 w-6" />
+              <span>Start Coaching</span>
+            </FlourishButton>
+            <FlourishButton 
+              variant="secondary" 
+              className="flourish-flex-col flourish-p-lg"
+              style={{ height: '80px', gap: 'var(--flourish-space-sm)' }}
+            >
+              <Calendar className="h-6 w-6" />
+              <span>Schedule Date</span>
+            </FlourishButton>
+          </div>
+        </div>
+      </FlourishCard>
 
       {/* Today's Recommendations */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center">
-            <Star className="mr-2 h-5 w-5" />
-            Today's Recommendations
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid md:grid-cols-2 gap-4">
-            <div className="p-4 rounded-lg border border-border">
-              <h4 className="font-medium mb-2">💕 Perfect Match Alert</h4>
-              <p className="text-sm text-muted-foreground mb-3">
+      <FlourishCard shadow="lg" padding="large" className="flourish-mt-xl flourish-fade-in">
+        <div className="flourish-card__header">
+          <div className="flourish-flex" style={{ alignItems: 'center', gap: 'var(--flourish-space-sm)' }}>
+            <div className="flourish-p-sm flourish-rounded-lg" style={{ 
+              background: 'var(--flourish-accent-lighter)',
+              color: 'var(--flourish-accent)'
+            }}>
+              <Star className="h-5 w-5" />
+            </div>
+            <h3 className="flourish-heading-5">Today's Recommendations</h3>
+          </div>
+        </div>
+        <div className="flourish-card__body">
+          <div className="flourish-grid flourish-grid-2">
+            <FlourishCard 
+              shadow="sm" 
+              padding="medium" 
+              className="flourish-transition"
+              style={{ border: '1px solid var(--flourish-border-light)' }}
+            >
+              <h4 className="flourish-heading-6 flourish-mb-sm">💕 Perfect Match Alert</h4>
+              <p className="flourish-body-sm flourish-mb-md">
                 We found someone with 94% compatibility! Check out their profile.
               </p>
-              <Button size="sm" className="flourish-gradient text-white">
+              <FlourishButton size="small" variant="primary">
                 View Profile
-              </Button>
-            </div>
+              </FlourishButton>
+            </FlourishCard>
             
-            <div className="p-4 rounded-lg border border-border">
-              <h4 className="font-medium mb-2">🧠 Dr. Love Insight</h4>
-              <p className="text-sm text-muted-foreground mb-3">
+            <FlourishCard 
+              shadow="sm" 
+              padding="medium" 
+              className="flourish-transition"
+              style={{ border: '1px solid var(--flourish-border-light)' }}
+            >
+              <h4 className="flourish-heading-6 flourish-mb-sm">🧠 Dr. Love Insight</h4>
+              <p className="flourish-body-sm flourish-mb-md">
                 Based on your recent conversations, here's a tip to improve connection.
               </p>
-              <Button size="sm" variant="outline">
+              <FlourishButton size="small" variant="secondary">
                 Read Insight
-              </Button>
-            </div>
+              </FlourishButton>
+            </FlourishCard>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </FlourishCard>
     </div>
   )
 }

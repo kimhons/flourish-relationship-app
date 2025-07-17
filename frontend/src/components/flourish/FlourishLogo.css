@@ -1,0 +1,201 @@
+/* FlourishLogo Component Styles */
+
+.flourish-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--flourish-space-sm);
+  font-family: inherit;
+  text-decoration: none;
+  transition: var(--flourish-transition-fast);
+}
+
+.flourish-logo__icon {
+  display: block;
+  flex-shrink: 0;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+
+.flourish-logo__text {
+  font-weight: var(--flourish-font-weight-bold);
+  font-size: var(--flourish-font-size-xl);
+  color: var(--flourish-text-primary);
+  white-space: nowrap;
+  background: var(--flourish-gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  transition: var(--flourish-transition-fast);
+}
+
+/* Logo Variants */
+.flourish-logo--default .flourish-logo__text {
+  background: var(--flourish-gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.flourish-logo--inverse .flourish-logo__text {
+  color: var(--flourish-text-inverse);
+  background: none;
+  -webkit-text-fill-color: var(--flourish-text-inverse);
+}
+
+.flourish-logo--gradient .flourish-logo__text {
+  background: var(--flourish-gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Text Size Variants */
+.flourish-logo__text--small {
+  font-size: var(--flourish-font-size-base);
+}
+
+.flourish-logo__text--medium {
+  font-size: var(--flourish-font-size-lg);
+}
+
+.flourish-logo__text--large {
+  font-size: var(--flourish-font-size-2xl);
+}
+
+/* Auto sizing based on icon size */
+.flourish-logo__icon[width="16"] ~ .flourish-logo__text,
+.flourish-logo__icon[width="20"] ~ .flourish-logo__text,
+.flourish-logo__icon[width="24"] ~ .flourish-logo__text {
+  font-size: var(--flourish-font-size-sm);
+}
+
+.flourish-logo__icon[width="32"] ~ .flourish-logo__text,
+.flourish-logo__icon[width="40"] ~ .flourish-logo__text {
+  font-size: var(--flourish-font-size-base);
+}
+
+.flourish-logo__icon[width="48"] ~ .flourish-logo__text,
+.flourish-logo__icon[width="56"] ~ .flourish-logo__text,
+.flourish-logo__icon[width="64"] ~ .flourish-logo__text {
+  font-size: var(--flourish-font-size-lg);
+}
+
+.flourish-logo__icon[width="80"] ~ .flourish-logo__text,
+.flourish-logo__icon[width="96"] ~ .flourish-logo__text,
+.flourish-logo__icon[width="120"] ~ .flourish-logo__text {
+  font-size: var(--flourish-font-size-xl);
+}
+
+.flourish-logo__icon[width="144"] ~ .flourish-logo__text,
+.flourish-logo__icon[width="160"] ~ .flourish-logo__text,
+.flourish-logo__icon[width="192"] ~ .flourish-logo__text {
+  font-size: var(--flourish-font-size-2xl);
+}
+
+/* Clickable Logo */
+.flourish-logo--clickable {
+  cursor: pointer;
+  border: none;
+  background: none;
+  padding: 0;
+  outline: none;
+}
+
+.flourish-logo--clickable:hover {
+  transform: scale(1.05);
+}
+
+.flourish-logo--clickable:active {
+  transform: scale(0.98);
+}
+
+.flourish-logo--clickable:focus-visible {
+  outline: 2px solid var(--flourish-primary);
+  outline-offset: 4px;
+  border-radius: var(--flourish-radius-md);
+}
+
+/* Icon-only logo (no text) */
+.flourish-logo:not(:has(.flourish-logo__text)) {
+  gap: 0;
+}
+
+.flourish-logo:not(:has(.flourish-logo__text)).flourish-logo--clickable:hover {
+  transform: scale(1.1);
+}
+
+/* Responsive Design */
+@media (max-width: 640px) {
+  .flourish-logo__text {
+    font-size: var(--flourish-font-size-lg);
+  }
+  
+  .flourish-logo__text--large {
+    font-size: var(--flourish-font-size-xl);
+  }
+  
+  .flourish-logo__icon[width="144"] ~ .flourish-logo__text,
+  .flourish-logo__icon[width="160"] ~ .flourish-logo__text,
+  .flourish-logo__icon[width="192"] ~ .flourish-logo__text {
+    font-size: var(--flourish-font-size-xl);
+  }
+}
+
+/* Loading State */
+.flourish-logo--loading .flourish-logo__icon {
+  animation: flourish-pulse 2s infinite;
+}
+
+.flourish-logo--loading .flourish-logo__text {
+  opacity: 0.7;
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+  .flourish-logo--default .flourish-logo__text,
+  .flourish-logo--gradient .flourish-logo__text {
+    background: none;
+    -webkit-text-fill-color: var(--flourish-primary);
+    color: var(--flourish-primary);
+  }
+  
+  .flourish-logo--inverse .flourish-logo__text {
+    color: var(--flourish-text-inverse);
+  }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .flourish-logo {
+    transition: none;
+  }
+  
+  .flourish-logo--clickable:hover {
+    transform: none;
+  }
+  
+  .flourish-logo--loading .flourish-logo__icon {
+    animation: none;
+  }
+}
+
+/* Print Styles */
+@media print {
+  .flourish-logo__text {
+    background: none !important;
+    -webkit-text-fill-color: var(--flourish-text-primary) !important;
+    color: var(--flourish-text-primary) !important;
+  }
+  
+  .flourish-logo--inverse .flourish-logo__text {
+    color: var(--flourish-text-primary) !important;
+  }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  .flourish-logo--inverse .flourish-logo__text {
+    color: var(--flourish-text-primary);
+  }
+}

@@ -1,0 +1,229 @@
+/* FlourishBadge Component Styles */
+
+.flourish-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--flourish-space-xs);
+  font-family: inherit;
+  font-weight: var(--flourish-font-weight-medium);
+  border-radius: var(--flourish-radius-full);
+  white-space: nowrap;
+  vertical-align: middle;
+  transition: var(--flourish-transition-fast);
+  position: relative;
+  border: none;
+  text-decoration: none;
+  line-height: 1;
+}
+
+/* Size Variants */
+.flourish-badge--small {
+  padding: var(--flourish-space-xs) var(--flourish-space-sm);
+  font-size: var(--flourish-font-size-xs);
+  min-height: 20px;
+}
+
+.flourish-badge--medium {
+  padding: calc(var(--flourish-space-xs) * 1.5) var(--flourish-space-md);
+  font-size: var(--flourish-font-size-sm);
+  min-height: 24px;
+}
+
+.flourish-badge--large {
+  padding: var(--flourish-space-sm) var(--flourish-space-lg);
+  font-size: var(--flourish-font-size-base);
+  min-height: 32px;
+}
+
+/* Color Variants */
+.flourish-badge--default {
+  background: var(--flourish-background-secondary);
+  color: var(--flourish-text-secondary);
+  border: 1px solid var(--flourish-border);
+}
+
+.flourish-badge--primary {
+  background: var(--flourish-primary-lighter);
+  color: var(--flourish-primary);
+}
+
+.flourish-badge--secondary {
+  background: var(--flourish-secondary-lighter);
+  color: var(--flourish-secondary);
+}
+
+.flourish-badge--success {
+  background: var(--flourish-success-light);
+  color: var(--flourish-success);
+}
+
+.flourish-badge--warning {
+  background: var(--flourish-warning-light);
+  color: var(--flourish-warning);
+}
+
+.flourish-badge--error {
+  background: var(--flourish-error-light);
+  color: var(--flourish-error);
+}
+
+.flourish-badge--info {
+  background: var(--flourish-info-light);
+  color: var(--flourish-info);
+}
+
+.flourish-badge--gradient {
+  background: var(--flourish-gradient-primary);
+  color: white;
+}
+
+/* Dot Badge */
+.flourish-badge--dot {
+  padding: 0;
+  min-width: 8px;
+  min-height: 8px;
+  width: 8px;
+  height: 8px;
+}
+
+.flourish-badge--dot.flourish-badge--small {
+  width: 6px;
+  height: 6px;
+  min-width: 6px;
+  min-height: 6px;
+}
+
+.flourish-badge--dot.flourish-badge--large {
+  width: 10px;
+  height: 10px;
+  min-width: 10px;
+  min-height: 10px;
+}
+
+/* Icon */
+.flourish-badge__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.flourish-badge__icon svg {
+  width: 1em;
+  height: 1em;
+}
+
+/* Content */
+.flourish-badge__content {
+  display: flex;
+  align-items: center;
+}
+
+/* Remove Button */
+.flourish-badge__remove {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: var(--flourish-space-xs);
+  margin-right: calc(var(--flourish-space-xs) * -1);
+  padding: 0;
+  width: 16px;
+  height: 16px;
+  background: rgba(0, 0, 0, 0.1);
+  border: none;
+  border-radius: var(--flourish-radius-full);
+  color: inherit;
+  font-size: 1.2em;
+  line-height: 1;
+  cursor: pointer;
+  transition: var(--flourish-transition-fast);
+}
+
+.flourish-badge__remove:hover {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.flourish-badge--gradient .flourish-badge__remove {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.flourish-badge--gradient .flourish-badge__remove:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* Clickable Badge */
+.flourish-badge--clickable {
+  cursor: pointer;
+}
+
+.flourish-badge--clickable:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--flourish-shadow-sm);
+}
+
+.flourish-badge--clickable:active {
+  transform: translateY(0);
+}
+
+.flourish-badge--clickable:focus-visible {
+  outline: 2px solid var(--flourish-primary);
+  outline-offset: 2px;
+}
+
+/* Badge as Count */
+.flourish-badge[data-count] {
+  min-width: 20px;
+  padding: 0 var(--flourish-space-xs);
+}
+
+/* Animation */
+@keyframes flourish-badge-pulse {
+  0% {
+    box-shadow: 0 0 0 0 currentColor;
+  }
+  70% {
+    box-shadow: 0 0 0 4px transparent;
+  }
+  100% {
+    box-shadow: 0 0 0 0 transparent;
+  }
+}
+
+.flourish-badge--pulse {
+  animation: flourish-badge-pulse 2s infinite;
+}
+
+/* Badge Group */
+.flourish-badge-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--flourish-space-xs);
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .flourish-badge--large {
+    padding: var(--flourish-space-xs) var(--flourish-space-md);
+    font-size: var(--flourish-font-size-sm);
+    min-height: 28px;
+  }
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+  .flourish-badge {
+    border: 1px solid currentColor;
+  }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .flourish-badge {
+    transition: none;
+  }
+  
+  .flourish-badge--pulse {
+    animation: none;
+  }
+}

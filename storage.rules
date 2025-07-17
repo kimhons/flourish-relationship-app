@@ -1,0 +1,53 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Users can upload and access their own profile images
+    match /users/{userId}/profile/{allPaths=**} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // Users can upload and access their own media in conversations
+    match /conversations/{conversationId}/media/{allPaths=**} {
+      allow read, write: if request.auth != null && 
+        request.auth.uid in firestore.get(/databases/(default)/documents/conversations/$(conversationId)).data.participants;
+    }
+    
+    // Users can upload media for their own assessments
+    match /assessments/{userId}/{allPaths=**} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // Users can upload media for their own game sessions
+    match /games/{userId}/{allPaths=**} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // Event images - creators can upload, everyone can read
+    match /events/{eventId}/{allPaths=**} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null && 
+        request.auth.uid == firestore.get(/databases/(default)/documents/events/$(eventId)).data.creatorId;
+    }
+    
+    // Public content - admin only write, everyone can read
+    match /public/{allPaths=**} {
+      allow read: if true;
+      allow write: if request.auth != null && 
+        firestore.get(/databases/(default)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+    
+    // Temporary uploads - users can upload to their own temp folder
+    match /temp/{userId}/{allPaths=**} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // File size and type restrictions
+    // This is a fallback rule that applies size and type restrictions globally.
+    // It only applies when no more specific rules match the requested path.
+    match /{allPaths=**} {
+      allow read, write: if request.auth != null &&
+        request.resource.size < 50 * 1024 * 1024 && // 50MB limit
+        resource.contentType.matches('image/.*|video/.*|audio/.*|application/pdf');
+    }
+  }
+}

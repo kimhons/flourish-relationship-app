@@ -28,8 +28,7 @@ import {
   Lightbulb,
   Headphones
 } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
+import { FlourishButton, FlourishCard, FlourishLogo } from '../../components/flourish'
 import { Badge } from '@/components/ui/badge'
 
 const LandingPage = () => {
@@ -216,31 +215,48 @@ const LandingPage = () => {
   }, [])
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="flourish-min-h-screen" style={{ background: 'var(--flourish-background)' }}>
       {/* Navigation */}
-      <nav className="fixed top-0 w-full bg-background/80 backdrop-blur-sm border-b border-border z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 flourish-gradient rounded-lg flex items-center justify-center">
-                <Heart className="h-5 w-5 text-white" />
-              </div>
-              <span className="text-xl font-bold flourish-text-gradient">Flourish</span>
+      <nav className="flourish-fixed flourish-w-full" style={{ 
+        top: 0, 
+        background: 'rgba(255, 255, 255, 0.9)', 
+        backdropFilter: 'blur(8px)', 
+        borderBottom: '1px solid var(--flourish-border-light)',
+        zIndex: 'var(--flourish-z-fixed)'
+      }}>
+        <div className="flourish-container-lg">
+          <div className="flourish-flex-between" style={{ height: '4rem' }}>
+            <FlourishLogo size={32} showText={true} />
+            
+            <div className="flourish-hidden md:flourish-flex" style={{ gap: 'var(--flourish-space-xl)' }}>
+              <Link to="#features" className="flourish-body" style={{ 
+                color: 'var(--flourish-text-secondary)', 
+                textDecoration: 'none',
+                transition: 'var(--flourish-transition-fast)'
+              }}>Features</Link>
+              <Link to="#games" className="flourish-body" style={{ 
+                color: 'var(--flourish-text-secondary)', 
+                textDecoration: 'none',
+                transition: 'var(--flourish-transition-fast)'
+              }}>Games</Link>
+              <Link to="#pricing" className="flourish-body" style={{ 
+                color: 'var(--flourish-text-secondary)', 
+                textDecoration: 'none',
+                transition: 'var(--flourish-transition-fast)'
+              }}>Pricing</Link>
+              <Link to="/blog" className="flourish-body" style={{ 
+                color: 'var(--flourish-text-secondary)', 
+                textDecoration: 'none',
+                transition: 'var(--flourish-transition-fast)'
+              }}>Blog</Link>
             </div>
             
-            <div className="hidden md:flex items-center space-x-6">
-              <Link to="#features" className="text-sm font-medium hover:text-primary transition-colors">Features</Link>
-              <Link to="#games" className="text-sm font-medium hover:text-primary transition-colors">Games</Link>
-              <Link to="#pricing" className="text-sm font-medium hover:text-primary transition-colors">Pricing</Link>
-              <Link to="/blog" className="text-sm font-medium hover:text-primary transition-colors">Blog</Link>
-            </div>
-            
-            <div className="flex items-center space-x-4">
+            <div className="flourish-flex" style={{ gap: 'var(--flourish-space-md)' }}>
               <Link to="/login">
-                <Button variant="ghost">Sign In</Button>
+                <FlourishButton variant="secondary">Sign In</FlourishButton>
               </Link>
               <Link to="/register">
-                <Button className="flourish-gradient text-white">Get Started</Button>
+                <FlourishButton variant="primary">Get Started</FlourishButton>
               </Link>
             </div>
           </div>
@@ -248,43 +264,66 @@ const LandingPage = () => {
       </nav>
 
       {/* Hero Section */}
-      <section className="pt-24 pb-16 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center">
-            <Badge className="mb-4 flourish-gradient text-white">
-              <Sparkles className="mr-1 h-3 w-3" />
-              #1 AI-Powered Dating Platform
-            </Badge>
+      <section className="flourish-p-4xl flourish-pt-4xl">
+        <div className="flourish-container-lg">
+          <div className="flourish-text-center">
+            <div className="flourish-mb-lg">
+              <Badge className="flourish-p-sm" style={{ 
+                background: 'var(--flourish-gradient-primary)', 
+                color: 'var(--flourish-text-inverse)',
+                borderRadius: 'var(--flourish-radius-full)',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 'var(--flourish-space-xs)'
+              }}>
+                <Sparkles className="h-3 w-3" />
+                #1 AI-Powered Dating Platform
+              </Badge>
+            </div>
             
-            <h1 className="text-4xl md:text-6xl font-bold mb-6">
-              Find Love, Grow Together,
-              <span className="flourish-text-gradient block">Build Forever</span>
+            <div className="flourish-mb-xl">
+              <FlourishLogo size={120} showText={false} />
+            </div>
+            
+            <h1 className="flourish-heading-1 flourish-mb-lg" style={{ 
+              fontSize: 'clamp(2.5rem, 5vw, 4rem)',
+              lineHeight: 'var(--flourish-line-height-tight)',
+              maxWidth: '800px',
+              margin: '0 auto var(--flourish-space-lg) auto'
+            }}>
+              Find Love with AI-Powered Coaching
             </h1>
             
-            <p className="text-xl text-muted-foreground mb-8 max-w-3xl mx-auto">
-              The world's most comprehensive relationship platform combining AI-powered matching, 
-              Dr. Love coaching, interactive games, and proven growth tools. Join over 2 million couples 
-              who found lasting love through science-backed compatibility and expert guidance.
+            <p className="flourish-body-lg flourish-mb-2xl" style={{ 
+              maxWidth: '600px',
+              margin: '0 auto var(--flourish-space-2xl) auto'
+            }}>
+              Revolutionary relationship platform that helps you build stronger, more meaningful connections 
+              through personalized coaching, interactive games, and community support.
             </p>
             
-            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-              <Button 
-                size="lg" 
-                className="flourish-gradient text-white text-lg px-8 py-6"
+            <div className="flourish-flex flourish-flex-col sm:flourish-flex-row flourish-mb-2xl" style={{ 
+              gap: 'var(--flourish-space-md)',
+              justifyContent: 'center'
+            }}>
+              <FlourishButton 
+                size="large" 
+                variant="primary"
                 onClick={() => navigate('/register')}
+                icon={<ArrowRight className="h-5 w-5" />}
+                iconPosition="right"
               >
                 Start Your Journey Free
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Button>
+              </FlourishButton>
               
-              <Button 
-                size="lg" 
-                variant="outline" 
-                className="text-lg px-8 py-6"
+              <FlourishButton 
+                size="large"
+                variant="secondary"
+                icon={<Play className="h-5 w-5" />}
+                iconPosition="left"
               >
-                <Play className="mr-2 h-5 w-5" />
                 Watch Demo
-              </Button>
+              </FlourishButton>
             </div>
 
             {/* Stats */}
