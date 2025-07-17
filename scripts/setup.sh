@@ -184,9 +184,10 @@ setup_firebase() {
     
     # Initialize Firebase project
     if [ ! -f firebase.json ]; then
-        echo -e "${YELLOW}📝 Firebase already configured${NC}"
+        echo -e "${YELLOW}📝 Firebase configuration not found. Initializing Firebase...${NC}"
+        firebase init
     else
-        echo -e "${GREEN}✅ Firebase configuration found${NC}"
+        echo -e "${GREEN}✅ Firebase already configured${NC}"
     fi
 }
 
