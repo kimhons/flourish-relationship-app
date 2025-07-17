@@ -82,7 +82,14 @@ check_command "docker-compose" "Docker Compose" "https://docs.docker.com/compose
 echo -e "${BLUE}📱 Mobile Development${NC}"
 
 # React Native CLI
-check_command "npx react-native" "React Native CLI" "npm install -g @react-native-community/cli"
+if npx react-native --version &> /dev/null; then
+    REACT_NATIVE_VERSION=$(npx react-native --version)
+    echo -e "${GREEN}✅ React Native CLI ($REACT_NATIVE_VERSION)${NC}"
+else
+    echo -e "${RED}❌ React Native CLI is not installed or not accessible${NC}"
+    echo -e "${YELLOW}   Install: npm install -g @react-native-community/cli${NC}"
+    OVERALL_STATUS=1
+fi
 
 # iOS Development (macOS only)
 if [[ "$OSTYPE" == "darwin"* ]]; then
