@@ -1,0 +1,12 @@
+{
+  "name": "ai-services",
+  "private": true,
+  "version": "0.0.1",
+  "description": "Placeholder for upcoming AI micro-services – implementation pending.",
+  "scripts": {
+    "dev": "echo \"AI services not yet implemented\"",
+    "build": "echo \"AI services build placeholder\"",
+    "test": "echo \"No tests yet\"",
+    "lint": "echo \"No linting configured\""
+  }
+}
