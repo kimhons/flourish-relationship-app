@@ -20,7 +20,8 @@
     "build:release:android": "cd android && ./gradlew assembleRelease",
     "build:release:ios": "cd ios && xcodebuild -workspace FlourishApp.xcworkspace -scheme FlourishApp -configuration Release -archivePath build/FlourishApp.xcarchive archive && xcodebuild -exportArchive -archivePath build/FlourishApp.xcarchive -exportOptionsPlist exportOptions.plist -exportPath build/",
     "deploy:android": "cd android && ./gradlew bundleRelease",
-    "deploy:ios": "cd ios && fastlane release"
+    "deploy:ios": "cd ios && fastlane release",
+    "type-check": "tsc --noEmit"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.21.0",
@@ -86,7 +87,8 @@
     "redux-persist": "^6.0.0",
     "redux-thunk": "^3.1.0",
     "formik": "^2.4.5",
-    "yup": "^1.3.3"
+    "yup": "^1.3.3",
+    "babel-plugin-module-resolver": "^5.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
