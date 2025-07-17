@@ -40,8 +40,8 @@ check_prerequisites() {
     fi
     
     # Check React Native CLI
-    if ! command -v npx react-native &> /dev/null; then
-        echo -e "${YELLOW}⚠️ React Native CLI not found, installing...${NC}"
+    if ! npx react-native --version &> /dev/null; then
+        echo -e "${YELLOW}⚠️ React Native CLI not found or not functional, installing...${NC}"
         npm install -g @react-native-community/cli
     fi
     
