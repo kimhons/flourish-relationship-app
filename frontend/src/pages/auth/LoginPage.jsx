@@ -1,9 +1,8 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { Heart, Eye, EyeOff } from 'lucide-react'
-import { Button } from '@/components/ui/button'
+import { Eye, EyeOff } from 'lucide-react'
+import { FlourishButton, FlourishCard, FlourishLogo } from '../../components/flourish'
 import { Input } from '@/components/ui/input'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { useAuth } from '../../contexts/AuthContext'
 import { useNotification } from '../../contexts/NotificationContext'
 
@@ -33,70 +32,98 @@ const LoginPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
-        <div className="text-center mb-8">
-          <div className="w-16 h-16 flourish-gradient rounded-2xl flex items-center justify-center mx-auto mb-4">
-            <Heart className="h-8 w-8 text-white" />
+    <div className="flourish-min-h-screen flourish-flex-center flourish-p-md" style={{ background: 'var(--flourish-background)' }}>
+      <div className="flourish-container-sm">
+        <div className="flourish-text-center flourish-mb-2xl">
+          <div className="flourish-mb-lg">
+            <FlourishLogo size={80} showText={false} />
           </div>
-          <h1 className="text-2xl font-bold flourish-text-gradient">Welcome Back</h1>
-          <p className="text-muted-foreground">Sign in to continue your journey</p>
+          <h1 className="flourish-heading-1 flourish-mb-sm">Welcome Back</h1>
+          <p className="flourish-body">Sign in to continue your journey</p>
         </div>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Sign In</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <Input
-                  type="email"
-                  placeholder="Email address"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                />
-              </div>
-              
-              <div className="relative">
-                <Input
-                  type={showPassword ? 'text' : 'password'}
-                  placeholder="Password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                />
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="sm"
-                  className="absolute right-2 top-1/2 transform -translate-y-1/2"
-                  onClick={() => setShowPassword(!showPassword)}
-                >
-                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                </Button>
-              </div>
-
-              <Button 
-                type="submit" 
-                className="w-full flourish-gradient text-white"
-                disabled={isLoading}
-              >
-                {isLoading ? 'Signing in...' : 'Sign In'}
-              </Button>
-            </form>
-
-            <div className="mt-6 text-center">
-              <p className="text-sm text-muted-foreground">
-                Don't have an account?{' '}
-                <Link to="/register" className="text-primary hover:underline">
-                  Sign up
-                </Link>
-              </p>
+        <FlourishCard padding="large" shadow="lg" className="flourish-fade-in">
+          <div className="flourish-mb-lg">
+            <h2 className="flourish-heading-4 flourish-text-center">Sign In</h2>
+          </div>
+          
+          <form onSubmit={handleSubmit} className="flourish-flex-col" style={{ gap: 'var(--flourish-space-md)' }}>
+            <div>
+              <Input
+                type="email"
+                placeholder="Email address"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                style={{
+                  borderRadius: 'var(--flourish-radius-lg)',
+                  border: '1px solid var(--flourish-border)',
+                  padding: 'var(--flourish-space-sm) var(--flourish-space-md)',
+                  fontSize: 'var(--flourish-font-size-base)',
+                  transition: 'var(--flourish-transition-fast)'
+                }}
+              />
             </div>
-          </CardContent>
-        </Card>
+            
+            <div className="flourish-relative">
+              <Input
+                type={showPassword ? 'text' : 'password'}
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                style={{
+                  borderRadius: 'var(--flourish-radius-lg)',
+                  border: '1px solid var(--flourish-border)',
+                  padding: 'var(--flourish-space-sm) var(--flourish-space-md)',
+                  fontSize: 'var(--flourish-font-size-base)',
+                  transition: 'var(--flourish-transition-fast)',
+                  paddingRight: '2.5rem'
+                }}
+              />
+              <button
+                type="button"
+                className="flourish-absolute"
+                style={{
+                  right: 'var(--flourish-space-sm)',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  background: 'none',
+                  border: 'none',
+                  cursor: 'pointer',
+                  color: 'var(--flourish-text-tertiary)',
+                  padding: 'var(--flourish-space-xs)'
+                }}
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+              </button>
+            </div>
+
+            <FlourishButton 
+              type="submit" 
+              variant="primary"
+              size="large"
+              fullWidth
+              loading={isLoading}
+            >
+              {isLoading ? 'Signing in...' : 'Sign In'}
+            </FlourishButton>
+          </form>
+
+          <div className="flourish-mt-xl flourish-text-center">
+            <p className="flourish-body-sm">
+              Don't have an account?{' '}
+              <Link 
+                to="/register" 
+                className="flourish-text-gradient"
+                style={{ textDecoration: 'none', fontWeight: 'var(--flourish-font-weight-medium)' }}
+              >
+                Sign up
+              </Link>
+            </p>
+          </div>
+        </FlourishCard>
       </div>
     </div>
   )
