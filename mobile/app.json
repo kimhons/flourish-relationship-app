@@ -6,7 +6,7 @@
     "slug": "flourish-relationship-app",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icons/app-icon.svg",
+    "icon": "./assets/icons/app-icon.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash/splash-screen.svg",
