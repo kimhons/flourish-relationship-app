@@ -1,0 +1,10 @@
+# Mobile Assets Directory
+# 
+# This directory should contain the following files for production deployment:
+# - icon.png (1024x1024) - Main app icon
+# - splash.png (2048x2732) - Splash screen image  
+# - adaptive-icon.png (1024x1024) - Android adaptive icon foreground
+# - favicon.png (32x32) - Web favicon
+#
+# These assets will be generated automatically during the build process
+# if not provided manually using the generate-app-icons.sh script.
