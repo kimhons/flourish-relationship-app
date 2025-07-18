@@ -10,9 +10,10 @@ import sys
 import os
 
 # Add ai-services to path
-sys.path.append(os.path.join(os.path.dirname(__file__), '../../../ai-services'))
+ai_services_path = os.path.join(os.path.dirname(__file__), '../../../ai-services/src')
+sys.path.append(ai_services_path)
 
-from src.ai_service_orchestrator import orchestrator
+from ai_service_orchestrator import orchestrator
 
 logger = logging.getLogger(__name__)
 
