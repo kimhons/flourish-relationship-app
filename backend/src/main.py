@@ -26,6 +26,7 @@ from .models.moderation import ModerationCase, Evidence, ModerationAction, Appea
 from .routes.auth import auth_bp
 from .routes.user import user_bp
 from .routes.ai_routes import ai_bp
+from .routes.ai_integration import ai_integration_bp, initialize_ai_services
 
 # Import AI services
 from .services.ai_service_manager import initialize_ai_services, cleanup_ai_services, ai_service_manager
@@ -251,6 +252,9 @@ def register_blueprints(app):
     
     # AI services routes
     app.register_blueprint(ai_bp)
+    
+    # AI integration routes
+    app.register_blueprint(ai_integration_bp)
     
     # Enhanced relationship coaching routes
     app.register_blueprint(enhanced_coaching_bp)
