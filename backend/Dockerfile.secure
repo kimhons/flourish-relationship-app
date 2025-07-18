@@ -1,0 +1,83 @@
+# Multi-stage build for security and size optimization
+FROM python:3.11-slim-bookworm AS builder
+
+# Install build dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    libpq-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create app directory
+WORKDIR /build
+
+# Copy requirements first for better caching
+COPY requirements.txt requirements-ai.txt ./
+
+# Install Python dependencies
+RUN pip install --no-cache-dir --user -r requirements.txt -r requirements-ai.txt
+
+# Production stage
+FROM python:3.11-slim-bookworm
+
+# Install runtime dependencies only
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libpq5 \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create non-root user
+RUN groupadd -r appuser && useradd -r -g appuser -u 1000 appuser
+
+# Copy Python dependencies from builder
+COPY --from=builder /root/.local /home/appuser/.local
+
+# Set up app directory
+WORKDIR /app
+
+# Copy application code
+COPY --chown=appuser:appuser . .
+
+# Create necessary directories
+RUN mkdir -p /app/logs /app/tmp && \
+    chown -R appuser:appuser /app/logs /app/tmp
+
+# Security: Remove unnecessary files
+RUN find . -name "*.pyc" -delete && \
+    find . -name "__pycache__" -delete && \
+    find . -name ".git" -type d -exec rm -rf {} + 2>/dev/null || true && \
+    find . -name ".env*" -delete 2>/dev/null || true && \
+    find . -name "*.key" -delete 2>/dev/null || true && \
+    find . -name "*.pem" -delete 2>/dev/null || true
+
+# Switch to non-root user
+USER appuser
+
+# Add local bin to PATH
+ENV PATH=/home/appuser/.local/bin:$PATH
+
+# Set Python environment variables
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONPATH=/app/src:$PYTHONPATH
+
+# Expose port (not binding to root-required ports)
+EXPOSE 8000
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
+    CMD curl -f http://localhost:8000/health || exit 1
+
+# Run with gunicorn for production
+CMD ["gunicorn", \
+     "--config", "gunicorn.conf.py", \
+     "--bind", "0.0.0.0:8000", \
+     "--workers", "4", \
+     "--worker-class", "uvicorn.workers.UvicornWorker", \
+     "--access-logfile", "/app/logs/access.log", \
+     "--error-logfile", "/app/logs/error.log", \
+     "--log-level", "info", \
+     "--timeout", "120", \
+     "--graceful-timeout", "30", \
+     "--max-requests", "1000", \
+     "--max-requests-jitter", "100", \
+     "src.main:app"]

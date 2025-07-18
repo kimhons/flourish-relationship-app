@@ -1,90 +1,228 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Users can read and write their own user document
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+    
+    function isAdmin() {
+      return isAuthenticated() && 
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+    
+    function hasValidSubscription() {
+      return isAuthenticated() && 
+        exists(/databases/$(database)/documents/subscriptions/$(request.auth.uid)) &&
+        get(/databases/$(database)/documents/subscriptions/$(request.auth.uid)).data.status == 'active';
+    }
+    
+    function isMatch(userId) {
+      return isAuthenticated() && (
+        exists(/databases/$(database)/documents/matches/$(request.auth.uid + '_' + userId)) ||
+        exists(/databases/$(database)/documents/matches/$(userId + '_' + request.auth.uid))
+      );
+    }
+    
+    function isBlocked(userId) {
+      return exists(/databases/$(database)/documents/blocks/$(request.auth.uid + '_' + userId)) ||
+             exists(/databases/$(database)/documents/blocks/$(userId + '_' + request.auth.uid));
+    }
+    
+    function canViewProfile(userId) {
+      return isOwner(userId) || 
+        (isAuthenticated() && 
+         !isBlocked(userId) &&
+         resource.data.visibility == 'public') ||
+        (isAuthenticated() && isMatch(userId));
+    }
+    
+    // Users collection - strict access control
     match /users/{userId} {
-      allow read, write: if request.auth != null && request.auth.uid == userId;
+      allow read: if isOwner(userId) || isAdmin();
+      allow create: if isAuthenticated() && request.auth.uid == userId;
+      allow update: if isOwner(userId) && 
+        request.resource.data.diff(resource.data).affectedKeys()
+          .hasAll(['email', 'role', 'createdAt']) == false;
+      allow delete: if false; // Users cannot delete their accounts directly
     }
     
-    // Users can read and write their own profile
+    // Profiles collection - privacy-aware access
     match /profiles/{userId} {
-      allow read, write: if request.auth != null && request.auth.uid == userId;
-      allow read: if request.auth != null; // Allow other users to read profiles for matching
+      allow read: if canViewProfile(userId);
+      allow create: if isOwner(userId);
+      allow update: if isOwner(userId) && 
+        request.resource.data.keys().hasAll(['userId', 'displayName']) &&
+        request.resource.data.userId == userId;
+      allow delete: if false;
     }
     
-    // Matches collection - users can only see their own matches
+    // Matches collection - mutual access only
     match /matches/{matchId} {
-      allow read, write: if request.auth != null && 
+      allow read: if isAuthenticated() && 
         (request.auth.uid == resource.data.user1Id || 
          request.auth.uid == resource.data.user2Id);
+      allow create: if false; // Matches created by backend only
+      allow update: if isAuthenticated() && 
+        (request.auth.uid == resource.data.user1Id || 
+         request.auth.uid == resource.data.user2Id) &&
+        request.resource.data.diff(resource.data).affectedKeys()
+          .hasOnly(['lastActivity', 'user1LastRead', 'user2LastRead']);
+      allow delete: if false;
     }
     
-    // Messages - users can only access messages in their conversations
+    // Conversations - secure messaging
     match /conversations/{conversationId} {
-      allow read, write: if request.auth != null && 
-        request.auth.uid in resource.data.participants;
+      allow read: if isAuthenticated() && 
+        request.auth.uid in resource.data.participants &&
+        !resource.data.deletedBy[request.auth.uid];
+      allow create: if false; // Created by backend when match is made
+      allow update: if isAuthenticated() && 
+        request.auth.uid in resource.data.participants &&
+        request.resource.data.participants == resource.data.participants;
+      allow delete: if false;
       
+      // Messages subcollection
       match /messages/{messageId} {
-        allow read, write: if request.auth != null && 
+        allow read: if isAuthenticated() && 
           request.auth.uid in get(/databases/$(database)/documents/conversations/$(conversationId)).data.participants;
+        allow create: if isAuthenticated() && 
+          request.auth.uid in get(/databases/$(database)/documents/conversations/$(conversationId)).data.participants &&
+          request.auth.uid == request.resource.data.senderId &&
+          request.resource.data.keys().hasAll(['senderId', 'content', 'timestamp', 'type']) &&
+          request.resource.data.content.size() <= 5000; // Limit message size
+        allow update: if false; // Messages are immutable
+        allow delete: if false;
       }
     }
     
-    // AI coaching sessions - users can only access their own sessions
+    // AI coaching sessions - private to user
     match /coachingSessions/{sessionId} {
-      allow read, write: if request.auth != null && request.auth.uid == resource.data.userId;
+      allow read: if isOwner(resource.data.userId) || isAdmin();
+      allow create: if isAuthenticated() && 
+        request.auth.uid == request.resource.data.userId &&
+        hasValidSubscription();
+      allow update: if isOwner(resource.data.userId) && 
+        request.resource.data.userId == resource.data.userId;
+      allow delete: if false;
     }
     
-    // Relationship assessments - users can only access their own assessments
+    // Assessments - private to user
     match /assessments/{assessmentId} {
-      allow read, write: if request.auth != null && request.auth.uid == resource.data.userId;
+      allow read: if isOwner(resource.data.userId);
+      allow create: if isAuthenticated() && 
+        request.auth.uid == request.resource.data.userId;
+      allow update: if isOwner(resource.data.userId) && 
+        request.resource.data.userId == resource.data.userId;
+      allow delete: if false;
     }
     
-    // Game sessions - users can only access their own game sessions
+    // Game sessions - shared between participants
     match /gameSessions/{sessionId} {
-      allow read, write: if request.auth != null && request.auth.uid == resource.data.userId;
+      allow read: if isAuthenticated() && 
+        (request.auth.uid == resource.data.player1Id || 
+         request.auth.uid == resource.data.player2Id);
+      allow create: if isAuthenticated() && 
+        request.auth.uid == request.resource.data.player1Id;
+      allow update: if isAuthenticated() && 
+        (request.auth.uid == resource.data.player1Id || 
+         request.auth.uid == resource.data.player2Id);
+      allow delete: if false;
     }
     
-    // Events - users can read all events but only create/update their own
+    // Events - public read, creator write
     match /events/{eventId} {
-      allow read: if request.auth != null;
-      allow write: if request.auth != null && request.auth.uid == resource.data.creatorId;
+      allow read: if isAuthenticated() && 
+        (resource.data.visibility == 'public' || 
+         request.auth.uid == resource.data.creatorId ||
+         request.auth.uid in resource.data.invitedUsers);
+      allow create: if isAuthenticated() && 
+        request.auth.uid == request.resource.data.creatorId &&
+        hasValidSubscription();
+      allow update: if isAuthenticated() && 
+        request.auth.uid == resource.data.creatorId;
+      allow delete: if isAuthenticated() && 
+        request.auth.uid == resource.data.creatorId;
     }
     
-    // Event registrations - users can only manage their own registrations
+    // Event registrations
     match /eventRegistrations/{registrationId} {
-      allow read, write: if request.auth != null && request.auth.uid == resource.data.userId;
+      allow read: if isOwner(resource.data.userId) || 
+        isAuthenticated() && request.auth.uid == get(/databases/$(database)/documents/events/$(resource.data.eventId)).data.creatorId;
+      allow create: if isAuthenticated() && 
+        request.auth.uid == request.resource.data.userId;
+      allow update: if isOwner(resource.data.userId);
+      allow delete: if isOwner(resource.data.userId);
     }
     
-    // Notifications - users can only access their own notifications
+    // Notifications - private to user
     match /notifications/{notificationId} {
-      allow read, write: if request.auth != null && request.auth.uid == resource.data.userId;
+      allow read: if isOwner(resource.data.userId);
+      allow create: if false; // Created by backend only
+      allow update: if isOwner(resource.data.userId) && 
+        request.resource.data.diff(resource.data).affectedKeys()
+          .hasOnly(['read', 'readAt']);
+      allow delete: if isOwner(resource.data.userId);
     }
     
-    // Reports - users can create reports but only admins can read them
+    // Reports - write-only for users, read for admins
     match /reports/{reportId} {
-      allow create: if request.auth != null;
-      allow read, update, delete: if request.auth != null && 
-        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+      allow read: if isAdmin();
+      allow create: if isAuthenticated() && 
+        request.auth.uid == request.resource.data.reporterId &&
+        request.resource.data.keys().hasAll(['reporterId', 'reportedUserId', 'reason', 'timestamp']);
+      allow update: if isAdmin();
+      allow delete: if false;
     }
     
-    // Admin-only collections
+    // Blocks - manage blocked users
+    match /blocks/{blockId} {
+      allow read: if isAuthenticated() && 
+        (request.auth.uid == resource.data.blockerId || 
+         request.auth.uid == resource.data.blockedId);
+      allow create: if isAuthenticated() && 
+        request.auth.uid == request.resource.data.blockerId;
+      allow update: if false;
+      allow delete: if isAuthenticated() && 
+        request.auth.uid == resource.data.blockerId;
+    }
+    
+    // Subscriptions - managed by backend
+    match /subscriptions/{userId} {
+      allow read: if isOwner(userId);
+      allow create: if false; // Backend only
+      allow update: if false; // Backend only
+      allow delete: if false;
+    }
+    
+    // Admin collections
     match /admin/{document=**} {
-      allow read, write: if request.auth != null && 
-        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+      allow read: if isAdmin();
+      allow write: if isAdmin();
     }
     
     // Analytics - admin only
     match /analytics/{document=**} {
-      allow read, write: if request.auth != null && 
-        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+      allow read: if isAdmin();
+      allow write: if false; // Backend only
     }
     
-    // Public content that anyone can read
+    // Public content
     match /publicContent/{document=**} {
       allow read: if true;
-      allow write: if request.auth != null && 
-        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+      allow write: if isAdmin();
+    }
+    
+    // Audit logs - write-only
+    match /auditLogs/{logId} {
+      allow read: if isAdmin();
+      allow create: if false; // Backend only
+      allow update: if false;
+      allow delete: if false;
     }
   }
 }
