@@ -19,9 +19,9 @@ from ..utils.security_validators import (
     RelationshipSecurityValidator, ValidationResult, 
     validate_relationship_input, is_input_safe
 )
-from ..middleware.rate_limiter import rate_limit
+from ..utils.rate_limiter import rate_limit
 from ..models.user import User
-from ..models.coaching_session import CoachingSession
+from ..models.coaching import CoachingSession
 from ..services.ai_service_manager import ai_service_manager
 
 logger = logging.getLogger(__name__)
@@ -82,7 +82,7 @@ def get_available_experts():
 
 @enhanced_coaching_bp.route('/chat', methods=['POST'])
 @jwt_required()
-@rate_limit(limit=30, window=60)  # 30 requests per minute
+@rate_limit(max_requests=30, window=60)  # 30 requests per minute
 def chat_with_expert():
     """Chat with a relationship expert"""
     try:
@@ -169,7 +169,7 @@ def chat_with_expert():
 
 @enhanced_coaching_bp.route('/multi-expert-consultation', methods=['POST'])
 @jwt_required()
-@rate_limit(limit=5, window=60)  # 5 requests per minute (more resource intensive)
+@rate_limit(max_requests=5, window=60)  # 5 requests per minute (more resource intensive)
 def multi_expert_consultation():
     """Get consultation from multiple experts"""
     try:
@@ -245,7 +245,7 @@ def multi_expert_consultation():
 
 @enhanced_coaching_bp.route('/expert/<expert_type>', methods=['POST'])
 @jwt_required()
-@rate_limit(limit=20, window=60)  # 20 requests per minute
+@rate_limit(max_requests=20, window=60)  # 20 requests per minute
 def chat_with_specific_expert(expert_type: str):
     """Chat with a specific relationship expert"""
     try:
@@ -317,7 +317,7 @@ def chat_with_specific_expert(expert_type: str):
 
 @enhanced_coaching_bp.route('/security/validate', methods=['POST'])
 @jwt_required()
-@rate_limit(limit=100, window=60)  # 100 requests per minute
+@rate_limit(max_requests=100, window=60)  # 100 requests per minute
 def validate_input():
     """Validate input for security threats (utility endpoint)"""
     try:
