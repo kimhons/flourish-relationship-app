@@ -2317,11 +2317,13 @@ app.post('/api/integrations/salesforce/sync', async (req, res) => {
   try {
     const { userData } = req.body;
     
-    // Authenticate with Salesforce
-    const authResponse = await axios.post('https://login.salesforce.com/services/oauth2/token', {
-      grant_type: 'client_credentials',
-      client_id: process.env.SALESFORCE_CLIENT_ID,
-      client_secret: process.env.SALESFORCE_CLIENT_SECRET
+    // Authenticate with Salesforce through secure backend proxy
+    const authResponse = await axios.post('/api/integrations/salesforce/auth', {
+      action: 'authenticate'
+    }, {
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      }
     });
     
     const accessToken = authResponse.data.access_token;

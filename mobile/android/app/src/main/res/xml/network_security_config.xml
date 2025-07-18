@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <!-- Default configuration that applies to all connections -->
+    <base-config cleartextTrafficPermitted="false">
+        <trust-anchors>
+            <certificates src="system" />
+            <certificates src="user" />
+        </trust-anchors>
+    </base-config>
+    
+    <!-- Production domain configuration with certificate pinning -->
+    <domain-config cleartextTrafficPermitted="false">
+        <domain includeSubdomains="true">flourish-app.com</domain>
+        <domain includeSubdomains="true">api.flourish-app.com</domain>
+        <pin-set expiration="2025-12-31">
+            <!-- Add your actual certificate pins here after obtaining SSL certificate -->
+            <!-- Example pin format: -->
+            <!-- <pin digest="SHA-256">base64==</pin> -->
+            <!-- Backup pins should also be included -->
+        </pin-set>
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </domain-config>
+    
+    <!-- Development configuration (only for debug builds) -->
+    <debug-overrides>
+        <trust-anchors>
+            <certificates src="user" />
+            <certificates src="system" />
+        </trust-anchors>
+    </debug-overrides>
+</network-security-config>
